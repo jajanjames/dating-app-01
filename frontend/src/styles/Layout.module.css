@@ -1,0 +1,35 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+}
+
+.main {
+  flex: 1;
+}
+
+.footer {
+  padding: 16px 32px;
+  border-top: 1px solid #e5e5e5;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}

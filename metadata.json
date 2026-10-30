@@ -1,0 +1,8 @@
+{
+  "name": "JDATE",
+  "description": "JDATE full-stack web application and API platform",
+  "requestFramePermissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
