@@ -23,11 +23,11 @@
   --lg-subtle-border: rgba(9, 9, 11, 0.06);
   --lg-shadow: 0 14px 34px -12px rgba(9, 9, 11, 0.07);
   --lg-orb-shadow: 0 8px 22px -4px rgba(9, 9, 11, 0.10);
-  --lg-ink: #09090b;
+  --lg-ink: #2d2d30;
   --lg-muted: #71717a;
   --lg-yellow: #facc15;
-  --lg-pink: #F93666;
-  --brand-rose: #F93666;
+  --lg-pink: #F7196B;
+  --brand-rose: #F7196B;
   --lg-sheet-backdrop: rgba(9, 9, 11, 0.36);
 }
 
@@ -56,7 +56,7 @@
   top: 0;
   z-index: 35;
   flex-shrink: 0;
-  padding: 4px 0 2px;
+  padding: 4px 0 4px;
   background-color: #ffffff;
 }
 
@@ -66,10 +66,19 @@
 }
 
 .naamBrandLogo {
-  height: 24px;
+  height: 18px;
+  max-width: 86px;
   width: auto;
   object-fit: contain;
   display: block;
+}
+
+.subBrandLogoInline {
+  height: 13px;
+  width: auto;
+  object-fit: contain;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .brandCapsule {
@@ -224,9 +233,9 @@
 }
 
 .microActionBadgeLike {
-  background-color: rgba(249, 54, 102, 0.92);
+  background-color: rgba(247, 25, 107, 0.92);
   color: #ffffff;
-  box-shadow: 0 12px 28px -6px rgba(249, 54, 102, 0.55);
+  box-shadow: 0 12px 28px -6px rgba(247, 25, 107, 0.55);
 }
 
 .microActionBadgeSuper {
@@ -458,9 +467,9 @@
   width: 62px;
   height: 62px;
   border-radius: 999px;
-  background: linear-gradient(180deg, #ff1f6d 0%, #f9165e 100%);
+  background: linear-gradient(180deg, #FF126B 0%, #E60E5F 100%);
   border: none;
-  box-shadow: 0 12px 26px -6px rgba(249, 22, 94, 0.45);
+  box-shadow: 0 12px 26px -6px rgba(247, 25, 107, 0.45);
   color: #ffffff;
   cursor: pointer;
   display: inline-flex;
@@ -474,7 +483,7 @@
 .figmaHeartPrimaryBtn:active,
 .actionBtnPressedHeart {
   animation: twitterButtonPop 0.34s cubic-bezier(0.17, 0.89, 0.32, 1.49) forwards;
-  box-shadow: 0 14px 32px -4px rgba(249, 22, 94, 0.68);
+  box-shadow: 0 14px 32px -4px rgba(247, 25, 107, 0.68);
 }
 
 @keyframes twitterButtonPop {
@@ -562,7 +571,7 @@
   position: absolute;
   inset: -2px;
   border-radius: 999px;
-  border: 2.5px solid #ff1f6d;
+  border: 2.5px solid #F7196B;
   opacity: 0;
   pointer-events: none;
   animation: twitterRingExpand 0.34s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -602,7 +611,7 @@
   margin-top: -3px;
   margin-left: -3px;
   border-radius: 999px;
-  background-color: var(--pcolor, #ff1f6d);
+  background-color: var(--pcolor, #F7196B);
   pointer-events: none;
   animation: twitterParticleFly 0.34s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -705,7 +714,7 @@
 }
 
 .bottomTabItemActive {
-  color: #F93666;
+  color: #F7196B;
   font-weight: 700;
 }
 
@@ -722,7 +731,7 @@
 }
 
 .bottomTabIndicatorActive {
-  background-color: #F93666;
+  background-color: #F7196B;
 }
 
 .bottomTabIconWrap {
@@ -740,7 +749,7 @@
   height: 16px;
   padding: 0 4px;
   border-radius: 999px;
-  background-color: #F93666;
+  background-color: #F7196B;
   color: #ffffff;
   font-size: 10px;
   font-weight: 800;
@@ -785,9 +794,9 @@
 }
 
 .filterChipActive {
-  background-color: #F93666;
+  background-color: #F7196B;
   color: #ffffff;
-  border-color: #F93666;
+  border-color: #F7196B;
   font-weight: 700;
 }
 
@@ -977,7 +986,7 @@
   height: 58px;
   border-radius: 999px;
   padding: 2px;
-  border: 1.5px solid rgba(249, 54, 102, 0.45);
+  border: 1.5px solid rgba(247, 25, 107, 0.45);
   box-sizing: border-box;
 }
 
@@ -997,7 +1006,7 @@
   width: 11px;
   height: 11px;
   border-radius: 999px;
-  background-color: #F93666;
+  background-color: #F7196B;
   border: 2px solid #ffffff;
 }
 
@@ -1062,7 +1071,7 @@
   width: 8px;
   height: 8px;
   border-radius: 999px;
-  background-color: #F93666;
+  background-color: #F7196B;
 }
 
 .matchSnippetUnread {
@@ -1140,7 +1149,7 @@
   background-size: cover;
   background-position: center;
   flex-shrink: 0;
-  border: 1.5px solid #F93666;
+  border: 1.5px solid #F7196B;
 }
 
 .matchTextCol {
@@ -1219,9 +1228,9 @@
   background-color: #e4e4e7;
   background-size: cover;
   background-position: center;
-  border: 2.5px solid #F93666;
+  border: 2.5px solid #F7196B;
   box-sizing: border-box;
-  box-shadow: 0 8px 18px -6px rgba(249, 54, 102, 0.28);
+  box-shadow: 0 8px 18px -6px rgba(247, 25, 107, 0.28);
 }
 
 .editorialAvatarCameraBadge {
@@ -1258,7 +1267,7 @@
   font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: #09090b;
+  color: #2d2d30;
   line-height: 1.15;
 }
 
@@ -1268,8 +1277,8 @@
   gap: 4px;
   padding: 3px 8px;
   border-radius: 999px;
-  background-color: rgba(249, 54, 102, 0.12);
-  color: #F93666;
+  background-color: rgba(247, 25, 107, 0.12);
+  color: #F7196B;
   font-size: 11px;
   font-weight: 700;
 }
@@ -1287,7 +1296,7 @@
   height: 38px;
   padding: 0 14px;
   border-radius: 12px;
-  background-color: #09090b;
+  background-color: #2d2d30;
   color: #ffffff;
   border: none;
   font-size: 13px;
@@ -1329,7 +1338,7 @@
 }
 
 .editorialCompletionPill {
-  background-color: #F93666;
+  background-color: #F7196B;
   color: #ffffff;
   font-size: 11px;
   font-weight: 800;
@@ -1349,7 +1358,7 @@
 .editorialProgressBarFill {
   height: 100%;
   border-radius: 999px;
-  background-color: #F93666;
+  background-color: #F7196B;
   transition: width 0.25s ease;
 }
 
@@ -1360,8 +1369,8 @@
   padding: 18px;
   box-sizing: border-box;
   background-color: #ffffff;
-  border: 1px solid rgba(249, 54, 102, 0.18);
-  box-shadow: 0 10px 26px -14px rgba(249, 54, 102, 0.12);
+  border: 1px solid rgba(247, 25, 107, 0.18);
+  box-shadow: 0 10px 26px -14px rgba(247, 25, 107, 0.12);
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -1395,7 +1404,7 @@
 
 .subTierTabBtnActive {
   background-color: #ffffff;
-  color: #F93666;
+  color: #F7196B;
   box-shadow: 0 2px 8px rgba(9, 9, 11, 0.06);
 }
 
@@ -1416,8 +1425,8 @@
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background-color: rgba(249, 54, 102, 0.1);
-  color: #F93666;
+  background-color: rgba(247, 25, 107, 0.1);
+  color: #F7196B;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1427,21 +1436,24 @@
 .subShowcaseEyebrow {
   font-size: 11px;
   font-weight: 700;
-  color: #F93666;
+  color: #F7196B;
 }
 
 .subShowcaseTitle {
-  margin: 1px 0 0;
+  margin: 2px 0 0;
   font-size: 18px;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: #09090b;
+  color: #2d2d30;
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
 
 .subShowcasePricePill {
   font-size: 14px;
   font-weight: 800;
-  color: #09090b;
+  color: #2d2d30;
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
 }
@@ -1466,8 +1478,8 @@
   width: 18px;
   height: 18px;
   border-radius: 999px;
-  background-color: rgba(249, 54, 102, 0.12);
-  color: #F93666;
+  background-color: rgba(247, 25, 107, 0.12);
+  color: #F7196B;
   font-size: 10px;
   font-weight: 800;
   display: inline-flex;
@@ -1488,7 +1500,7 @@
   height: 44px;
   border-radius: 14px;
   border: none;
-  background-color: #F93666;
+  background: linear-gradient(135deg, #FF126B 0%, #E60E5F 100%);
   color: #ffffff;
   font-size: 14px;
   font-weight: 700;
@@ -1498,7 +1510,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  box-shadow: 0 8px 18px -6px rgba(249, 54, 102, 0.38);
+  box-shadow: 0 8px 18px -6px rgba(247, 25, 107, 0.38);
   transition: transform 0.15s ease, opacity 0.15s ease;
 }
 
@@ -1525,7 +1537,7 @@
 }
 
 .modalFeatureCheckMark {
-  color: #F93666;
+  color: #F7196B;
   font-weight: 800;
 }
 
@@ -1715,7 +1727,7 @@
   position: absolute;
   height: 4px;
   border-radius: 999px;
-  background-color: #1e1b4b;
+  background-color: #F7196B;
 }
 
 .dualRangeInput {
@@ -1776,8 +1788,8 @@
 }
 
 .iosSwitchBtnActive {
-  background-color: #F93666;
-  border-color: #F93666;
+  background-color: #F7196B;
+  border-color: #F7196B;
 }
 
 .iosSwitchThumb {
@@ -1840,7 +1852,7 @@
 .preferenceSelectedTag {
   font-size: 14px;
   font-weight: 600;
-  color: #F93666;
+  color: #F7196B;
 }
 
 .preferenceChevronIcon {
@@ -1863,7 +1875,7 @@
   gap: 10px;
 }
 
-/* Sticky Save Search Footer CTA (#F93666) */
+/* Sticky Save Search Footer CTA (#F7196B) */
 .saveSearchStickyFooter {
   position: sticky;
   bottom: 0;
@@ -1879,13 +1891,13 @@
   height: 58px;
   border-radius: 16px;
   border: none;
-  background-color: #F93666;
+  background: linear-gradient(135deg, #FF126B 0%, #E60E5F 100%);
   color: #ffffff;
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.01em;
   cursor: pointer;
-  box-shadow: 0 10px 24px -6px rgba(249, 54, 102, 0.45);
+  box-shadow: 0 10px 24px -6px rgba(247, 25, 107, 0.45);
   transition: transform 0.15s ease, opacity 0.15s ease;
 }
 
@@ -1929,7 +1941,7 @@
   right: 8px;
   padding: 4px 8px;
   border-radius: 999px;
-  background-color: #F93666;
+  background-color: #F7196B;
   border: none;
   color: #ffffff;
   font-size: 10px;
@@ -2043,7 +2055,7 @@
 .sequenceLocationRow {
   font-size: 13px;
   font-weight: 600;
-  color: #F93666;
+  color: #F7196B;
 }
 
 .sequenceBodyText {
@@ -2288,12 +2300,12 @@
 .msgBubbleMe {
   padding: 11px 15px;
   border-radius: 20px 20px 6px 20px;
-  background: linear-gradient(135deg, #ff1f6d 0%, #f93666 100%);
+  background: linear-gradient(135deg, #FF126B 0%, #E60E5F 100%);
   color: #ffffff;
   font-weight: 500;
   font-size: 14.5px;
   line-height: 1.42;
-  box-shadow: 0 6px 16px -6px rgba(249, 54, 102, 0.38);
+  box-shadow: 0 6px 16px -6px rgba(247, 25, 107, 0.38);
 }
 
 .msgTimeMeta {
@@ -2332,8 +2344,8 @@
 }
 
 .fullChatIcebreakerPill:active {
-  border-color: #F93666;
-  color: #F93666;
+  border-color: #F7196B;
+  color: #F7196B;
 }
 
 .fullChatComposerBar {
@@ -2368,7 +2380,7 @@
   padding: 0 18px;
   border-radius: 999px;
   border: none;
-  background-color: #F93666;
+  background: linear-gradient(135deg, #FF126B 0%, #E60E5F 100%);
   color: #ffffff;
   font-size: 13px;
   font-weight: 700;
@@ -2413,7 +2425,7 @@
   padding: 0 22px;
   border-radius: 16px;
   border: none;
-  background-color: #F93666;
+  background: linear-gradient(135deg, #FF126B 0%, #E60E5F 100%);
   color: #ffffff;
   font-size: 15px;
   font-weight: 700;
@@ -2423,7 +2435,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 8px 20px -6px rgba(249, 54, 102, 0.40);
+  box-shadow: 0 8px 20px -6px rgba(247, 25, 107, 0.40);
 }
 
 .stateCard {
@@ -2441,5 +2453,901 @@
   text-align: center;
   gap: 14px;
 }
+
+/* ==========================================================================
+   NAAM WELCOME & 8-STEP ONBOARDING FLOW (Exact Match to Reference Screens)
+   ========================================================================== */
+.onboardingFullBleed {
+  flex: 1;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  margin: -14px -20px 0 -20px;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Welcome Screen (Screen 0) */
+.welcomeHeroPhoto {
+  width: 100%;
+  flex: 1.58;
+  min-height: 0;
+  background-image: url("/assets/aistudio/onboarding_welcome_hero.png");
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.welcomeBottomCard {
+  flex: 1;
+  background-color: #ffffff;
+  padding: 26px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.welcomeTextGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.welcomeHeadline {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.16;
+  letter-spacing: -0.03em;
+  color: #1c1c1e;
+}
+
+.welcomeSubline {
+  margin: 0;
+  font-size: 15.5px;
+  font-weight: 400;
+  color: #6e6e73;
+  letter-spacing: -0.01em;
+}
+
+.welcomeActionsGroup {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.welcomePrimaryBtn {
+  width: 100%;
+  height: 56px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(90deg, #FA0B65 0%, #E50E62 100%);
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 24px -6px rgba(247, 25, 107, 0.42);
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.welcomePrimaryBtn:active {
+  transform: scale(0.985);
+  opacity: 0.94;
+}
+
+.welcomeLoginRow {
+  font-size: 15px;
+  color: #6e6e73;
+  font-weight: 400;
+}
+
+.welcomeLoginBtn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-left: 4px;
+  color: #F7196B;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.welcomeLegalFooter {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: #8e8e93;
+  max-width: 310px;
+}
+
+.welcomeLegalLink {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  color: #6e6e73;
+  cursor: pointer;
+}
+
+/* Steps 01 / 08 – 08 / 08 Wizard Container */
+.onboardingWizardScreen {
+  flex: 1;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  margin: -14px -20px 0 -20px;
+  padding: 14px 22px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.onboardingHeader {
+  display: grid;
+  grid-template-columns: 44px 1fr 54px;
+  align-items: center;
+  padding: 4px 0 14px;
+  flex-shrink: 0;
+}
+
+.onboardingBackBtn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: #2c2c2e;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  cursor: pointer;
+}
+
+.onboardingLogoCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.onboardingHeaderLogo {
+  height: 22px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.onboardingStepCounter {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6e6e73;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.onboardingProgressGrid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+  margin-bottom: 24px;
+  flex-shrink: 0;
+}
+
+.onboardingProgressSeg {
+  height: 3.5px;
+  border-radius: 999px;
+  background-color: #e5e5ea;
+  transition: background-color 0.2s ease;
+}
+
+.onboardingProgressSegDone {
+  background-color: #6e6e73;
+}
+
+.onboardingProgressSegActive {
+  background-color: #F7196B;
+}
+
+.onboardingBodyScroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 16px;
+}
+
+.onboardingBodyScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.onboardingTitle {
+  margin: 0;
+  font-size: 31px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: #1c1c1e;
+}
+
+.onboardingSubtitle {
+  margin: 8px 0 0;
+  font-size: 15.5px;
+  font-weight: 400;
+  color: #6e6e73;
+  line-height: 1.4;
+}
+
+.onboardingFieldLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1c1c1e;
+  margin-top: 26px;
+  margin-bottom: 10px;
+}
+
+.onboardingFieldLabelMuted {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6e6e73;
+  margin-top: 22px;
+  margin-bottom: 10px;
+}
+
+/* Step 01: Mobile Number Input */
+.onboardingPhoneBox {
+  height: 60px;
+  border-radius: 18px;
+  border: 1px solid #e4e4e7;
+  background-color: #ffffff;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.onboardingCountryBtn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 17px;
+  font-weight: 500;
+  color: #1c1c1e;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.onboardingPinkDivider {
+  width: 1.5px;
+  height: 24px;
+  background-color: #F7196B;
+  flex-shrink: 0;
+}
+
+.onboardingTextInput {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  font-weight: 400;
+  color: #1c1c1e;
+  outline: none;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+.onboardingInfoRow {
+  margin-top: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: #6e6e73;
+}
+
+.onboardingInfoIconGrey {
+  color: #8e8e93;
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.onboardingInfoIconPink {
+  color: #F7196B;
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Step 02: OTP Code */
+.onboardingMaskedRow {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.onboardingMaskedPhone {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1c1c1e;
+  font-variant-numeric: tabular-nums;
+}
+
+.onboardingPinkLinkBtn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: #F7196B;
+  font-size: 14.5px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.onboardingOtpGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.onboardingOtpCell {
+  height: 60px;
+  border-radius: 16px;
+  border: 1px solid #e4e4e7;
+  background-color: #ffffff;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.onboardingOtpCellActive {
+  border-color: #d4d4d8;
+}
+
+.onboardingOtpInput {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1c1c1e;
+  outline: none;
+  caret-color: #F7196B;
+  font-variant-numeric: tabular-nums;
+}
+
+.onboardingOtpPlaceholderCaret {
+  position: absolute;
+  width: 1.5px;
+  height: 22px;
+  background-color: #F7196B;
+  pointer-events: none;
+}
+
+.onboardingOtpPlaceholderDash {
+  position: absolute;
+  color: #F7196B;
+  font-size: 18px;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.onboardingResendRow {
+  margin-top: 22px;
+  font-size: 14.5px;
+  color: #6e6e73;
+}
+
+/* Step 03: Name & Birthday */
+.onboardingSingleInputBox {
+  height: 58px;
+  border-radius: 18px;
+  border: 1px solid #e4e4e7;
+  background-color: #ffffff;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+}
+
+.onboardingDobGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.onboardingDobCard {
+  border-radius: 18px;
+  border: 1px solid #e4e4e7;
+  background-color: #ffffff;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.onboardingDobSubLabel {
+  font-size: 12px;
+  font-weight: 400;
+  color: #6e6e73;
+}
+
+.onboardingDobInput {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  font-weight: 500;
+  color: #1c1c1e;
+  outline: none;
+  padding: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.onboardingAgePillBox {
+  margin-top: 16px;
+  height: 54px;
+  border-radius: 16px;
+  background-color: #f4f4f5;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  font-size: 15.5px;
+  font-weight: 600;
+  color: #1c1c1e;
+}
+
+/* Step 04 & 05: Gender & Looking For Radio Cards */
+.onboardingRadioStack {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.onboardingRadioCard {
+  width: 100%;
+  border-radius: 20px;
+  border: 1px solid #e4e4e7;
+  background-color: #ffffff;
+  padding: 18px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.16s ease;
+}
+
+.onboardingRadioCardSelected {
+  border: 1.5px solid #F7196B;
+}
+
+.onboardingRadioTopRow {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.onboardingRadioLabel {
+  font-size: 17px;
+  font-weight: 500;
+  color: #1c1c1e;
+}
+
+.onboardingRadioCircle {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  border: 1.5px solid #e4e4e7;
+  background-color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.onboardingRadioCircleSelected {
+  border-color: #F7196B;
+  background-color: #F7196B;
+}
+
+.onboardingRadioInnerDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background-color: #ffffff;
+}
+
+.onboardingRadioDetailWrap {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f1f4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.onboardingAddDetailText {
+  font-size: 14px;
+  font-weight: 500;
+  color: #F7196B;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.onboardingGenderToggleRow {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.onboardingGenderToggleLabel {
+  font-size: 15.5px;
+  font-weight: 500;
+  color: #1c1c1e;
+}
+
+/* Step 06: Add Your Photos */
+.onboardingPhotoGrid {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.onboardingPhotoCardFilled {
+  aspect-ratio: 3 / 4.15;
+  border-radius: 18px;
+  background-size: cover;
+  background-position: center;
+  background-color: #e4e4e7;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid rgba(9, 9, 11, 0.06);
+}
+
+.onboardingPhotoCardEmpty {
+  aspect-ratio: 3 / 4.15;
+  border-radius: 18px;
+  background-color: #fbf7f8;
+  border: 1.5px dashed #f0d6df;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.onboardingPhotoPlusIcon {
+  color: #F7196B;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.onboardingPhotoAddLabel {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #6e6e73;
+}
+
+.onboardingPhotoStatusRow {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.onboardingPhotoCountLeft {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #3a3a3c;
+}
+
+/* Step 07: Find People Nearby */
+.onboardingUseCityBtn {
+  margin-top: 24px;
+  width: 100%;
+  height: 54px;
+  border-radius: 999px;
+  border: 1.2px solid #f7bfd4;
+  background-color: #ffffff;
+  color: #F7196B;
+  font-size: 15.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.onboardingCitySelectBtn {
+  width: 100%;
+  height: 58px;
+  border-radius: 18px;
+  border: 1px solid #e4e4e7;
+  background-color: #ffffff;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.onboardingCityLeft {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16.5px;
+  font-weight: 500;
+  color: #1c1c1e;
+}
+
+.onboardingDistanceCard {
+  margin-top: 16px;
+  border-radius: 20px;
+  background-color: #f4f4f5;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.onboardingDistanceHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.onboardingDistanceLabel {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1c1c1e;
+}
+
+.onboardingDistanceVal {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1c1c1e;
+  font-variant-numeric: tabular-nums;
+}
+
+.onboardingSingleRangeWrap {
+  position: relative;
+  height: 28px;
+  display: flex;
+  align-items: center;
+}
+
+.onboardingSingleRangeTrack {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 5px;
+  border-radius: 999px;
+  background-color: #e4e4e7;
+}
+
+.onboardingSingleRangeFill {
+  position: absolute;
+  left: 0;
+  height: 5px;
+  border-radius: 999px;
+  background-color: #F7196B;
+}
+
+.onboardingSingleRangeInput {
+  position: relative;
+  width: 100%;
+  height: 5px;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  z-index: 2;
+}
+
+.onboardingSingleRangeInput::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background-color: #ffffff;
+  border: 5px solid #F7196B;
+  box-shadow: 0 2px 6px rgba(9, 9, 11, 0.16);
+  cursor: pointer;
+}
+
+.onboardingSingleRangeInput::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background-color: #ffffff;
+  border: 5px solid #F7196B;
+  box-shadow: 0 2px 6px rgba(9, 9, 11, 0.16);
+  cursor: pointer;
+}
+
+.onboardingDistanceMinMax {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: #8e8e93;
+}
+
+/* Step 08: Selfie Verification */
+.onboardingVerifyHeroCard {
+  margin-top: 22px;
+  border-radius: 22px;
+  background-color: #f4f4f5;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.onboardingVerifyCopyCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.onboardingVerifyCardTitle {
+  font-size: 16.5px;
+  font-weight: 700;
+  color: #1c1c1e;
+}
+
+.onboardingVerifyCardSub {
+  font-size: 14.5px;
+  line-height: 1.4;
+  color: #6e6e73;
+}
+
+.onboardingChecklistStack {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.onboardingChecklistRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 14.5px;
+  line-height: 1.42;
+  color: #1c1c1e;
+}
+
+.onboardingVerifyDivider {
+  height: 1px;
+  background-color: #efeff4;
+  margin: 22px 0 18px;
+}
+
+.onboardingConsentRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.onboardingCheckboxBtn {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1.5px solid #d4d4d8;
+  background-color: #ffffff;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 1px;
+}
+
+.onboardingCheckboxBtnChecked {
+  border-color: #F7196B;
+  background-color: #F7196B;
+}
+
+.onboardingConsentTextCol {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: #3a3a3c;
+}
+
+/* Sticky Bottom Footer Note & CTA Pill Button */
+.onboardingBottomFooter {
+  margin-top: auto;
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  background-color: #ffffff;
+}
+
+.onboardingFooterCaption {
+  margin: 0;
+  font-size: 12.5px;
+  color: #6e6e73;
+  text-align: center;
+}
+
+.onboardingCtaPillBtn {
+  width: 100%;
+  height: 58px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(90deg, #FA0B65 0%, #E50E62 100%);
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  padding: 0 26px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  box-shadow: 0 10px 24px -6px rgba(247, 25, 107, 0.42);
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.onboardingCtaPillBtn:active {
+  transform: scale(0.985);
+  opacity: 0.94;
+}
+
+.onboardingCtaPillBtn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
 
 

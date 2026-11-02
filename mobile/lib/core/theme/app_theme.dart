@@ -3,17 +3,18 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Design tokens for Naam (iOS & Android) matching the Figma design system:
+/// Design tokens for naam (iOS & Android) matching the updated brand identity:
 /// - Pure white background (#FFFFFF)
-/// - Naam primary rose-pink (#F01E65)
-/// - Deep charcoal ink (#18181B) and muted neutral (#71717A)
+/// - naam ribbon-heart hot magenta-rose (#F7196B)
+/// - Deep charcoal wordmark ink (#333333 / #18181B) and muted neutral (#71717A)
 abstract final class JDateTokens {
-  // Primary #F01E65 Naam Rose Accent & Deep Charcoal Ink
-  static const Color brandRose = Color(0xFFF01E65);
+  // Primary #F7196B naam Ribbon-Heart Magenta Accent & Deep Charcoal Ink
+  static const Color brandRose = Color(0xFFF7196B);
   static const Color solarYellow = Color(0xFFFACC15);
   static const Color conciergeCream = Color(0xFFFBF3D5);
   static const Color conciergeGold = Color(0xFFEAB308);
   static const Color pitchBlack = Color(0xFF18181B);
+  static const Color logoCharcoal = Color(0xFF333333);
   static const Color systemGreen = Color(0xFF34C759);
 
   // Solid Light Mode Surfaces
@@ -51,12 +52,12 @@ abstract final class JDateTokens {
 /// Light Mode Only theme provider.
 final themeModeProvider = Provider<ThemeMode>((ref) => ThemeMode.light);
 
-/// Official Naam Brand Wordmark widget rendering the bundled `assets/images/naam_logo.png`
-/// with a resilient typographic + heart fallback.
+/// Official naam Brand Wordmark widget rendering the bundled `assets/images/naam_logo.png`
+/// (horizontal lowercase `naam` + inline magenta ribbon heart) with a matching vector fallback.
 class NaamBrandLogo extends StatelessWidget {
   const NaamBrandLogo({
     super.key,
-    this.height = 32.0,
+    this.height = 20.0,
   });
 
   final double height;
@@ -68,41 +69,43 @@ class NaamBrandLogo extends StatelessWidget {
       height: height,
       fit: BoxFit.contain,
       errorBuilder: (context, error, stackTrace) {
-        return const _NaamVectorFallbackLogo();
+        return _NaamVectorFallbackLogo(height: height);
       },
     );
   }
 }
 
 class _NaamVectorFallbackLogo extends StatelessWidget {
-  const _NaamVectorFallbackLogo();
+  const _NaamVectorFallbackLogo({
+    this.height = 20.0,
+  });
+
+  final double height;
 
   @override
   Widget build(BuildContext context) {
+    final fontSize = height * 0.92;
     return SizedBox(
-      height: 36,
-      child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.bottomLeft,
+      height: height,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text(
-            'Naam',
+          Text(
+            'naam',
             style: TextStyle(
-              color: Color(0xFF27272A),
-              fontSize: 28,
-              fontWeight: FontWeight.w800,
-              letterSpacing: -1.0,
+              color: JDateTokens.logoCharcoal,
+              fontSize: fontSize,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.8,
               height: 1.0,
             ),
           ),
-          Positioned(
-            top: -2,
-            left: 30,
-            child: Icon(
-              Icons.favorite_rounded,
-              size: 13,
-              color: JDateTokens.brandRose,
-            ),
+          const SizedBox(width: 3),
+          Icon(
+            Icons.favorite_border_rounded,
+            size: fontSize * 0.88,
+            color: JDateTokens.brandRose,
           ),
         ],
       ),
@@ -211,7 +214,7 @@ class LiquidGlassOrbButton extends StatelessWidget {
               boxShadow: [
                 if (isPrimary)
                   const BoxShadow(
-                    color: Color(0x4DF01E65),
+                    color: Color(0x4DF7196B),
                     blurRadius: 20,
                     offset: Offset(0, 8),
                   )
@@ -237,7 +240,7 @@ class LiquidGlassOrbButton extends StatelessWidget {
   }
 }
 
-/// Light Mode theme with crisp white surfaces, #18181B typography, and #F01E65 Naam rose accents.
+/// Light Mode theme with crisp white surfaces, #18181B typography, and #F7196B naam magenta-rose accents.
 abstract final class AppTheme {
   static const Color yellowPrimary = JDateTokens.solarYellow;
   static const Color rosePrimary = JDateTokens.brandRose;

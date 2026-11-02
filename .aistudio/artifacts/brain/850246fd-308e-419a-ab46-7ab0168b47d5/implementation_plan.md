@@ -1,88 +1,102 @@
-# Naam — Viewport Fit, Twitter-Style Micro-Interactions, Liquid Glass Presence & Full-Screen Chat
+# Implementation Plan — `naam` Welcome & 8-Step Onboarding Flow
 
-This update eliminates vertical scrolling on the Discover screen so the 5 action buttons are always immediately visible in the viewport, adds Twitter/X-inspired radial burst and spring micro-interactions on the action buttons, replaces the solid pink Online badge with a translucent Liquid Glass presence pill (with a green dot for `"Online"` or `"Seen 1h ago"` / `"Seen 1d ago"` / `"Seen 2d ago"`), and upgrades the open conversation view into a true full-screen chat experience with no bottom navigation bar.
-
-## User Review & Critical Decisions
-
-> [!IMPORTANT]
-> All four improvements requested in your feedback are specified below and will be applied across both the interactive Next.js preview and the Flutter mobile app.
-
-- **Zero-Scroll Discover Viewport Fit**: The Discover stage locks to the exact height between the top header and bottom tab bar (`flex: 1; min-height: 0; overflow: hidden`), sizing the portrait card dynamically so the 5 action buttons (`Rewind`, `Skip`, `Love`, `Star`, `Message`) are always visible without scrolling while staying completely fixed across photo changes.
-- **Twitter/X-Style Button Micro-Interactions**: Tapping the **Love** button triggers a filled heart spring pop, an expanding crimson ring wave, and a radial 8-particle burst before gliding to the next profile. **Skip**, **Star**, and **Rewind** include matching tactile ring ripples and spring icon feedback.
-- **Liquid Glass Presence Pills (`Online` & `Seen ... ago`)**: Removed the solid pink `Online` badge on the Likes grid and Discover card. Presence is now displayed in a frosted Liquid Glass pill (`backdrop-filter: blur(16px) saturate(180%)`, subtle specular border) with a glowing emerald green dot (`#22C55E`) for `Online`, or a frosted glass pill showing `Seen 1h ago`, `Seen 1d ago`, or `Seen 2d ago`.
-- **Full-Screen Dedicated Chat Conversation View**: Opening any chat thread hides the bottom 4-tab navigation bar completely and renders a full-screen native chat layout with a sticky partner header (back button, avatar, name, verified icon, and live/last-seen status), full-bleed scrollable message stream with timestamps, and a docked bottom message composer bar.
+## 1. Overview & Entry Flow
+- **Launch State**: The application will start on the new **Welcome Screen** (`step 0`) and progress through the **8-Step Onboarding Flow** (`01 / 08` through `08 / 08`).
+- **Completion & Log In**:
+  - Completing Step `08 / 08` (`Capture selfie`) transitions into the main **naam** Discovery experience with all onboarding inputs (First Name, calculated Age, Gender, Relationship Intention, Photos, City & Distance, and Verified status) synced to the user's profile.
+  - Clicking `"Log in"` on the Welcome screen allows returning users to jump directly to the mobile number / OTP verification or into the app.
+  - A `"Replay Onboarding / Log out"` action in the Profile screen lets you revisit the Welcome and 8-step onboarding flow anytime.
+- **Brand Copy Alignment**: The legal/consent text in Steps `03 / 08` and `08 / 08` will use **naam** (`"naam is for adults aged 18 and over."` and `"I agree to naam using my selfie and profile photos..."`).
 
 ---
 
-## 1. Overview & Core Concept
+## 2. Screen-by-Screen Specification (Exact Match to Reference Screenshots)
 
-- **What It Does**: Delivers a zero-scroll, one-handed Discover experience, tactile Twitter-grade button micro-interactions, realistic Liquid Glass activity status indicators across Discover/Likes/Chat, and a distraction-free full-screen chat screen.
-- **Target Audience / Persona**: Intentional daters on iOS, Android, and mobile web expecting native-grade spatial polish and immediate visual feedback.
-- **Key Value**: Eliminates accidental scrolling to reach core swipe actions, clarifies user activity status with refined glassmorphic aesthetics, and gives conversations full vertical screen real estate.
+### Screen 0: Welcome Screen (`image_2972c48f.png`)
+- **Top 62% Hero Image**: Full-bleed lifestyle photo of the Malayali couple holding chai and vada against the bright blue sky, with the white `naam` + hot-pink ribbon heart logo centered at the top.
+- **Bottom 38% White Sheet**:
+  - Centered bold headline: `"Someone new.\nSomething familiar."`
+  - Subtitle: `"Meet Malayali singles who get you."`
+  - Full-width gradient pill CTA (`linear-gradient(90deg, #FA0B65, #E21162)`): `"Let's begin"`
+  - Secondary row: `"Already here? "` + hot-pink `"Log in"` action
+  - Legal footer: `"For adults 18+ · By continuing, you agree to our Terms and Privacy Policy."` with underlined `Terms` and `Privacy Policy`.
+
+### Shared Onboarding Header (`01 / 08` – `08 / 08`)
+- **Top Row**: Left back button (`←`), centered `naam` logo (`/assets/aistudio/image_cd9da323.png`), right tabular step counter (`01 / 08` to `08 / 08`).
+- **8-Segment Progress Bar**:
+  - Completed segments (`< currentStep`): dark charcoal grey (`#6E6E73`)
+  - Active segment (`=== currentStep`): hot pink (`#F7196B`)
+  - Upcoming segments (`> currentStep`): soft light grey (`#E5E5EA`)
+- **Bottom Sticky Action Bar**: Full-width rounded pill button (`height: 58px`, `#F7196B` gradient) with left-aligned label and right-aligned `→` arrow.
+
+### Step `01 / 08` — Mobile Number (`image_5d3a073c.png`)
+- **Heading**: `"Your number?"` & subtitle `"We'll send a one-time code to this number."`
+- **Input Card**: `"Mobile number"` label above a rounded `20px` input container with country code selector (`+91` + pink chevron), pink vertical divider, and phone number input (`98765 43210`).
+- **Privacy Note**: Outline lock icon + `"Your number stays private. It's only for sign-in and verification."`
+- **CTA**: `"Send SMS code"` + `→`.
+
+### Step `02 / 08` — Enter Your Code (`image_5a5ea85b.png`)
+- **Heading**: `"Enter your code"` & subtitle `"We sent a 6-digit code by SMS."`
+- **Number Bar**: Masked number (`+91 ••••• •3210`) on the left and underlined pink `"Change number"` button on the right (returns to Step 01).
+- **OTP Grid**: `"SMS code"` label + 6 individual rounded digit boxes (`52×60px`), active box showing a pink vertical caret and empty boxes showing a pink dash (`-`), with auto-advance on digit entry.
+- **Resend Prompt**: `"Didn't get a text? "` + underlined pink `"Resend code"`.
+- **CTA**: `"Verify & continue"` + `→`.
+
+### Step `03 / 08` — Name & Birthday (`image_262f4179.png`)
+- **Heading**: `"A little about you"` & subtitle `"Let's start with your name and birthday."`
+- **First Name**: `"First name"` label + rounded input box (`Anjali`).
+- **Date of Birth**: `"Date of birth"` label + 3 side-by-side rounded cards (`Day` `14`, `Month` `06`, `Year` `1998`) with stacked muted label and bold numeric input.
+- **Calculated Age Banner**: Soft grey rounded card (`#F4F4F5`) displaying `"You're 28 years old"` dynamically calculated from the entered date of birth.
+- **Privacy Note**: Pink lock icon + `"Only your age appears on your profile—not your birthday."`
+- **Footer Note**: `"naam is for adults aged 18 and over."` above `"Continue"` + `→`.
+
+### Step `04 / 08` — Your Gender (`image_46ecb583.png`)
+- **Heading**: `"Your gender"` & subtitle `"Choose what feels right for you."`
+- **Selectable Cards**: `"Woman"`, `"Man"`, `"Non-binary"`.
+  - Selected card has a `1.5px` `#F7196B` border, pink filled radio indicator, subtle horizontal divider, and `"＋ Add more detail"` link in hot pink.
+  - Unselected cards have a `1px` `#E4E4E7` border and empty radio circle.
+- **Visibility Toggle**: `"Show gender on my profile"` with a hot-pink iOS switch.
+- **Footer Note**: `"You can change this anytime in your profile."` above `"Continue"` + `→`.
+
+### Step `05 / 08` — Looking For (`image_ef7e5dd8.png`)
+- **Heading**: `"Looking for..."` & subtitle `"Choose the connection you want."`
+- **Selectable Cards**:
+  - `"Open-minded relationship"`
+  - `"Serious relationship"` (default selected, `#F7196B` border + pink radio indicator)
+  - `"Casual"`
+- **Footer Note**: `"You can change this anytime in your profile."` above `"Continue"` + `→`.
+
+### Step `06 / 08` — Add Your Photos (`image_c1814247.png`)
+- **Heading**: `"Add your photos"` & subtitle `"Tap to edit · Drag to reorder"`
+- **3×2 Portrait Photo Grid** (6 slots, `3:4` aspect ratio, `18px` radius):
+  - Pre-populated with 3 portrait photos (matching the screenshot's `"3 of 6 added"` state) and interactive add/remove/reorder support.
+  - Filled slots display a top-right circular white pencil edit button; slot 1 includes a bottom-left dark frosted pill `"Main photo"`.
+  - Empty slots (`#FBF8F9`) display a pink `+` icon and `"Add photo"` caption.
+- **Counter & Tips Row**: Pink check-circle icon + `"3 of 6 added"` on the left, underlined pink `"Photo tips"` link on the right.
+- **Guidance Row**: Pink image icon + `"Add 2–6 recent photos. A clear face photo first."`
+- **CTA**: `"Continue with 3 photos"` (dynamically updates with photo count) + `→`.
+
+### Step `07 / 08` — Find People Nearby (`image_a690a48c.png`)
+- **Heading**: `"Find people nearby"` & subtitle `"Choose your city and distance."`
+- **Current City Button**: Full-width pill button with pink border (`#F9C8D9`), pink GPS target icon, and pink label `"Use my current city"`.
+- **City Dropdown**: `"Or choose your city"` label + rounded selector box with pin icon, `"Kochi, Kerala"` (selectable across Kerala/Malayali hub cities), and chevron.
+- **Preferred Distance Card**: Soft grey card (`#F5F5F6`) with `"Preferred distance"` on the left, bold `"25 km"` on the right, interactive hot-pink range slider (`5 km` to `100 km`), and min/max captions.
+- **Privacy Note**: Grey lock icon + `"Only your approximate city is shown. Your distance preference stays private."`
+- **CTA**: `"Continue"` + `→`.
+
+### Step `08 / 08` — Selfie Verification (`image_8eacebb1.png`)
+- **Heading**: `"Let's verify it's you"` & subtitle `"A quick selfie helps confirm your identity."`
+- **Guide Card**: Soft grey rounded card (`#F4F4F5`) with minimalist face-oval illustration on the left and `"Just you, clearly."` + `"Centre your whole face inside the guide."` on the right.
+- **3 Checklist Items**:
+  - Sun icon: `"Good light. Face clear and in focus."`
+  - Person icon: `"No sunglasses, masks, filters or other people."`
+  - Lock icon: `"We compare your selfie with your photos. It won't appear on your profile."`
+- **Consent Checkbox**: Divider line + pink checked rounded square checkbox + `"I agree to naam using my selfie and profile photos for this identity check, as described in the Privacy Policy."` + underlined pink `"Read the Privacy Policy"`.
+- **Footer Note**: `"Your phone will ask for camera access next."` above `"Capture selfie"` + `→`.
 
 ---
 
-## 2. User Experience & Visual Design
-
-- **Key User Flows**:
-  - **Discover (Zero-Scroll Viewport & Presence)**:
-    - The top bar, portrait card, and 5 circular action buttons fit 100% within `100dvh` with no vertical scrollbar.
-    - A translucent **Liquid Glass presence pill** sits at the top-left of the portrait card (below the story indicator bars) showing either a glowing green dot + `Online` or `Seen 1h ago` / `Seen 1d ago` / `Seen 2d ago`.
-    - Tapping **Love** triggers an immediate Twitter-style heart fill, expanding ring ripple, and 8-dot radial confetti burst (`220ms`) synchronized with a smooth card glide.
-  - **Likes Grid (Liquid Glass Online & Last Seen Badges)**:
-    - Each card in the 2-column Likes grid displays the new translucent Liquid Glass presence pill (emerald green dot + `Online`, or frosted `Seen 1h ago` / `Seen 1d ago` / `Seen 2d ago`) alongside the frosted `Verified` badge—with zero pink background fill on the Online badge.
-  - **Full-Screen Inside-Chat Experience**:
-    - Tapping any match or conversation row opens a full-bleed screen that **hides the bottom 4-tab navigation bar**.
-    - Includes a sticky glass header (Back button, tappable partner avatar & name, Verified badge, and `Online` / `Seen ... ago` subtitle), a scrollable message canvas with date/match context pills and read timestamps, and a docked bottom composer capsule.
-
-- **Visual Identity & Theme**:
-  - *Liquid Glass Presence Pill*: `background: rgba(15, 15, 20, 0.42)`, `backdrop-filter: blur(16px) saturate(180%)`, `border: 1px solid rgba(255, 255, 255, 0.24)`, `box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25)`, crisp white typography (`11px`, `600` weight), and `#22C55E` emerald dot with soft outer glow (`0 0 8px rgba(34, 197, 94, 0.8)`).
-  - *Twitter-Style Heart Burst*: `#F93666` primary heart fill with radial micro-particles in `#F93666`, `#FF6B8B`, `#FFB3C6`, and `#F59E0B` expanding outward over `220ms` (`cubic-bezier(0.16, 1, 0.3, 1)`).
-
----
-
-## 3. Key Product Decisions & Trade-Offs
-
-- **Decision 1: Dynamic Flex Viewport Sizing (`flex: 1; min-height: 0`) vs. Hardcoded `500px` Card Height**
-  - *Chosen Approach*: Use `flex: 1; min-height: 0` on the portrait card inside a locked non-scrolling Discover stage (`overflow: hidden`), while keeping the bottom identity overlay height fixed (`92px`).
-  - *Why*: Guarantees the portrait card fills the maximum available height on any mobile or desktop preview screen without ever pushing the 5 action buttons below the fold, while ensuring photo-to-photo transitions never shift layout geometry.
-- **Decision 2: Full-Screen Modal Route for Open Chat Threads**
-  - *Chosen Approach*: Conditionally suppress the bottom tab bar whenever `fullScreenChatThread` (or `fullScreenProfile`) is active, and anchor the message composer directly to the bottom safe area.
-  - *Why*: Matches iOS/Android messaging standards (iMessage, WhatsApp, Hinge) where open conversations occupy the entire screen without tab bar clutter.
-
----
-
-## 4. Technical Architecture & Data Strategy *(Technical Reference)*
-
-### Architecture & Component Diagram
-
-```
-┌──────────────────────────────────────────────────────────────────────────┐
-│                     Naam Mobile Viewport (100dvh)                        │
-├───────────────────────────────────┬──────────────────────────────────────┤
-│   Standard 4-Tab Shell            │   Full-Screen Dedicated Chat View    │
-│   (Bottom Tab Bar Visible)        │   (Bottom Tab Bar Hidden)            │
-│                                   │                                      │
-│  ┌─────────────────────────────┐  │  ┌────────────────────────────────┐  │
-│  │ Discover Stage (No Scroll)  │  │  │ Sticky Chat Partner Header     │  │
-│  │ ├─ Flex-1 Portrait Card     │  │  │ ├─ Back Button                 │  │
-│  │ │  ├─ Story Bars            │  │  │ ├─ Avatar + Name + Verified    │  │
-│  │ │  ├─ Liquid Glass Presence │  │  │ └─ Green Dot Online / Seen Ago │  │
-│  │ │  └─ Fixed 92px Bio Stack  │  │  ├────────────────────────────────┤  │
-│  │ └─ Docked 5-Action Row      │  │  │ Full-Bleed Message Stream      │  │
-│  │    └─ Twitter Burst Effect  │  │  │ ├─ Match Context Pill          │  │
-│  ├─────────────────────────────┤  │  │ └─ Timestamped Chat Bubbles    │  │
-│  │ Likes Grid                  │  │  ├────────────────────────────────┤  │
-│  │ └─ Liquid Glass Status Pill │  │  │ Docked Bottom Composer Bar     │  │
-│  └─────────────────────────────┘  │  └────────────────────────────────┘  │
-└───────────────────────────────────┴──────────────────────────────────────┘
-```
-
-### Data Model & Presence Mapping
-
-- **`CandidateProfile` Presence Field (`lastSeenLabel: string`)**:
-  - Online candidates (`isOnline: true`): Display `Online` with a glowing `#22C55E` emerald dot inside the Liquid Glass pill.
-  - Offline candidates (`isOnline: false`): Display realistic relative timestamps (`Seen 1h ago`, `Seen 1d ago`, `Seen 2d ago`) with a soft frosted glass dot inside the Liquid Glass pill.
-- **Interactive State Transitions**:
-  - Clicking **Love**, **Skip**, **Star**, or **Rewind** triggers `burstAction` state on the clicked button (rendering the radial particle ring + icon spring animation) while smoothly transitioning the card deck.
-  - Opening a chat thread sets `fullScreenChatThread`, immediately hiding `.bottomTabBarWrapper` and mounting the full-screen chat layout with auto-scroll to the latest message.
+## 3. Files to Update
+- `/frontend/public/assets/aistudio/` — Copy the onboarding reference assets so the Welcome hero photography is served cleanly by Next.js.
+- `/frontend/src/pages/index.tsx` & `/frontend/src/styles/Home.module.css` — Implement the Welcome screen and 8-step onboarding wizard with pixel-accurate layout, typography, colors, and interactive state synced to the user's profile.
+- `/mobile/lib/features/onboarding/onboarding_screen.dart` — Sync the Flutter onboarding implementation to match the exact 8-step flow.

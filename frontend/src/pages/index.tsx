@@ -380,13 +380,13 @@ const ChevronLeftIcon = ({ size = 20 }: { size?: number }) => (
 );
 
 const TWITTER_BURST_PARTICLES = [
-  { tx: "0px", ty: "-42px", color: "#ff1f6d" },
-  { tx: "30px", ty: "-30px", color: "#fb7185" },
-  { tx: "42px", ty: "0px", color: "#f43f5e" },
+  { tx: "0px", ty: "-42px", color: "#F7196B" },
+  { tx: "30px", ty: "-30px", color: "#FF4D8D" },
+  { tx: "42px", ty: "0px", color: "#F7196B" },
   { tx: "30px", ty: "30px", color: "#f59e0b" },
-  { tx: "0px", ty: "42px", color: "#ff1f6d" },
+  { tx: "0px", ty: "42px", color: "#FF126B" },
   { tx: "-30px", ty: "30px", color: "#ec4899" },
-  { tx: "-42px", ty: "0px", color: "#f43f5e" },
+  { tx: "-42px", ty: "0px", color: "#F7196B" },
   { tx: "-30px", ty: "-30px", color: "#fbbf24" },
 ];
 
@@ -752,7 +752,270 @@ const FILTER_ACCORDION_SECTIONS: {
   },
 ];
 
+/* Onboarding Vector Icons */
+const OnboardingBackArrowIcon = ({ size = 22 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.9"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M19 12H5" />
+    <path d="m11 18-6-6 6-6" />
+  </svg>
+);
+
+const OnboardingRightArrowIcon = ({ size = 20 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.1"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M5 12h14" />
+    <path d="m13 6 6 6-6 6" />
+  </svg>
+);
+
+const OnboardingLockIcon = ({ size = 18 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect x="4" y="11" width="16" height="10" rx="2.5" />
+    <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+    <circle cx="12" cy="16" r="1" fill="currentColor" />
+  </svg>
+);
+
+const OnboardingCheckCircleIcon = ({ size = 18 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.9"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="12" cy="12" r="9" />
+    <path d="m8.5 12.2 2.3 2.3 4.8-4.8" />
+  </svg>
+);
+
+const OnboardingGalleryIcon = ({ size = 18 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect x="3" y="4" width="18" height="16" rx="3" />
+    <circle cx="8.5" cy="9.5" r="1.5" />
+    <path d="m21 15-4.5-4.5L7 20" />
+  </svg>
+);
+
+const OnboardingTargetIcon = ({ size = 18 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.9"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="12" cy="12" r="7" />
+    <circle cx="12" cy="12" r="2.5" />
+    <path d="M12 2v3" />
+    <path d="M12 19v3" />
+    <path d="M2 12h3" />
+    <path d="M19 12h3" />
+  </svg>
+);
+
+const OnboardingPinIcon = ({ size = 18 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M12 21s-6-5.2-6-10a6 6 0 1 1 12 0c0 4.8-6 10-6 10Z" />
+    <circle cx="12" cy="11" r="2.2" />
+  </svg>
+);
+
+const OnboardingSunIcon = ({ size = 20 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2.2" />
+    <path d="M12 19.8V22" />
+    <path d="m4.9 4.9 1.6 1.6" />
+    <path d="m17.5 17.5 1.6 1.6" />
+    <path d="M2 12h2.2" />
+    <path d="M19.8 12H22" />
+    <path d="m4.9 19.1 1.6-1.6" />
+    <path d="m17.5 6.5 1.6-1.6" />
+  </svg>
+);
+
+const OnboardingPersonIcon = ({ size = 20 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="12" cy="8" r="3.6" />
+    <path d="M5.5 20a6.5 6.5 0 0 1 13 0" />
+  </svg>
+);
+
+const OnboardingFaceGuideIllustration = () => (
+  <svg
+    width="68"
+    height="82"
+    viewBox="0 0 68 82"
+    fill="none"
+    style={{ flexShrink: 0 }}
+  >
+    {/* Corner framing brackets */}
+    <path
+      d="M8 18V11C8 8.8 9.8 7 12 7H19"
+      stroke="#A1A1AA"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M49 7H56C58.2 7 60 8.8 60 11V18"
+      stroke="#A1A1AA"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M8 64V71C8 73.2 9.8 75 12 75H19"
+      stroke="#A1A1AA"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M49 75H56C58.2 75 60 73.2 60 71V64"
+      stroke="#A1A1AA"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    {/* Outer oval guide */}
+    <ellipse
+      cx="34"
+      cy="41"
+      rx="22"
+      ry="28"
+      stroke="#8E8E93"
+      strokeWidth="1.5"
+    />
+    {/* Minimalist face & shoulders inside oval */}
+    <circle
+      cx="34"
+      cy="33"
+      r="7.5"
+      stroke="#71717A"
+      strokeWidth="1.5"
+    />
+    <path
+      d="M21.5 55C23.5 48.5 28.2 45 34 45C39.8 45 44.5 48.5 46.5 55"
+      stroke="#71717A"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+const ONBOARDING_CITIES = [
+  "Kochi, Kerala",
+  "Trivandrum, Kerala",
+  "Kozhikode, Kerala",
+  "Kottayam, Kerala",
+  "Thrissur, Kerala",
+  "Bengaluru, Karnataka",
+  "Chennai, Tamil Nadu",
+  "Mumbai, Maharashtra",
+];
+
 const Home: NextPage = () => {
+  // Welcome (0) + 8-Step Onboarding Flow (1..8), or "done" when inside the main app
+  const [onboardingStep, setOnboardingStep] = useState<number | "done">(0);
+  const [obCountryCode, setObCountryCode] = useState<string>("+91");
+  const [obPhoneNumber, setObPhoneNumber] = useState<string>("98765 43210");
+  const [obOtpDigits, setObOtpDigits] = useState<string[]>([
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+  ]);
+  const [obFocusedOtpIdx, setObFocusedOtpIdx] = useState<number>(0);
+  const [obFirstName, setObFirstName] = useState<string>("Anjali");
+  const [obDobDay, setObDobDay] = useState<string>("14");
+  const [obDobMonth, setObDobMonth] = useState<string>("06");
+  const [obDobYear, setObDobYear] = useState<string>("1998");
+  const [obGender, setObGender] = useState<"Woman" | "Man" | "Non-binary">(
+    "Woman"
+  );
+  const [obGenderDetail, setObGenderDetail] = useState<string>("");
+  const [obShowGenderOnProfile, setObShowGenderOnProfile] =
+    useState<boolean>(true);
+  const [obLookingFor, setObLookingFor] = useState<
+    "Open-minded relationship" | "Serious relationship" | "Casual"
+  >("Serious relationship");
+  const [obPhotos, setObPhotos] = useState<string[]>([
+    "/assets/aistudio/onboarding_photo_1.png",
+    "/assets/aistudio/onboarding_photo_2.png",
+    "/assets/aistudio/onboarding_photo_3.png",
+  ]);
+  const [obCity, setObCity] = useState<string>("Kochi, Kerala");
+  const [obDistanceKm, setObDistanceKm] = useState<number>(25);
+  const [obSelfieConsent, setObSelfieConsent] = useState<boolean>(true);
+
   const [activeTab, setActiveTab] = useState<ActiveTab>("discover");
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
 
@@ -1142,20 +1405,999 @@ const Home: NextPage = () => {
 
   const unreadThreadCount = threads.filter((t) => t.unread).length;
 
+  // Calculate dynamic age from onboarding Date of Birth (defaults to 28 for 14 / 06 / 1998)
+  const parsedBirthYear = parseInt(obDobYear, 10);
+  const calculatedOnboardingAge =
+    !Number.isNaN(parsedBirthYear) &&
+    parsedBirthYear >= 1940 &&
+    parsedBirthYear <= 2008
+      ? Math.max(18, 2026 - parsedBirthYear)
+      : 28;
+
+  // Masked phone number for Step 02 / 08 (e.g., "+91 ••••• •3210")
+  const digitsOnlyPhone = obPhoneNumber.replace(/\D/g, "");
+  const lastFourPhone =
+    digitsOnlyPhone.length >= 4 ? digitsOnlyPhone.slice(-4) : "3210";
+  const maskedPhoneDisplay = `${obCountryCode} ••••• •${lastFourPhone}`;
+
+  const handleCompleteOnboarding = () => {
+    const cleanName = obFirstName.trim() || "Anjali";
+    setUserName(cleanName);
+    setUserAge(calculatedOnboardingAge);
+    setUserPhone(`${obCountryCode} ${obPhoneNumber.trim() || "98765 43210"}`);
+    setUserNeighborhood(obCity);
+    if (obPhotos.length > 0) {
+      setMyPhotos(obPhotos);
+    }
+    setIsViewerVerified(true);
+    setOnboardingStep("done");
+    setActiveTab("discover");
+    showToast(`Welcome to naam, ${cleanName}!`);
+  };
+
+  const handleOnboardingPhotoTap = (slotIndex: number) => {
+    if (slotIndex < obPhotos.length) {
+      if (obPhotos.length > 2) {
+        setObPhotos((prev) => prev.filter((_, idx) => idx !== slotIndex));
+      } else {
+        const nextPreset =
+          EXTRA_PORTRAIT_PRESETS[
+            (slotIndex + obPhotos.length) % EXTRA_PORTRAIT_PRESETS.length
+          ];
+        setObPhotos((prev) =>
+          prev.map((url, idx) => (idx === slotIndex ? nextPreset : url))
+        );
+      }
+    } else if (obPhotos.length < 6) {
+      const nextPreset =
+        EXTRA_PORTRAIT_PRESETS[obPhotos.length % EXTRA_PORTRAIT_PRESETS.length];
+      setObPhotos((prev) => [...prev, nextPreset]);
+    }
+  };
+
   return (
     <>
       <Head>
-        <title>jdate — Intentional Dating</title>
+        <title>naam — Intentional Dating</title>
         <meta
           name="description"
-          content="JDATE modern intentional dating experience."
+          content="naam modern intentional dating experience."
         />
       </Head>
 
       <div className={`${styles.viewportRoot} ${styles.pearlTheme}`}>
         <div className={styles.mobileCanvas}>
-          {/* FULL-SCREEN NORMAL PAGE 1: Candidate Full Profile Detail Page */}
-          {fullScreenProfile ? (
+          {/* WELCOME & 8-STEP ONBOARDING FLOW (Screens 0 to 8) */}
+          {onboardingStep !== "done" ? (
+            onboardingStep === 0 ? (
+              /* SCREEN 0: Welcome Screen (Matches image_2972c48f.png) */
+              <section className={styles.onboardingFullBleed}>
+                <div
+                  className={styles.welcomeHeroPhoto}
+                  role="img"
+                  aria-label="naam Malayali couple enjoying chai and vada under a blue sky"
+                />
+
+                <div className={styles.welcomeBottomCard}>
+                  <div className={styles.welcomeTextGroup}>
+                    <h1 className={styles.welcomeHeadline}>
+                      Someone new.
+                      <br />
+                      Something familiar.
+                    </h1>
+                    <p className={styles.welcomeSubline}>
+                      Meet Malayali singles who get you.
+                    </p>
+                  </div>
+
+                  <div className={styles.welcomeActionsGroup}>
+                    <button
+                      type="button"
+                      className={styles.welcomePrimaryBtn}
+                      onClick={() => setOnboardingStep(1)}
+                    >
+                      Let&apos;s begin
+                    </button>
+
+                    <div className={styles.welcomeLoginRow}>
+                      <span>Already here?</span>
+                      <button
+                        type="button"
+                        className={styles.welcomeLoginBtn}
+                        onClick={() => setOnboardingStep(1)}
+                      >
+                        Log in
+                      </button>
+                    </div>
+                  </div>
+
+                  <p className={styles.welcomeLegalFooter}>
+                    For adults 18+ · By continuing, you agree to our{" "}
+                    <span className={styles.welcomeLegalLink}>Terms</span> and{" "}
+                    <span className={styles.welcomeLegalLink}>
+                      Privacy Policy
+                    </span>
+                    .
+                  </p>
+                </div>
+              </section>
+            ) : (
+              /* STEPS 01 / 08 – 08 / 08 WIZARD */
+              <section className={styles.onboardingWizardScreen}>
+                {/* Shared Top Header: Back Arrow + Centered naam Logo + Step Counter */}
+                <header className={styles.onboardingHeader}>
+                  <button
+                    type="button"
+                    className={styles.onboardingBackBtn}
+                    onClick={() =>
+                      setOnboardingStep((prev) =>
+                        typeof prev === "number" && prev > 1 ? prev - 1 : 0
+                      )
+                    }
+                    aria-label="Go back"
+                  >
+                    <OnboardingBackArrowIcon size={22} />
+                  </button>
+
+                  <div className={styles.onboardingLogoCenter}>
+                    <img
+                      src="/assets/aistudio/image_cd9da323.png"
+                      alt="naam"
+                      className={styles.onboardingHeaderLogo}
+                    />
+                  </div>
+
+                  <div className={styles.onboardingStepCounter}>
+                    {`0${onboardingStep} / 08`}
+                  </div>
+                </header>
+
+                {/* 8-Segment Horizontal Progress Bar */}
+                <div className={styles.onboardingProgressGrid}>
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((seg) => (
+                    <div
+                      key={seg}
+                      className={`${styles.onboardingProgressSeg} ${
+                        typeof onboardingStep === "number" &&
+                        seg < onboardingStep
+                          ? styles.onboardingProgressSegDone
+                          : seg === onboardingStep
+                            ? styles.onboardingProgressSegActive
+                            : ""
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                {/* STEP 01 / 08: Mobile Number (Matches image_5d3a073c.png) */}
+                {onboardingStep === 1 && (
+                  <>
+                    <div className={styles.onboardingBodyScroll}>
+                      <h1 className={styles.onboardingTitle}>Your number?</h1>
+                      <p className={styles.onboardingSubtitle}>
+                        We&apos;ll send a one-time code to this number.
+                      </p>
+
+                      <div className={styles.onboardingFieldLabel}>
+                        Mobile number
+                      </div>
+
+                      <div className={styles.onboardingPhoneBox}>
+                        <button
+                          type="button"
+                          className={styles.onboardingCountryBtn}
+                          onClick={() =>
+                            setObCountryCode((prev) =>
+                              prev === "+91"
+                                ? "+971"
+                                : prev === "+971"
+                                  ? "+44"
+                                  : prev === "+44"
+                                    ? "+1"
+                                    : "+91"
+                            )
+                          }
+                        >
+                          <span>{obCountryCode}</span>
+                          <span
+                            style={{
+                              color: "#F7196B",
+                              display: "inline-flex",
+                            }}
+                          >
+                            <ChevronDownIcon size={16} />
+                          </span>
+                        </button>
+
+                        <span className={styles.onboardingPinkDivider} />
+
+                        <input
+                          type="tel"
+                          className={styles.onboardingTextInput}
+                          value={obPhoneNumber}
+                          onChange={(e) => setObPhoneNumber(e.target.value)}
+                          placeholder="98765 43210"
+                          aria-label="Mobile number"
+                        />
+                      </div>
+
+                      <div className={styles.onboardingInfoRow}>
+                        <span className={styles.onboardingInfoIconGrey}>
+                          <OnboardingLockIcon size={17} />
+                        </span>
+                        <span>
+                          Your number stays private. It&apos;s only for sign-in
+                          and verification.
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className={styles.onboardingBottomFooter}>
+                      <button
+                        type="button"
+                        className={styles.onboardingCtaPillBtn}
+                        onClick={() => setOnboardingStep(2)}
+                      >
+                        <span>Send SMS code</span>
+                        <OnboardingRightArrowIcon size={20} />
+                      </button>
+                    </div>
+                  </>
+                )}
+
+                {/* STEP 02 / 08: Enter Your Code (Matches image_5a5ea85b.png) */}
+                {onboardingStep === 2 && (
+                  <>
+                    <div className={styles.onboardingBodyScroll}>
+                      <h1 className={styles.onboardingTitle}>
+                        Enter your code
+                      </h1>
+                      <p className={styles.onboardingSubtitle}>
+                        We sent a 6-digit code by SMS.
+                      </p>
+
+                      <div className={styles.onboardingMaskedRow}>
+                        <span className={styles.onboardingMaskedPhone}>
+                          {maskedPhoneDisplay}
+                        </span>
+                        <button
+                          type="button"
+                          className={styles.onboardingPinkLinkBtn}
+                          onClick={() => setOnboardingStep(1)}
+                        >
+                          Change number
+                        </button>
+                      </div>
+
+                      <div className={styles.onboardingFieldLabel}>
+                        SMS code
+                      </div>
+
+                      <div className={styles.onboardingOtpGrid}>
+                        {obOtpDigits.map((digit, idx) => {
+                          const isEmpty = !digit;
+                          const isFirstEmpty =
+                            isEmpty &&
+                            obOtpDigits.findIndex((d) => !d) === idx;
+                          const showCaret =
+                            isEmpty &&
+                            (obFocusedOtpIdx === idx || isFirstEmpty);
+
+                          return (
+                            <div
+                              key={idx}
+                              className={`${styles.onboardingOtpCell} ${
+                                obFocusedOtpIdx === idx
+                                  ? styles.onboardingOtpCellActive
+                                  : ""
+                              }`}
+                            >
+                              {showCaret ? (
+                                <span
+                                  className={
+                                    styles.onboardingOtpPlaceholderCaret
+                                  }
+                                />
+                              ) : isEmpty ? (
+                                <span
+                                  className={
+                                    styles.onboardingOtpPlaceholderDash
+                                  }
+                                >
+                                  –
+                                </span>
+                              ) : null}
+                              <input
+                                id={`ob-otp-${idx}`}
+                                type="text"
+                                inputMode="numeric"
+                                maxLength={1}
+                                className={styles.onboardingOtpInput}
+                                value={digit}
+                                onFocus={() => setObFocusedOtpIdx(idx)}
+                                onChange={(e) => {
+                                  const val = e.target.value.replace(
+                                    /\D/g,
+                                    ""
+                                  );
+                                  const next = [...obOtpDigits];
+                                  next[idx] = val.slice(-1);
+                                  setObOtpDigits(next);
+                                  if (val && idx < 5) {
+                                    setObFocusedOtpIdx(idx + 1);
+                                    const nextEl = document.getElementById(
+                                      `ob-otp-${idx + 1}`
+                                    );
+                                    nextEl?.focus();
+                                  }
+                                }}
+                                onKeyDown={(e) => {
+                                  if (
+                                    e.key === "Backspace" &&
+                                    !obOtpDigits[idx] &&
+                                    idx > 0
+                                  ) {
+                                    setObFocusedOtpIdx(idx - 1);
+                                    const prevEl = document.getElementById(
+                                      `ob-otp-${idx - 1}`
+                                    );
+                                    prevEl?.focus();
+                                  }
+                                }}
+                                aria-label={`Digit ${idx + 1}`}
+                              />
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      <div className={styles.onboardingResendRow}>
+                        <span>Didn&apos;t get a text? </span>
+                        <button
+                          type="button"
+                          className={styles.onboardingPinkLinkBtn}
+                          onClick={() =>
+                            setObOtpDigits(["4", "8", "2", "9", "1", "6"])
+                          }
+                        >
+                          Resend code
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className={styles.onboardingBottomFooter}>
+                      <button
+                        type="button"
+                        className={styles.onboardingCtaPillBtn}
+                        onClick={() => setOnboardingStep(3)}
+                      >
+                        <span>Verify &amp; continue</span>
+                        <OnboardingRightArrowIcon size={20} />
+                      </button>
+                    </div>
+                  </>
+                )}
+
+                {/* STEP 03 / 08: A Little About You (Matches image_262f4179.png) */}
+                {onboardingStep === 3 && (
+                  <>
+                    <div className={styles.onboardingBodyScroll}>
+                      <h1 className={styles.onboardingTitle}>
+                        A little about you
+                      </h1>
+                      <p className={styles.onboardingSubtitle}>
+                        Let&apos;s start with your name and birthday.
+                      </p>
+
+                      <div className={styles.onboardingFieldLabel}>
+                        First name
+                      </div>
+                      <div className={styles.onboardingSingleInputBox}>
+                        <input
+                          type="text"
+                          className={styles.onboardingTextInput}
+                          value={obFirstName}
+                          onChange={(e) => setObFirstName(e.target.value)}
+                          placeholder="Anjali"
+                          aria-label="First name"
+                        />
+                      </div>
+
+                      <div className={styles.onboardingFieldLabel}>
+                        Date of birth
+                      </div>
+                      <div className={styles.onboardingDobGrid}>
+                        <label className={styles.onboardingDobCard}>
+                          <span className={styles.onboardingDobSubLabel}>
+                            Day
+                          </span>
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            maxLength={2}
+                            className={styles.onboardingDobInput}
+                            value={obDobDay}
+                            onChange={(e) =>
+                              setObDobDay(e.target.value.replace(/\D/g, ""))
+                            }
+                          />
+                        </label>
+
+                        <label className={styles.onboardingDobCard}>
+                          <span className={styles.onboardingDobSubLabel}>
+                            Month
+                          </span>
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            maxLength={2}
+                            className={styles.onboardingDobInput}
+                            value={obDobMonth}
+                            onChange={(e) =>
+                              setObDobMonth(e.target.value.replace(/\D/g, ""))
+                            }
+                          />
+                        </label>
+
+                        <label className={styles.onboardingDobCard}>
+                          <span className={styles.onboardingDobSubLabel}>
+                            Year
+                          </span>
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            maxLength={4}
+                            className={styles.onboardingDobInput}
+                            value={obDobYear}
+                            onChange={(e) =>
+                              setObDobYear(e.target.value.replace(/\D/g, ""))
+                            }
+                          />
+                        </label>
+                      </div>
+
+                      <div className={styles.onboardingAgePillBox}>
+                        {`You’re ${calculatedOnboardingAge} years old`}
+                      </div>
+
+                      <div className={styles.onboardingInfoRow}>
+                        <span className={styles.onboardingInfoIconPink}>
+                          <OnboardingLockIcon size={17} />
+                        </span>
+                        <span>
+                          Only your age appears on your profile—not your
+                          birthday.
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className={styles.onboardingBottomFooter}>
+                      <p className={styles.onboardingFooterCaption}>
+                        naam is for adults aged 18 and over.
+                      </p>
+                      <button
+                        type="button"
+                        className={styles.onboardingCtaPillBtn}
+                        onClick={() => setOnboardingStep(4)}
+                      >
+                        <span>Continue</span>
+                        <OnboardingRightArrowIcon size={20} />
+                      </button>
+                    </div>
+                  </>
+                )}
+
+                {/* STEP 04 / 08: Your Gender (Matches image_46ecb583.png) */}
+                {onboardingStep === 4 && (
+                  <>
+                    <div className={styles.onboardingBodyScroll}>
+                      <h1 className={styles.onboardingTitle}>Your gender</h1>
+                      <p className={styles.onboardingSubtitle}>
+                        Choose what feels right for you.
+                      </p>
+
+                      <div className={styles.onboardingRadioStack}>
+                        {(["Woman", "Man", "Non-binary"] as const).map(
+                          (option) => {
+                            const isSelected = obGender === option;
+                            return (
+                              <div
+                                key={option}
+                                role="button"
+                                tabIndex={0}
+                                className={`${styles.onboardingRadioCard} ${
+                                  isSelected
+                                    ? styles.onboardingRadioCardSelected
+                                    : ""
+                                }`}
+                                onClick={() => {
+                                  setObGender(option);
+                                  setObGenderDetail("");
+                                }}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter" || e.key === " ") {
+                                    setObGender(option);
+                                    setObGenderDetail("");
+                                  }
+                                }}
+                              >
+                                <div className={styles.onboardingRadioTopRow}>
+                                  <span className={styles.onboardingRadioLabel}>
+                                    {option}
+                                  </span>
+                                  <span
+                                    className={`${styles.onboardingRadioCircle} ${
+                                      isSelected
+                                        ? styles.onboardingRadioCircleSelected
+                                        : ""
+                                    }`}
+                                  >
+                                    {isSelected && (
+                                      <span
+                                        className={
+                                          styles.onboardingRadioInnerDot
+                                        }
+                                      />
+                                    )}
+                                  </span>
+                                </div>
+
+                                {isSelected && (
+                                  <div
+                                    className={styles.onboardingRadioDetailWrap}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setObGenderDetail((prev) =>
+                                        prev
+                                          ? ""
+                                          : option === "Woman"
+                                            ? "Cis woman"
+                                            : option === "Man"
+                                              ? "Cis man"
+                                              : "Agender / Genderfluid"
+                                      );
+                                    }}
+                                  >
+                                    <span
+                                      className={styles.onboardingAddDetailText}
+                                    >
+                                      <span>+</span>
+                                      <span>
+                                        {obGenderDetail
+                                          ? `Detail: ${obGenderDetail}`
+                                          : "Add more detail"}
+                                      </span>
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          }
+                        )}
+                      </div>
+
+                      <div className={styles.onboardingGenderToggleRow}>
+                        <span className={styles.onboardingGenderToggleLabel}>
+                          Show gender on my profile
+                        </span>
+                        <button
+                          type="button"
+                          role="switch"
+                          aria-checked={obShowGenderOnProfile}
+                          className={`${styles.iosSwitchBtn} ${
+                            obShowGenderOnProfile
+                              ? styles.iosSwitchBtnActive
+                              : ""
+                          }`}
+                          onClick={() =>
+                            setObShowGenderOnProfile((prev) => !prev)
+                          }
+                        >
+                          <div
+                            className={`${styles.iosSwitchThumb} ${
+                              obShowGenderOnProfile
+                                ? styles.iosSwitchThumbActive
+                                : ""
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className={styles.onboardingBottomFooter}>
+                      <p className={styles.onboardingFooterCaption}>
+                        You can change this anytime in your profile.
+                      </p>
+                      <button
+                        type="button"
+                        className={styles.onboardingCtaPillBtn}
+                        onClick={() => setOnboardingStep(5)}
+                      >
+                        <span>Continue</span>
+                        <OnboardingRightArrowIcon size={20} />
+                      </button>
+                    </div>
+                  </>
+                )}
+
+                {/* STEP 05 / 08: Looking For... (Matches image_ef7e5dd8.png) */}
+                {onboardingStep === 5 && (
+                  <>
+                    <div className={styles.onboardingBodyScroll}>
+                      <h1 className={styles.onboardingTitle}>Looking for...</h1>
+                      <p className={styles.onboardingSubtitle}>
+                        Choose the connection you want.
+                      </p>
+
+                      <div className={styles.onboardingRadioStack}>
+                        {(
+                          [
+                            "Open-minded relationship",
+                            "Serious relationship",
+                            "Casual",
+                          ] as const
+                        ).map((option) => {
+                          const isSelected = obLookingFor === option;
+                          return (
+                            <button
+                              key={option}
+                              type="button"
+                              className={`${styles.onboardingRadioCard} ${
+                                isSelected
+                                  ? styles.onboardingRadioCardSelected
+                                  : ""
+                              }`}
+                              onClick={() => setObLookingFor(option)}
+                            >
+                              <div className={styles.onboardingRadioTopRow}>
+                                <span className={styles.onboardingRadioLabel}>
+                                  {option}
+                                </span>
+                                <span
+                                  className={`${styles.onboardingRadioCircle} ${
+                                    isSelected
+                                      ? styles.onboardingRadioCircleSelected
+                                      : ""
+                                  }`}
+                                >
+                                  {isSelected && (
+                                    <span
+                                      className={styles.onboardingRadioInnerDot}
+                                    />
+                                  )}
+                                </span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div className={styles.onboardingBottomFooter}>
+                      <p className={styles.onboardingFooterCaption}>
+                        You can change this anytime in your profile.
+                      </p>
+                      <button
+                        type="button"
+                        className={styles.onboardingCtaPillBtn}
+                        onClick={() => setOnboardingStep(6)}
+                      >
+                        <span>Continue</span>
+                        <OnboardingRightArrowIcon size={20} />
+                      </button>
+                    </div>
+                  </>
+                )}
+
+                {/* STEP 06 / 08: Add Your Photos (Matches image_c1814247.png) */}
+                {onboardingStep === 6 && (
+                  <>
+                    <div className={styles.onboardingBodyScroll}>
+                      <h1 className={styles.onboardingTitle}>
+                        Add your photos
+                      </h1>
+                      <p className={styles.onboardingSubtitle}>
+                        Tap to edit · Drag to reorder
+                      </p>
+
+                      <div className={styles.onboardingPhotoGrid}>
+                        {[0, 1, 2, 3, 4, 5].map((slotIdx) => {
+                          const photoUrl = obPhotos[slotIdx];
+                          if (photoUrl) {
+                            return (
+                              <div
+                                key={slotIdx}
+                                className={styles.onboardingPhotoCardFilled}
+                                style={{
+                                  backgroundImage: `url(${photoUrl})`,
+                                }}
+                                onClick={() =>
+                                  handleOnboardingPhotoTap(slotIdx)
+                                }
+                                title="Tap to edit photo"
+                              />
+                            );
+                          }
+                          return (
+                            <button
+                              key={slotIdx}
+                              type="button"
+                              className={styles.onboardingPhotoCardEmpty}
+                              onClick={() => handleOnboardingPhotoTap(slotIdx)}
+                            >
+                              <span className={styles.onboardingPhotoPlusIcon}>
+                                +
+                              </span>
+                              <span className={styles.onboardingPhotoAddLabel}>
+                                Add photo
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      <div className={styles.onboardingPhotoStatusRow}>
+                        <div className={styles.onboardingPhotoCountLeft}>
+                          <span className={styles.onboardingInfoIconPink}>
+                            <OnboardingCheckCircleIcon size={18} />
+                          </span>
+                          <span>{`${obPhotos.length} of 6 added`}</span>
+                        </div>
+
+                        <button
+                          type="button"
+                          className={styles.onboardingPinkLinkBtn}
+                          onClick={() =>
+                            handleOnboardingPhotoTap(obPhotos.length)
+                          }
+                        >
+                          Photo tips
+                        </button>
+                      </div>
+
+                      <div className={styles.onboardingInfoRow}>
+                        <span className={styles.onboardingInfoIconPink}>
+                          <OnboardingGalleryIcon size={18} />
+                        </span>
+                        <span>
+                          Add 2–6 recent photos. A clear face photo first.
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className={styles.onboardingBottomFooter}>
+                      <button
+                        type="button"
+                        className={styles.onboardingCtaPillBtn}
+                        onClick={() => setOnboardingStep(7)}
+                      >
+                        <span>{`Continue with ${obPhotos.length} photos`}</span>
+                        <OnboardingRightArrowIcon size={20} />
+                      </button>
+                    </div>
+                  </>
+                )}
+
+                {/* STEP 07 / 08: Find People Nearby (Matches image_a690a48c.png) */}
+                {onboardingStep === 7 && (
+                  <>
+                    <div className={styles.onboardingBodyScroll}>
+                      <h1 className={styles.onboardingTitle}>
+                        Find people nearby
+                      </h1>
+                      <p className={styles.onboardingSubtitle}>
+                        Choose your city and distance.
+                      </p>
+
+                      <button
+                        type="button"
+                        className={styles.onboardingUseCityBtn}
+                        onClick={() => setObCity("Kochi, Kerala")}
+                      >
+                        <OnboardingTargetIcon size={18} />
+                        <span>Use my current city</span>
+                      </button>
+
+                      <div className={styles.onboardingFieldLabelMuted}>
+                        Or choose your city
+                      </div>
+
+                      <button
+                        type="button"
+                        className={styles.onboardingCitySelectBtn}
+                        onClick={() => {
+                          const currentIndex =
+                            ONBOARDING_CITIES.indexOf(obCity);
+                          const nextCity =
+                            ONBOARDING_CITIES[
+                              (currentIndex + 1) % ONBOARDING_CITIES.length
+                            ];
+                          setObCity(nextCity);
+                        }}
+                      >
+                        <span className={styles.onboardingCityLeft}>
+                          <span style={{ color: "#8e8e93", display: "flex" }}>
+                            <OnboardingPinIcon size={18} />
+                          </span>
+                          <span>{obCity}</span>
+                        </span>
+                        <span style={{ color: "#8e8e93", display: "flex" }}>
+                          <ChevronDownIcon size={18} />
+                        </span>
+                      </button>
+
+                      <div className={styles.onboardingDistanceCard}>
+                        <div className={styles.onboardingDistanceHeader}>
+                          <span className={styles.onboardingDistanceLabel}>
+                            Preferred distance
+                          </span>
+                          <span className={styles.onboardingDistanceVal}>
+                            {`${obDistanceKm} km`}
+                          </span>
+                        </div>
+
+                        <div className={styles.onboardingSingleRangeWrap}>
+                          <div className={styles.onboardingSingleRangeTrack} />
+                          <div
+                            className={styles.onboardingSingleRangeFill}
+                            style={{
+                              width: `${((obDistanceKm - 5) / 95) * 100}%`,
+                            }}
+                          />
+                          <input
+                            type="range"
+                            min={5}
+                            max={100}
+                            value={obDistanceKm}
+                            onChange={(e) =>
+                              setObDistanceKm(Number(e.target.value))
+                            }
+                            aria-label="Preferred distance"
+                            className={styles.onboardingSingleRangeInput}
+                          />
+                        </div>
+
+                        <div className={styles.onboardingDistanceMinMax}>
+                          <span>5 km</span>
+                          <span>100 km</span>
+                        </div>
+                      </div>
+
+                      <div className={styles.onboardingInfoRow}>
+                        <span className={styles.onboardingInfoIconGrey}>
+                          <OnboardingLockIcon size={17} />
+                        </span>
+                        <span>
+                          Only your approximate city is shown. Your distance
+                          preference stays private.
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className={styles.onboardingBottomFooter}>
+                      <button
+                        type="button"
+                        className={styles.onboardingCtaPillBtn}
+                        onClick={() => setOnboardingStep(8)}
+                      >
+                        <span>Continue</span>
+                        <OnboardingRightArrowIcon size={20} />
+                      </button>
+                    </div>
+                  </>
+                )}
+
+                {/* STEP 08 / 08: Selfie Verification (Matches image_8eacebb1.png) */}
+                {onboardingStep === 8 && (
+                  <>
+                    <div className={styles.onboardingBodyScroll}>
+                      <h1 className={styles.onboardingTitle}>
+                        Let&apos;s verify it&apos;s you
+                      </h1>
+                      <p className={styles.onboardingSubtitle}>
+                        A quick selfie helps confirm your identity.
+                      </p>
+
+                      <div className={styles.onboardingVerifyHeroCard}>
+                        <OnboardingFaceGuideIllustration />
+                        <div className={styles.onboardingVerifyCopyCol}>
+                          <div className={styles.onboardingVerifyCardTitle}>
+                            Just you, clearly.
+                          </div>
+                          <div className={styles.onboardingVerifyCardSub}>
+                            Centre your whole face inside the guide.
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className={styles.onboardingChecklistStack}>
+                        <div className={styles.onboardingChecklistRow}>
+                          <span className={styles.onboardingInfoIconGrey}>
+                            <OnboardingSunIcon size={20} />
+                          </span>
+                          <span>Good light. Face clear and in focus.</span>
+                        </div>
+
+                        <div className={styles.onboardingChecklistRow}>
+                          <span className={styles.onboardingInfoIconGrey}>
+                            <OnboardingPersonIcon size={20} />
+                          </span>
+                          <span>
+                            No sunglasses, masks, filters or other people.
+                          </span>
+                        </div>
+
+                        <div className={styles.onboardingChecklistRow}>
+                          <span className={styles.onboardingInfoIconGrey}>
+                            <OnboardingLockIcon size={19} />
+                          </span>
+                          <span>
+                            We compare your selfie with your photos. It
+                            won&apos;t appear on your profile.
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className={styles.onboardingVerifyDivider} />
+
+                      <div className={styles.onboardingConsentRow}>
+                        <button
+                          type="button"
+                          role="checkbox"
+                          aria-checked={obSelfieConsent}
+                          className={`${styles.onboardingCheckboxBtn} ${
+                            obSelfieConsent
+                              ? styles.onboardingCheckboxBtnChecked
+                              : ""
+                          }`}
+                          onClick={() => setObSelfieConsent((prev) => !prev)}
+                        >
+                          {obSelfieConsent && (
+                            <span
+                              style={{ fontSize: "13px", fontWeight: 800 }}
+                            >
+                              ✓
+                            </span>
+                          )}
+                        </button>
+
+                        <div className={styles.onboardingConsentTextCol}>
+                          <span>
+                            I agree to naam using my selfie and profile photos
+                            for this identity check, as described in the Privacy
+                            Policy.
+                          </span>
+                          <div>
+                            <button
+                              type="button"
+                              className={styles.onboardingPinkLinkBtn}
+                            >
+                              Read the Privacy Policy
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className={styles.onboardingBottomFooter}>
+                      <p className={styles.onboardingFooterCaption}>
+                        Your phone will ask for camera access next.
+                      </p>
+                      <button
+                        type="button"
+                        className={styles.onboardingCtaPillBtn}
+                        disabled={!obSelfieConsent}
+                        onClick={handleCompleteOnboarding}
+                      >
+                        <span>Capture selfie</span>
+                        <OnboardingRightArrowIcon size={20} />
+                      </button>
+                    </div>
+                  </>
+                )}
+              </section>
+            )
+          ) : fullScreenProfile ? (
             <section className={styles.fullPageScreen}>
               <header className={styles.fullPageTopBar}>
                 <div className={styles.fullPageTitleGroup}>
@@ -1169,7 +2411,7 @@ const Home: NextPage = () => {
                       padding: "0 10px",
                       fontSize: "11px",
                       color: fullScreenProfile.isVerified
-                        ? "#F93666"
+                        ? "#F7196B"
                         : "var(--lg-muted)",
                     }}
                   >
@@ -1209,7 +2451,7 @@ const Home: NextPage = () => {
                         {fullScreenProfile.name}, {fullScreenProfile.age}
                       </span>
                       {fullScreenProfile.isVerified && (
-                        <span style={{ color: "#F93666", display: "flex" }}>
+                        <span style={{ color: "#F7196B", display: "flex" }}>
                           <SoftVerifiedBadgeIcon size={20} />
                         </span>
                       )}
@@ -1364,7 +2606,7 @@ const Home: NextPage = () => {
                         {fullScreenChatThread.profile.age}
                       </span>
                       {fullScreenChatThread.profile.isVerified && (
-                        <span style={{ color: "#F93666", display: "flex" }}>
+                        <span style={{ color: "#F7196B", display: "flex" }}>
                           <SoftVerifiedBadgeIcon size={15} />
                         </span>
                       )}
@@ -1484,8 +2726,8 @@ const Home: NextPage = () => {
                 <header className={styles.floatingTopBar}>
                   <div className={styles.naamBrandWrap}>
                     <img
-                      src="/assets/aistudio/image_cd469378.png"
-                      alt="Naam"
+                      src="/assets/aistudio/image_cd9da323.png"
+                      alt="naam"
                       className={styles.naamBrandLogo}
                     />
                   </div>
@@ -1513,8 +2755,8 @@ const Home: NextPage = () => {
                     textAlign: "center",
                     fontSize: "13px",
                     fontWeight: 700,
-                    color: "#F93666",
-                    borderColor: "rgba(249, 54, 102, 0.25)",
+                    color: "#F7196B",
+                    borderColor: "rgba(247, 25, 107, 0.25)",
                   }}
                 >
                   {statusBanner}
@@ -1898,7 +3140,7 @@ const Home: NextPage = () => {
                                 {person.isVerified && (
                                   <span
                                     style={{
-                                      color: "#F93666",
+                                      color: "#F7196B",
                                       display: "flex",
                                     }}
                                   >
@@ -1964,7 +3206,7 @@ const Home: NextPage = () => {
                                         sender: "them",
                                         text:
                                           person.paidIntroMessage ??
-                                          "Matched with you on Naam",
+                                          "Matched with you on naam",
                                         time: "Just now",
                                       },
                                     ],
@@ -2020,7 +3262,7 @@ const Home: NextPage = () => {
                                 {thread.profile.isVerified && (
                                   <span
                                     style={{
-                                      color: "#F93666",
+                                      color: "#F7196B",
                                       display: "flex",
                                     }}
                                   >
@@ -2107,7 +3349,7 @@ const Home: NextPage = () => {
                                       style={{
                                         fontSize: "12px",
                                         fontWeight: 700,
-                                        color: "#F93666",
+                                        color: "#F7196B",
                                       }}
                                     >
                                       + Add
@@ -2353,7 +3595,7 @@ const Home: NextPage = () => {
                                       {person.isVerified && (
                                         <span
                                           style={{
-                                            color: "#F93666",
+                                            color: "#F7196B",
                                             display: "flex",
                                           }}
                                         >
@@ -2513,7 +3755,7 @@ const Home: NextPage = () => {
 
                         <div className={styles.glassSurfaceCard}>
                           <h2 className={styles.viewHeader}>
-                            2. Keep Early Conversations on jdate
+                            2. Keep Early Conversations on naam
                           </h2>
                           <p className={styles.viewSubtext}>
                             Get to know your match using our built-in messaging before sharing personal phone numbers, workplace details, or home addresses.
@@ -2695,7 +3937,12 @@ const Home: NextPage = () => {
                                   {activeSubscriptionTier.badge}
                                 </div>
                                 <h3 className={styles.subShowcaseTitle}>
-                                  Naam {activeSubscriptionTier.title}
+                                  <img
+                                    src="/assets/aistudio/image_cd9da323.png"
+                                    alt="naam"
+                                    className={styles.subBrandLogoInline}
+                                  />
+                                  <span>{activeSubscriptionTier.title}</span>
                                 </h3>
                               </div>
                             </div>
@@ -2732,7 +3979,7 @@ const Home: NextPage = () => {
                           >
                             <span>
                               {isConciergeActive
-                                ? `Active: Naam ${activeSubscriptionTier.title}`
+                                ? `Active: naam ${activeSubscriptionTier.title}`
                                 : `Upgrade to ${activeSubscriptionTier.title}`}
                             </span>
                             <ChevronRightIcon size={17} />
@@ -2812,6 +4059,33 @@ const Home: NextPage = () => {
                               <ChevronRightIcon size={18} />
                             </span>
                           </button>
+
+                          <button
+                            type="button"
+                            className={styles.minimalSettingRow}
+                            onClick={() => {
+                              setProfileSubPage(null);
+                              setOnboardingStep(0);
+                            }}
+                          >
+                            <div className={styles.minimalSettingLeft}>
+                              <span
+                                className={styles.minimalSettingIcon}
+                                style={{ color: "#F7196B" }}
+                              >
+                                <SoftRewindIcon size={19} />
+                              </span>
+                              <span
+                                className={styles.minimalSettingTitle}
+                                style={{ color: "#F7196B" }}
+                              >
+                                Replay Onboarding
+                              </span>
+                            </div>
+                            <span className={styles.minimalSettingArrow}>
+                              <ChevronRightIcon size={18} />
+                            </span>
+                          </button>
                         </div>
                       </section>
                     )}
@@ -2821,8 +4095,10 @@ const Home: NextPage = () => {
             </>
           )}
 
-          {/* Clean Full-Width Docked Bottom Navigation Bar — Hidden Inside Full-Screen Chat or Profile Detail View */}
-          {!fullScreenChatThread && !fullScreenProfile && (
+          {/* Clean Full-Width Docked Bottom Navigation Bar — Hidden Inside Onboarding, Full-Screen Chat, or Profile Detail View */}
+          {onboardingStep === "done" &&
+            !fullScreenChatThread &&
+            !fullScreenProfile && (
             <div className={styles.bottomTabBarWrapper}>
               <nav
                 className={styles.bottomTabBar}
@@ -2972,13 +4248,23 @@ const Home: NextPage = () => {
                 <div>
                   <div
                     className={styles.paidBadgeText}
-                    style={{ color: "#F93666" }}
+                    style={{ color: "#F7196B" }}
                   >
                     {activeSubscriptionTier.badge}
                   </div>
-                  <h2 className={styles.viewHeader}>
-                    Naam {activeSubscriptionTier.title} ·{" "}
-                    {activeSubscriptionTier.price}
+                  <h2
+                    className={styles.viewHeader}
+                    style={{ display: "flex", alignItems: "center", gap: "7px" }}
+                  >
+                    <img
+                      src="/assets/aistudio/image_cd9da323.png"
+                      alt="naam"
+                      className={styles.subBrandLogoInline}
+                    />
+                    <span>
+                      {activeSubscriptionTier.title} ·{" "}
+                      {activeSubscriptionTier.price}
+                    </span>
                   </h2>
                 </div>
                 <button

@@ -1,6 +1,6 @@
 {
-  "summary":  "Implementation plan for zero-scroll Discover viewport layout, Twitter-inspired heart & button burst micro-interactions, Liquid Glass online/last-seen presence pills with green dot (\"Online\", \"Seen 1h ago\", \"Seen 1d ago\", \"Seen 2d ago\"), and a full-screen edge-to-edge Chat conversation view without the bottom tab bar.",
-  "updatedAt":  "2026-10-28T08:26:36.163420494Z",
+  "summary":  "Implementation plan for the exact 9-screen naam Welcome and 8-step Onboarding flow matching the uploaded reference screenshots, syncing user onboarding answers into the live profile and entering the main app after Step 08.",
+  "updatedAt":  "2026-11-02T12:15:46.258258646Z",
   "requestFeedback":  true,
   "userFacing":  true
 }

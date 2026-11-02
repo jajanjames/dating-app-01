@@ -5,11 +5,13 @@ import 'package:go_router/go_router.dart';
 import '../../features/discovery/discovery_screen.dart';
 import '../../features/matches/chats_screen.dart';
 import '../../features/matches/likes_screen.dart';
+import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../theme/app_theme.dart';
 
-/// Named route paths for Naam (4-Tab Navigation: Discover, Likes, Chats, You).
+/// Named route paths for Naam (Onboarding + 4-Tab Navigation: Discover, Likes, Chats, You).
 abstract final class AppRoutes {
+  static const String onboarding = '/onboarding';
   static const String discover = '/discover';
   static const String likes = '/likes';
   static const String chats = '/chats';
@@ -28,8 +30,12 @@ final _profileNavigatorKey =
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: AppRoutes.discover,
+    initialLocation: AppRoutes.onboarding,
     routes: [
+      GoRoute(
+        path: AppRoutes.onboarding,
+        builder: (context, state) => const OnboardingScreen(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return _DockedBottomTabMainScaffold(navigationShell: navigationShell);
