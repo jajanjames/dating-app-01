@@ -1,0 +1,62 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: jdate_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: jdate_user
+      POSTGRES_PASSWORD: jdate_password
+      POSTGRES_DB: jdate_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jdate_user -d jdate_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - jdate_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: jdate_backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://jdate_user:jdate_password@postgres:5432/jdate_db?schema=public
+      JWT_SECRET: super-secret-jwt-key-change-me
+      JWT_EXPIRES_IN: 1d
+      PORT: 3000
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    networks:
+      - jdate_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: jdate_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3000/api/v1
+    ports:
+      - "3001:3000"
+    networks:
+      - jdate_network
+
+networks:
+  jdate_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
