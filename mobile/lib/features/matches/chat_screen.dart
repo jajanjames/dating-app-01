@@ -81,11 +81,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   child: SizedBox(
                     width: 42,
                     height: 42,
-                    child: Image.network(
-                      partner.primaryImageUrl,
+                    child: NaamProfileImage(
+                      imageUrl: partner.primaryImageUrl,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const ColoredBox(color: Color(0xFFE4E4E7)),
                     ),
                   ),
                 ),

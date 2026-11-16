@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 /// - Age (18-29)
 /// - Height in inches (48..96 -> 4'0"-8'0")
 /// - Sort By Activity toggle
-/// - Expandable accordions: Status, Faith, Community, Mother Tongue, Country, State, Smoking, Drug, Gender
+/// - Expandable accordions: Status, Faith, Country, State, Smoking (incl. Cannabis), Interested In (incl. Non-binary)
 @immutable
 class FilterPreferences {
   const FilterPreferences({
@@ -17,13 +17,10 @@ class FilterPreferences {
     this.maxHeightInches = 96,
     this.sortByActivity = false,
     this.status = 'Any',
-    this.speaks = 'Any',
     this.faith = 'Any',
-    this.community = 'Any',
     this.country = 'Any',
     this.stateRegion = 'Any',
     this.smoking = 'Any',
-    this.drug = 'Any',
     this.intention = 'Any',
     this.verifiedOnly = false,
   });
@@ -36,13 +33,10 @@ class FilterPreferences {
   final int maxHeightInches;
   final bool sortByActivity;
   final String status;
-  final String speaks;
   final String faith;
-  final String community;
   final String country;
   final String stateRegion;
   final String smoking;
-  final String drug;
   final String intention;
   final bool verifiedOnly;
 
@@ -64,13 +58,10 @@ class FilterPreferences {
     int? maxHeightInches,
     bool? sortByActivity,
     String? status,
-    String? speaks,
     String? faith,
-    String? community,
     String? country,
     String? stateRegion,
     String? smoking,
-    String? drug,
     String? intention,
     bool? verifiedOnly,
   }) {
@@ -83,13 +74,10 @@ class FilterPreferences {
       maxHeightInches: maxHeightInches ?? this.maxHeightInches,
       sortByActivity: sortByActivity ?? this.sortByActivity,
       status: status ?? this.status,
-      speaks: speaks ?? this.speaks,
       faith: faith ?? this.faith,
-      community: community ?? this.community,
       country: country ?? this.country,
       stateRegion: stateRegion ?? this.stateRegion,
       smoking: smoking ?? this.smoking,
-      drug: drug ?? this.drug,
       intention: intention ?? this.intention,
       verifiedOnly: verifiedOnly ?? this.verifiedOnly,
     );
@@ -107,13 +95,10 @@ class FilterPreferences {
         other.maxHeightInches == maxHeightInches &&
         other.sortByActivity == sortByActivity &&
         other.status == status &&
-        other.speaks == speaks &&
         other.faith == faith &&
-        other.community == community &&
         other.country == country &&
         other.stateRegion == stateRegion &&
         other.smoking == smoking &&
-        other.drug == drug &&
         other.intention == intention &&
         other.verifiedOnly == verifiedOnly;
   }
@@ -128,13 +113,10 @@ class FilterPreferences {
         maxHeightInches,
         sortByActivity,
         status,
-        speaks,
         faith,
-        community,
         country,
         stateRegion,
         smoking,
-        drug,
         intention,
         verifiedOnly,
       );

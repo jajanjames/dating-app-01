@@ -523,14 +523,10 @@ class _SequencePhotoCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(24),
       child: AspectRatio(
         aspectRatio: 4 / 5,
-        child: imageUrl.isNotEmpty
-            ? Image.network(
-                imageUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
-                    const ColoredBox(color: Color(0xFFE4E4E7)),
-              )
-            : const ColoredBox(color: Color(0xFFE4E4E7)),
+        child: NaamProfileImage(
+          imageUrl: imageUrl,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }

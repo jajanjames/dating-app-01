@@ -44,7 +44,8 @@ class CandidateProfile {
     required this.interests,
     required this.intention,
     required this.likesViewer,
-    this.drug = 'Never',
+    this.smoking = 'Non-Smoker',
+    this.isSuperLiked = false,
     this.whatTheyDo = '',
     this.storyDescription = '',
     this.lifestyleStory = '',
@@ -72,7 +73,8 @@ class CandidateProfile {
   final List<String> interests;
   final String intention;
   final bool likesViewer;
-  final String drug;
+  final String smoking;
+  final bool isSuperLiked;
   final String whatTheyDo;
   final String storyDescription;
   final String lifestyleStory;
@@ -105,7 +107,8 @@ class CandidateProfile {
     List<String>? interests,
     String? intention,
     bool? likesViewer,
-    String? drug,
+    String? smoking,
+    bool? isSuperLiked,
     String? whatTheyDo,
     String? storyDescription,
     String? lifestyleStory,
@@ -133,7 +136,8 @@ class CandidateProfile {
       interests: interests ?? this.interests,
       intention: intention ?? this.intention,
       likesViewer: likesViewer ?? this.likesViewer,
-      drug: drug ?? this.drug,
+      smoking: smoking ?? this.smoking,
+      isSuperLiked: isSuperLiked ?? this.isSuperLiked,
       whatTheyDo: whatTheyDo ?? this.whatTheyDo,
       storyDescription: storyDescription ?? this.storyDescription,
       lifestyleStory: lifestyleStory ?? this.lifestyleStory,

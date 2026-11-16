@@ -870,25 +870,8 @@ class _WelcomeStepView extends StatelessWidget {
                   ),
                   Column(
                     children: [
-                      SizedBox(
-                        width: double.infinity,
-                        height: 56,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: JDateTokens.brandRose,
-                            foregroundColor: Colors.white,
-                            shape: const StadiumBorder(),
-                            elevation: 0,
-                          ),
-                          onPressed: onStart,
-                          child: const Text(
-                            "Let's begin",
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
+                      _LetsBeginInteractiveButton(
+                        onCompleted: onStart,
                       ),
                       const SizedBox(height: 14),
                       Row(
@@ -931,6 +914,187 @@ class _WelcomeStepView extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _LetsBeginInteractiveButton extends StatefulWidget {
+  const _LetsBeginInteractiveButton({
+    required this.onCompleted,
+  });
+
+  final VoidCallback onCompleted;
+
+  @override
+  State<_LetsBeginInteractiveButton> createState() =>
+      _LetsBeginInteractiveButtonState();
+}
+
+class _LetsBeginInteractiveButtonState
+    extends State<_LetsBeginInteractiveButton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _scaleAnimation;
+  late final Animation<double> _ringOpacityAnimation;
+  late final Animation<double> _ringScaleAnimation;
+  late final Animation<double> _arrowRevealAnimation;
+  bool _isRunning = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 430),
+    );
+
+    _scaleAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.0, end: 0.952)
+            .chain(CurveTween(curve: Curves.easeOutCubic)),
+        weight: 28,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0.952, end: 1.024)
+            .chain(CurveTween(curve: Curves.easeOutBack)),
+        weight: 42,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.024, end: 1.0)
+            .chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 30,
+      ),
+    ]).animate(_controller);
+
+    _ringOpacityAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0.0, end: 0.55),
+        weight: 25,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0.55, end: 0.0)
+            .chain(CurveTween(curve: Curves.easeOutCubic)),
+        weight: 75,
+      ),
+    ]).animate(_controller);
+
+    _ringScaleAnimation = Tween<double>(begin: 0.98, end: 1.12).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
+    );
+
+    _arrowRevealAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0.18, 0.85, curve: Curves.easeOutCubic),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleTap() async {
+    if (_isRunning) return;
+    setState(() {
+      _isRunning = true;
+    });
+    await _controller.forward(from: 0.0);
+    if (!context.mounted) return;
+    setState(() {
+      _isRunning = false;
+    });
+    widget.onCompleted();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        return Stack(
+          alignment: Alignment.center,
+          clipBehavior: Clip.none,
+          children: [
+            Opacity(
+              opacity: _ringOpacityAnimation.value,
+              child: Transform.scale(
+                scaleX: _ringScaleAnimation.value,
+                scaleY: 1.0 + (_ringScaleAnimation.value - 1.0) * 1.8,
+                child: Container(
+                  width: double.infinity,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(999),
+                    border: Border.all(
+                      color: JDateTokens.brandRose,
+                      width: 2,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Transform.scale(
+              scale: _scaleAnimation.value,
+              child: GestureDetector(
+                onTap: _handleTap,
+                child: Container(
+                  width: double.infinity,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(999),
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color(0xFFFA0B65),
+                        Color(0xFFE50E62),
+                      ],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: JDateTokens.brandRose.withValues(alpha: 0.42),
+                        blurRadius: 24,
+                        offset: const Offset(0, 10),
+                        spreadRadius: -6,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Let's begin",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.2,
+                        ),
+                      ),
+                      ClipRect(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          widthFactor: _arrowRevealAnimation.value,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Opacity(
+                              opacity: _arrowRevealAnimation.value,
+                              child: const Icon(
+                                Icons.arrow_forward_rounded,
+                                color: Colors.white,
+                                size: 19,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/models/candidate_profile.dart';
 import '../../data/repositories/dating_repository.dart';
+import '../onboarding/malayali_vibe_onboarding_screen.dart';
 
 class UserProfileData {
   const UserProfileData({
@@ -17,6 +18,14 @@ class UserProfileData {
     required this.promptAnswer,
     required this.isVerified,
     required this.photoUrls,
+    this.interests = const [
+      'Mohanlal fan',
+      'Malayalam indie',
+      'Coffee & chaya dates',
+      'Anime & manga',
+      'Chaya',
+      'Sadya',
+    ],
   });
 
   final String displayName;
@@ -29,6 +38,7 @@ class UserProfileData {
   final String promptAnswer;
   final bool isVerified;
   final List<String> photoUrls;
+  final List<String> interests;
 
   UserProfileData copyWith({
     String? displayName,
@@ -41,6 +51,7 @@ class UserProfileData {
     String? promptAnswer,
     bool? isVerified,
     List<String>? photoUrls,
+    List<String>? interests,
   }) {
     return UserProfileData(
       displayName: displayName ?? this.displayName,
@@ -53,6 +64,7 @@ class UserProfileData {
       promptAnswer: promptAnswer ?? this.promptAnswer,
       isVerified: isVerified ?? this.isVerified,
       photoUrls: photoUrls ?? this.photoUrls,
+      interests: interests ?? this.interests,
     );
   }
 }
@@ -72,6 +84,14 @@ final userProfileProvider = StateProvider<UserProfileData>((ref) {
     photoUrls: [
       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=85',
       'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=85',
+    ],
+    interests: [
+      'Mohanlal fan',
+      'Malayalam indie',
+      'Coffee & chaya dates',
+      'Anime & manga',
+      'Chaya',
+      'Sadya',
     ],
   );
 });
@@ -108,7 +128,7 @@ const List<SubscriptionTierInfo> _kSubscriptionTiers = [
     icon: Icons.favorite_rounded,
     features: [
       'Unlimited daily Likes & Rewinds',
-      'Full Community, Faith & City filters',
+      'Full Faith, Status & City filters',
       'Ad-free discovery experience',
     ],
   ),
@@ -141,9 +161,9 @@ const List<SubscriptionTierInfo> _kSubscriptionTiers = [
 ];
 
 /// Naam `You` Tab Screen:
-/// 1. Minimal User Profile Identity Card (single Edit button next to name/bio, no photo icon overlay, no 29% completion strip)
+/// 1. Minimal User Profile Identity Card (with compact clickable Interests section that navigates directly to Malayali Vibe & Interests)
 /// 2. Clean White Card with Rose Accent, 3 Short Perks, and Upgrade CTA
-/// 3. 4 Essential Rows (Your Likes, Recent Passes, Safety Tips, Help Center)
+/// 3. Settings Rows (Your Likes, Recent Passes, Malayali Vibe & Interests, Safety Tips, Help Center)
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
@@ -158,6 +178,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     await Navigator.of(context).push<void>(
       MaterialPageRoute(
         builder: (_) => const PersonalInformationPage(),
+      ),
+    );
+  }
+
+  Future<void> _openMalayaliVibeOnboarding(BuildContext context) async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => const MalayaliVibeOnboardingScreen(),
       ),
     );
   }
@@ -227,12 +255,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           children: [
-            // 1. Minimal User Profile Header Card (Single Edit button only)
+            // 1. Minimal User Profile Header Card + Compact Clickable Interests Section
             _EditorialProfileIdentityCard(
               profile: profile,
               onEditTap: () => _openPhotoAndInfoEditor(context),
+              onInterestsTap: () => _openMalayaliVibeOnboarding(context),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 16),
 
             // 2. Clean White Card with Rose Accent, 3 Short Perks & Upgrade CTA
             _MediumSubscriptionShowcaseCard(
@@ -244,9 +273,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               },
               onTapUpgrade: () => _openUpgradeSheet(context, selectedTier),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 16),
 
-            // 3. Clean Minimal Rows (Your Likes, Recent Passes, Safety Tips, Help Center)
+            // 3. Clean Minimal Rows
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -275,6 +304,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     onTap: () => _openRecentPassesSheet(context),
                   ),
                   _MinimalSettingRow(
+                    icon: Icons.local_cafe_outlined,
+                    title: 'Malayali Vibe & Interests',
+                    showDivider: true,
+                    onTap: () => _openMalayaliVibeOnboarding(context),
+                  ),
+                  _MinimalSettingRow(
                     icon: Icons.verified_user_outlined,
                     title: 'Safety Tips',
                     showDivider: true,
@@ -300,7 +335,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       subtitle: '24/7 Member Support & Account Privacy',
                       highlights: const [
                         'How Save Search filters curate your Naam Discovery deck.',
-                        'How to update your profile photos and verify your selfie.',
+                        'How to update your profile photos, Malayali vibe interests, and verify your selfie.',
                         'Privacy Policy, Data Protection & Account Controls.',
                       ],
                     ),
@@ -315,14 +350,143 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 }
 
+/// Compact clickable Interests card used in both Profile (`You`) and `Edit Profile`.
+/// Clicking opens the dedicated Malayali Vibe & Interests screen directly; shows a crisp tick mark (`✓`) only.
+class _CompactInterestsSectionCard extends StatelessWidget {
+  const _CompactInterestsSectionCard({
+    required this.interests,
+    required this.onTap,
+    this.maxPreviewCount = 6,
+  });
+
+  final List<String> interests;
+  final VoidCallback onTap;
+  final int maxPreviewCount;
+
+  @override
+  Widget build(BuildContext context) {
+    final visibleTags = interests.take(maxPreviewCount).toList(growable: false);
+
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFAFAFC),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFECECF2)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Interests · ${interests.length}',
+                  style: const TextStyle(
+                    color: Color(0xFF3A3A3C),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const Text(
+                  'Edit vibe →',
+                  style: TextStyle(
+                    color: Color(0xFFF7196B),
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            if (visibleTags.isEmpty)
+              const Text(
+                'Tap to choose Malayalam movies, music, anime & dating vibes',
+                style: TextStyle(
+                  color: Color(0xFF6E6E73),
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w500,
+                ),
+              )
+            else
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  ...visibleTags.map(
+                    (tag) => Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFF8FA),
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(color: const Color(0x59F7196B)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            tag,
+                            style: const TextStyle(
+                              color: Color(0xFF1C1C1E),
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          const Icon(
+                            Icons.check_rounded,
+                            size: 14,
+                            color: Color(0xFFF7196B),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (interests.length > maxPreviewCount)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFF8FA),
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(color: const Color(0x59F7196B)),
+                      ),
+                      child: Text(
+                        '+${interests.length - maxPreviewCount} more',
+                        style: const TextStyle(
+                          color: Color(0xFFF7196B),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _EditorialProfileIdentityCard extends StatelessWidget {
   const _EditorialProfileIdentityCard({
     required this.profile,
     required this.onEditTap,
+    required this.onInterestsTap,
   });
 
   final UserProfileData profile;
   final VoidCallback onEditTap;
+  final VoidCallback onInterestsTap;
 
   @override
   Widget build(BuildContext context) {
@@ -343,88 +507,99 @@ class _EditorialProfileIdentityCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(22),
-            child: SizedBox(
-              width: 72,
-              height: 72,
-              child: avatarUrl.isNotEmpty
-                  ? Image.network(
-                      avatarUrl,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const ColoredBox(
-                        color: Color(0xFFE4E4E7),
-                        child: Icon(Icons.person_rounded, size: 32),
-                      ),
-                    )
-                  : const ColoredBox(
-                      color: Color(0xFFE4E4E7),
-                      child: Icon(Icons.person_rounded, size: 32),
-                    ),
-            ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        '${profile.displayName}, ${profile.age}',
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: JDateTokens.pitchBlack,
-                          fontSize: 21,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: -0.5,
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(22),
+                child: SizedBox(
+                  width: 72,
+                  height: 72,
+                  child: avatarUrl.isNotEmpty
+                      ? Image.network(
+                          avatarUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const ColoredBox(
+                            color: Color(0xFFE4E4E7),
+                            child: Icon(Icons.person_rounded, size: 32),
+                          ),
+                        )
+                      : const ColoredBox(
+                          color: Color(0xFFE4E4E7),
+                          child: Icon(Icons.person_rounded, size: 32),
                         ),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            '${profile.displayName}, ${profile.age}',
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: JDateTokens.pitchBlack,
+                              fontSize: 21,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                        ),
+                        if (profile.isVerified) ...[
+                          const SizedBox(width: 6),
+                          const Icon(
+                            Icons.verified_rounded,
+                            size: 18,
+                            color: JDateTokens.brandRose,
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${profile.occupation} · ${profile.neighborhood}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Color(0xFF71717A),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                    if (profile.isVerified) ...[
-                      const SizedBox(width: 6),
-                      const Icon(
-                        Icons.verified_rounded,
-                        size: 18,
-                        color: JDateTokens.brandRose,
-                      ),
-                    ],
                   ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  '${profile.occupation} · ${profile.neighborhood}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Color(0xFF71717A),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
+              ),
+              const SizedBox(width: 8),
+              FilledButton(
+                onPressed: onEditTap,
+                style: FilledButton.styleFrom(
+                  backgroundColor: JDateTokens.pitchBlack,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(0, 38),
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          FilledButton(
-            onPressed: onEditTap,
-            style: FilledButton.styleFrom(
-              backgroundColor: JDateTokens.pitchBlack,
-              foregroundColor: Colors.white,
-              minimumSize: const Size(0, 38),
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                child: const Text(
+                  'Edit',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                ),
               ),
-            ),
-            child: const Text(
-              'Edit',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
-            ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          _CompactInterestsSectionCard(
+            interests: profile.interests,
+            onTap: onInterestsTap,
+            maxPreviewCount: 6,
           ),
         ],
       ),
@@ -473,7 +648,6 @@ class _MediumSubscriptionShowcaseCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. Segmented Tier Selector Tabs
           Container(
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
@@ -525,8 +699,6 @@ class _MediumSubscriptionShowcaseCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-
-          // 2. Selected Tier Header + Price
           Row(
             children: [
               Container(
@@ -582,8 +754,6 @@ class _MediumSubscriptionShowcaseCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 14),
-
-          // 3. 3 Short Perks
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(
@@ -623,8 +793,6 @@ class _MediumSubscriptionShowcaseCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 14),
-
-          // 4. Single Upgrade CTA Button
           SizedBox(
             width: double.infinity,
             height: 44,
@@ -796,11 +964,9 @@ class _SavedProfilesSheet extends ConsumerWidget {
                             child: SizedBox(
                               width: 46,
                               height: 46,
-                              child: Image.network(
-                                person.primaryImageUrl,
+                              child: NaamProfileImage(
+                                imageUrl: person.primaryImageUrl,
                                 fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    const ColoredBox(color: Color(0xFFE4E4E7)),
                               ),
                             ),
                           ),
@@ -956,7 +1122,7 @@ class _ProfileDetailSubPage extends StatelessWidget {
   }
 }
 
-/// Full-Screen Photo Grid & Personal Information Editor
+/// Full-Screen Photo Grid, Compact Clickable Malayali Vibe Interests & Personal Information Editor (`Edit Profile`)
 class PersonalInformationPage extends ConsumerStatefulWidget {
   const PersonalInformationPage({super.key});
 
@@ -1015,10 +1181,28 @@ class _PersonalInformationPageState
         current.copyWith(photoUrls: updated);
   }
 
-  void _saveChanges() {
+  void _handleRemovePhoto(int slotIndex) {
+    final current = ref.read(userProfileProvider);
+    if (current.photoUrls.length <= 1) return;
+    final updated = List<String>.from(current.photoUrls)..removeAt(slotIndex);
+    ref.read(userProfileProvider.notifier).state =
+        current.copyWith(photoUrls: updated);
+  }
+
+  Future<void> _openFullMalayaliVibePage(BuildContext context) async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => const MalayaliVibeOnboardingScreen(),
+      ),
+    );
+  }
+
+  void _handleSave() {
     final current = ref.read(userProfileProvider);
     ref.read(userProfileProvider.notifier).state = current.copyWith(
-      displayName: _nameController.text.trim(),
+      displayName: _nameController.text.trim().isEmpty
+          ? current.displayName
+          : _nameController.text.trim(),
       occupation: _occupationController.text.trim(),
       education: _educationController.text.trim(),
       neighborhood: _neighborhoodController.text.trim(),
@@ -1026,6 +1210,12 @@ class _PersonalInformationPageState
       promptAnswer: _promptAnswerController.text.trim(),
     );
     Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Profile & Malayali vibe updated!'),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   @override
@@ -1039,14 +1229,11 @@ class _PersonalInformationPageState
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
+              padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Edit Profile',
-                    style: textTheme.headlineMedium,
-                  ),
+                  Text('Edit Profile', style: textTheme.headlineMedium),
                   LiquidGlassOrbButton(
                     icon: Icons.close_rounded,
                     size: 42,
@@ -1057,96 +1244,79 @@ class _PersonalInformationPageState
             ),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
+                padding: const EdgeInsets.fromLTRB(18, 8, 18, 28),
                 children: [
-                  LiquidGlassSurface(
-                    borderRadius: 24,
-                    padding: const EdgeInsets.all(18),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Profile Photos', style: textTheme.titleMedium),
-                            Text(
-                              '${profile.photoUrls.length} of 6 slots',
-                              style: textTheme.bodySmall,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: 6,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                            childAspectRatio: 0.76,
-                          ),
-                          itemBuilder: (context, index) {
-                            final hasPhoto = index < profile.photoUrls.length;
-                            return _ProfilePhotoTile(
-                              photoUrl:
-                                  hasPhoto ? profile.photoUrls[index] : null,
-                              onTap: () => _handleSwapOrAddPhoto(index),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                  Text(
+                    'Profile Photos (${profile.photoUrls.length}/6)',
+                    style: textTheme.titleLarge,
                   ),
-                  const SizedBox(height: 16),
-                  LiquidGlassSurface(
-                    borderRadius: 24,
-                    padding: const EdgeInsets.all(18),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _ProfileTextField(
-                          label: 'Display Name',
-                          controller: _nameController,
-                        ),
-                        const SizedBox(height: 14),
-                        _ProfileTextField(
-                          label: 'Occupation & Role',
-                          controller: _occupationController,
-                        ),
-                        const SizedBox(height: 14),
-                        _ProfileTextField(
-                          label: 'Education',
-                          controller: _educationController,
-                        ),
-                        const SizedBox(height: 14),
-                        _ProfileTextField(
-                          label: 'City',
-                          controller: _neighborhoodController,
-                        ),
-                        const SizedBox(height: 14),
-                        _ProfileTextField(
-                          label: 'About / Bio',
-                          controller: _bioController,
-                          maxLines: 3,
-                        ),
-                        const SizedBox(height: 14),
-                        _ProfileTextField(
-                          label: 'Profile Prompt',
-                          controller: _promptAnswerController,
-                          maxLines: 2,
-                        ),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          width: double.infinity,
-                          child: FilledButton(
-                            onPressed: _saveChanges,
-                            child: const Text('Save Changes'),
-                          ),
-                        ),
-                      ],
+                  const SizedBox(height: 12),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: 6,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                      childAspectRatio: 0.78,
                     ),
+                    itemBuilder: (context, index) {
+                      final hasPhoto = index < profile.photoUrls.length;
+                      final url = hasPhoto ? profile.photoUrls[index] : null;
+                      return _EditablePhotoSlotTile(
+                        imageUrl: url,
+                        canRemove: hasPhoto && profile.photoUrls.length > 1,
+                        onTap: () => _handleSwapOrAddPhoto(index),
+                        onRemove: () => _handleRemovePhoto(index),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 22),
+
+                  // Compact Clickable Malayali Vibe & Interests Section (no banner image, navigates directly to full Malayali Vibe screen)
+                  _CompactInterestsSectionCard(
+                    interests: profile.interests,
+                    onTap: () => _openFullMalayaliVibePage(context),
+                    maxPreviewCount: 8,
+                  ),
+                  const SizedBox(height: 22),
+                  _ProfileInputField(
+                    label: 'Display Name',
+                    controller: _nameController,
+                  ),
+                  const SizedBox(height: 12),
+                  _ProfileInputField(
+                    label: 'Occupation',
+                    controller: _occupationController,
+                  ),
+                  const SizedBox(height: 12),
+                  _ProfileInputField(
+                    label: 'Education',
+                    controller: _educationController,
+                  ),
+                  const SizedBox(height: 12),
+                  _ProfileInputField(
+                    label: 'City / Neighborhood',
+                    controller: _neighborhoodController,
+                  ),
+                  const SizedBox(height: 12),
+                  _ProfileInputField(
+                    label: 'Bio',
+                    controller: _bioController,
+                    maxLines: 3,
+                  ),
+                  const SizedBox(height: 12),
+                  _ProfileInputField(
+                    label: 'Prompt Answer (${profile.promptQuestion})',
+                    controller: _promptAnswerController,
+                    maxLines: 2,
+                  ),
+                  const SizedBox(height: 22),
+                  FilledButton(
+                    onPressed: _handleSave,
+                    child: const Text('Save Profile Changes'),
                   ),
                 ],
               ),
@@ -1158,14 +1328,18 @@ class _PersonalInformationPageState
   }
 }
 
-class _ProfilePhotoTile extends StatelessWidget {
-  const _ProfilePhotoTile({
-    required this.photoUrl,
+class _EditablePhotoSlotTile extends StatelessWidget {
+  const _EditablePhotoSlotTile({
+    required this.imageUrl,
+    required this.canRemove,
     required this.onTap,
+    required this.onRemove,
   });
 
-  final String? photoUrl;
+  final String? imageUrl;
+  final bool canRemove;
   final VoidCallback onTap;
+  final VoidCallback onRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -1173,61 +1347,57 @@ class _ProfilePhotoTile extends StatelessWidget {
       onTap: onTap,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: JDateTokens.pearlGlassBorder),
-          ),
-          child: photoUrl != null
-              ? Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.network(
-                      photoUrl!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const ColoredBox(color: Color(0xFFE4E4E7)),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            if (imageUrl != null)
+              Image.network(
+                imageUrl!,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => const ColoredBox(
+                  color: Color(0xFFF4F4F6),
+                  child: Icon(Icons.broken_image_outlined),
+                ),
+              )
+            else
+              Container(
+                color: const Color(0xFFF6F6F8),
+                alignment: Alignment.center,
+                child: const Icon(
+                  Icons.add_a_photo_outlined,
+                  color: JDateTokens.brandRose,
+                ),
+              ),
+            if (canRemove)
+              Positioned(
+                top: 6,
+                right: 6,
+                child: GestureDetector(
+                  onTap: onRemove,
+                  child: Container(
+                    width: 26,
+                    height: 26,
+                    decoration: const BoxDecoration(
+                      color: Color(0xB309090B),
+                      shape: BoxShape.circle,
                     ),
-                    Positioned(
-                      right: 6,
-                      bottom: 6,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: JDateTokens.brandRose,
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        child: const Text(
-                          'Edit',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
+                    child: const Icon(
+                      Icons.close_rounded,
+                      size: 15,
+                      color: Colors.white,
                     ),
-                  ],
-                )
-              : const Center(
-                  child: Icon(
-                    Icons.add_rounded,
-                    color: JDateTokens.brandRose,
-                    size: 28,
                   ),
                 ),
+              ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _ProfileTextField extends StatelessWidget {
-  const _ProfileTextField({
+class _ProfileInputField extends StatelessWidget {
+  const _ProfileInputField({
     required this.label,
     required this.controller,
     this.maxLines = 1,
@@ -1242,17 +1412,28 @@ class _ProfileTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: Theme.of(context).textTheme.labelMedium),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Color(0xFF71717A),
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
         const SizedBox(height: 6),
         TextField(
           controller: controller,
           maxLines: maxLines,
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.white,
+            fillColor: const Color(0xFFF8F8FA),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: JDateTokens.pearlGlassBorder),
+              borderRadius: BorderRadius.circular(14),
+              borderSide: const BorderSide(color: Color(0xFFE4E4E7)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+              borderSide: const BorderSide(color: Color(0xFFE4E4E7)),
             ),
           ),
         ),

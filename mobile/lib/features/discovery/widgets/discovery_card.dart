@@ -183,16 +183,15 @@ class _DiscoveryCardState extends State<DiscoveryCard>
                       AnimatedSwitcher(
                         duration: const Duration(milliseconds: 180),
                         child: currentPhoto.isNotEmpty
-                            ? Image.network(
-                                currentPhoto,
+                            ? NaamProfileImage(
+                                imageUrl: currentPhoto,
                                 key: ValueKey<String>(
                                   '${widget.candidate.id}_$_photoIndex',
                                 ),
                                 fit: BoxFit.cover,
                                 width: double.infinity,
                                 height: double.infinity,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    const _PhotoFallback(),
+                                fallback: const _PhotoFallback(),
                               )
                             : const _PhotoFallback(),
                       ),
