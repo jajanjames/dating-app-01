@@ -26,6 +26,32 @@ class InterestOption {
   final String label;
 }
 
+/// A section heading with its tags (e.g. "Comfort food").
+@immutable
+class InterestCategory {
+  const InterestCategory({
+    required this.key,
+    required this.title,
+    required this.items,
+  });
+
+  factory InterestCategory.fromJson(Map<String, dynamic> json) =>
+      InterestCategory(
+        key: json['key'] as String? ?? '',
+        title: json['title'] as String? ?? '',
+        items: json['items'] is List
+            ? (json['items'] as List)
+                .whereType<Map<String, dynamic>>()
+                .map(InterestOption.fromJson)
+                .toList()
+            : const [],
+      );
+
+  final String key;
+  final String title;
+  final List<InterestOption> items;
+}
+
 /// Response of `GET /interests` and `PUT /interests`.
 @immutable
 class InterestsResult {
@@ -40,15 +66,16 @@ class InterestsResult {
     List<String> strings(dynamic v) =>
         v is List ? v.whereType<String>().toList() : const [];
 
-    List<InterestOption> opts(dynamic v) => v is List
+    List<InterestCategory> opts(dynamic v) => v is List
         ? v
             .whereType<Map<String, dynamic>>()
-            .map(InterestOption.fromJson)
+            .map(InterestCategory.fromJson)
             .toList()
         : const [];
 
     final rawOptions = json['options'];
-    final optionMap = rawOptions is Map<String, dynamic> ? rawOptions : const {};
+    final optionMap =
+        rawOptions is Map<String, dynamic> ? rawOptions : const {};
     return InterestsResult(
       stepOne: strings(json['stepOne']),
       stepTwo: strings(json['stepTwo']),
@@ -63,7 +90,7 @@ class InterestsResult {
   final List<String> stepOne;
   final List<String> stepTwo;
   final bool isComplete;
-  final Map<InterestStep, List<InterestOption>> options;
+  final Map<InterestStep, List<InterestCategory>> options;
 
   List<String> selectedFor(InterestStep step) =>
       step == InterestStep.stepOne ? stepOne : stepTwo;
@@ -73,8 +100,10 @@ class InterestsResult {
     final labels = <String>[];
     for (final step in InterestStep.values) {
       final selected = selectedFor(step);
-      for (final option in options[step] ?? const <InterestOption>[]) {
-        if (selected.contains(option.value)) labels.add(option.label);
+      for (final category in options[step] ?? const <InterestCategory>[]) {
+        for (final option in category.items) {
+          if (selected.contains(option.value)) labels.add(option.label);
+        }
       }
     }
     return labels;

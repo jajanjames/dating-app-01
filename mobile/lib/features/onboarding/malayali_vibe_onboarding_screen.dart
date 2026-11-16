@@ -1,32 +1,37 @@
 // FILE: lib/features/onboarding/malayali_vibe_onboarding_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../core/network/api_client.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/models/interests_models.dart';
 import '../../data/repositories/interests_repository.dart';
 import '../profile/profile_screen.dart';
 
-/// Loads the interest options and saved selection from `GET /interests`.
-final interestsProvider = FutureProvider.autoDispose<InterestsResult>(
+/// Loads the user's saved selection and the tag catalog (`GET /interests`).
+final malayaliVibeCatalogProvider = FutureProvider.autoDispose<InterestsResult>(
   (ref) => ref.read(interestsRepositoryProvider).fetch(),
 );
 
-/// 2-step "What's your Malayali vibe?" interests screen (`01 / 02`, `02 / 02`),
-/// driven by the `/interests` API. Each step is saved with its own `PUT`.
+/// 2-step "What's your Malayali vibe?" selector (`01 / 02` and `02 / 02`).
+///
+/// Catalog and selection come from the Interests API. Step 1 Continue saves
+/// `STEP_ONE`; step 2 Save saves `STEP_TWO`. The counter and the Continue
+/// gate use the local total across both steps (`minRequired`).
 class MalayaliVibeOnboardingScreen extends ConsumerStatefulWidget {
   const MalayaliVibeOnboardingScreen({
     super.key,
     this.initialStep = 1,
-    this.onCompleted,
     this.isOnboarding = false,
+    this.onCompleted,
   });
 
   final int initialStep;
-  final VoidCallback? onCompleted;
 
-  /// `true` when shown as part of sign-up (final button reads "Continue").
+  /// True when shown right after sign-up (affects nothing visual yet; kept so
+  /// callers can distinguish the flows).
   final bool isOnboarding;
+  final VoidCallback? onCompleted;
 
   @override
   ConsumerState<MalayaliVibeOnboardingScreen> createState() =>
@@ -35,85 +40,90 @@ class MalayaliVibeOnboardingScreen extends ConsumerStatefulWidget {
 
 class _MalayaliVibeOnboardingScreenState
     extends ConsumerState<MalayaliVibeOnboardingScreen> {
-  late int _currentStep;
+  static const int _minRequired = 3;
 
-  /// Working selection per step; seeded from the server once loaded.
-  final Map<InterestStep, Set<String>> _selected = {
-    InterestStep.stepOne: <String>{},
-    InterestStep.stepTwo: <String>{},
+  late int _currentStep;
+  late final ScrollController _scrollController;
+
+  /// Local selections, seeded once from the server response.
+  final Map<InterestStep, List<String>> _selected = {
+    InterestStep.stepOne: <String>[],
+    InterestStep.stepTwo: <String>[],
   };
   bool _seeded = false;
-  bool _isSaving = false;
-  String? _error;
+  bool _saving = false;
 
   InterestStep get _step =>
       _currentStep == 1 ? InterestStep.stepOne : InterestStep.stepTwo;
+
+  int get _totalSelected =>
+      _selected.values.fold(0, (sum, list) => sum + list.length);
 
   @override
   void initState() {
     super.initState();
     _currentStep = widget.initialStep.clamp(1, 2);
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _seed(InterestsResult result) {
     if (_seeded) return;
     _seeded = true;
-    for (final step in InterestStep.values) {
-      _selected[step] = result.selectedFor(step).toSet();
-    }
+    _selected[InterestStep.stepOne] = List.of(result.stepOne);
+    _selected[InterestStep.stepTwo] = List.of(result.stepTwo);
   }
 
-  void _toggle(String value) {
-    final set = _selected[_step]!;
+  void _toggleTag(String value) {
     setState(() {
-      _error = null;
-      if (!set.remove(value)) set.add(value);
+      final list = _selected[_step]!;
+      if (!list.remove(value)) list.add(value);
     });
   }
 
+  void _scrollToTop() {
+    if (_scrollController.hasClients) _scrollController.jumpTo(0);
+  }
+
   void _handleBack() {
+    if (_saving) return;
     if (_currentStep == 2) {
-      setState(() {
-        _currentStep = 1;
-        _error = null;
-      });
+      setState(() => _currentStep = 1);
+      _scrollToTop();
       return;
     }
     Navigator.of(context).maybePop();
   }
 
-  Future<void> _handleContinue(InterestsResult catalog) async {
-    final values = _selected[_step]!;
-    if (values.isEmpty || _isSaving) return;
-
-    // Keep the server's option order and send the full selection for the step.
-    final ordered = [
-      for (final o in catalog.options[_step] ?? const <InterestOption>[])
-        if (values.contains(o.value)) o.value,
-    ];
-
-    setState(() {
-      _isSaving = true;
-      _error = null;
-    });
+  Future<void> _handleContinue() async {
+    if (_saving) return;
+    setState(() => _saving = true);
     try {
-      final result =
-          await ref.read(interestsRepositoryProvider).save(_step, ordered);
+      final result = await ref
+          .read(interestsRepositoryProvider)
+          .save(_step, List.of(_selected[_step]!));
       if (!mounted) return;
 
-      if (_currentStep == 1) {
-        setState(() {
-          _isSaving = false;
-          _currentStep = 2;
-        });
-        return;
-      }
-
-      // Mirror saved interests into the profile preview.
+      // Keep the profile preview in sync with what the server stored.
       final profile = ref.read(userProfileProvider);
       ref.read(userProfileProvider.notifier).state =
           profile.copyWith(interests: result.selectedLabels);
-      setState(() => _isSaving = false);
+
+      if (_currentStep == 1) {
+        setState(() {
+          _saving = false;
+          _currentStep = 2;
+        });
+        _scrollToTop();
+        return;
+      }
+
+      setState(() => _saving = false);
       if (widget.onCompleted != null) {
         widget.onCompleted!();
       } else {
@@ -121,18 +131,16 @@ class _MalayaliVibeOnboardingScreenState
       }
     } on ApiException catch (e) {
       if (!mounted) return;
-      setState(() {
-        _isSaving = false;
-        _error = e.statusCode == 401
-            ? 'Your session has expired. Please sign in again.'
-            : e.message;
-      });
+      setState(() => _saving = false);
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(e.message)));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final asyncCatalog = ref.watch(interestsProvider);
+    final asyncCatalog = ref.watch(malayaliVibeCatalogProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -141,27 +149,27 @@ class _MalayaliVibeOnboardingScreenState
           loading: () => const _MalayaliVibeStateView(
             icon: Icons.local_cafe_outlined,
             title: 'Brewing Your Malayali Vibe',
-            subtitle: 'Loading your interests...',
+            subtitle: 'Loading Malayalam cinema, dating, and Gen Z vibes...',
             isLoading: true,
           ),
           error: (err, _) => _MalayaliVibeStateView(
             icon: Icons.error_outline_rounded,
-            title: 'Could Not Load Interests',
+            title: 'Could Not Load Malayali Vibes',
             subtitle: err is ApiException ? err.message : err.toString(),
             actionLabel: 'Retry',
-            onAction: () => ref.invalidate(interestsProvider),
+            onAction: () => ref.invalidate(malayaliVibeCatalogProvider),
           ),
           data: (catalog) {
             _seed(catalog);
-            final options = catalog.options[_step] ?? const <InterestOption>[];
-            if (options.isEmpty) {
+            final activeCategories = catalog.options[_step] ?? const [];
+            if (activeCategories.isEmpty) {
               return const _MalayaliVibeStateView(
                 icon: Icons.sentiment_neutral_rounded,
-                title: 'No Interests Available',
-                subtitle: 'Check back soon for more Malayali vibe options.',
+                title: 'No Categories Available',
+                subtitle: 'Check back soon for more Malayali vibe tags.',
               );
             }
-            final selected = _selected[_step]!;
+            final selectedTags = _selected[_step]!;
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -173,6 +181,7 @@ class _MalayaliVibeOnboardingScreenState
                 _MalayaliVibeTwoStepProgressBar(currentStep: _currentStep),
                 Expanded(
                   child: ListView(
+                    controller: _scrollController,
                     padding: const EdgeInsets.fromLTRB(24, 18, 24, 24),
                     children: [
                       const Text(
@@ -187,7 +196,7 @@ class _MalayaliVibeOnboardingScreenState
                       ),
                       const SizedBox(height: 8),
                       const Text(
-                        'Malayalam cinema, on repeat, dating vibes, Gen Z, anime & more.',
+                        'For Malayalis, wherever you call home.',
                         style: TextStyle(
                           color: Color(0xFF6E6E73),
                           fontSize: 15,
@@ -197,40 +206,28 @@ class _MalayaliVibeOnboardingScreenState
                       ),
                       const SizedBox(height: 16),
                       _MalayaliVibeSelectionCounterRow(
-                        selectedCount: selected.length,
+                        selectedCount: _totalSelected,
                       ),
                       const SizedBox(height: 18),
-                      Wrap(
-                        spacing: 10,
-                        runSpacing: 10,
-                        children: [
-                          for (final option in options)
-                            _MalayaliVibeSelectablePill(
-                              label: option.label,
-                              isSelected: selected.contains(option.value),
-                              onTap: () => _toggle(option.value),
-                            ),
-                        ],
-                      ),
-                      if (_error != null) ...[
-                        const SizedBox(height: 16),
-                        Text(
-                          _error!,
-                          style: const TextStyle(
-                            color: Color(0xFFD70015),
-                            fontSize: 13.5,
+                      ...activeCategories.map(
+                        (category) => Padding(
+                          padding: const EdgeInsets.only(bottom: 22),
+                          child: _MalayaliVibeCategorySection(
+                            category: category,
+                            selectedTags: selectedTags,
+                            onToggleTag: _toggleTag,
                           ),
                         ),
-                      ],
+                      ),
                     ],
                   ),
                 ),
                 _MalayaliVibeBottomFooter(
                   currentStep: _currentStep,
+                  canContinue: _totalSelected >= _minRequired && !_saving,
                   isOnboarding: widget.isOnboarding,
-                  isSaving: _isSaving,
-                  canContinue: selected.isNotEmpty && !_isSaving,
-                  onContinue: () => _handleContinue(catalog),
+                  isSaving: _saving,
+                  onContinue: _handleContinue,
                 ),
               ],
             );
@@ -377,6 +374,48 @@ class _MalayaliVibeSelectionCounterRow extends StatelessWidget {
   }
 }
 
+class _MalayaliVibeCategorySection extends StatelessWidget {
+  const _MalayaliVibeCategorySection({
+    required this.category,
+    required this.selectedTags,
+    required this.onToggleTag,
+  });
+
+  final InterestCategory category;
+  final List<String> selectedTags;
+  final ValueChanged<String> onToggleTag;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          category.title,
+          style: const TextStyle(
+            color: Color(0xFF3A3A3C),
+            fontSize: 14.5,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.2,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: category.items.map((option) {
+            return _MalayaliVibeSelectablePill(
+              label: option.label,
+              isSelected: selectedTags.contains(option.value),
+              onTap: () => onToggleTag(option.value),
+            );
+          }).toList(growable: false),
+        ),
+      ],
+    );
+  }
+}
+
 /// Selectable Malayali Vibe pill with a set tick mark (`✓`) only when selected (no faded `+` toggle).
 class _MalayaliVibeSelectablePill extends StatelessWidget {
   const _MalayaliVibeSelectablePill({
@@ -402,9 +441,8 @@ class _MalayaliVibeSelectablePill extends StatelessWidget {
           color: isSelected ? const Color(0xFFFFF5F8) : Colors.white,
           borderRadius: BorderRadius.circular(999),
           border: Border.all(
-            color: isSelected
-                ? const Color(0xFFF7196B)
-                : const Color(0xFFE5E5EA),
+            color:
+                isSelected ? const Color(0xFFF7196B) : const Color(0xFFE5E5EA),
             width: 1.5,
           ),
         ),
@@ -494,7 +532,9 @@ class _MalayaliVibeBottomFooter extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      currentStep == 1 || isOnboarding ? 'Continue' : 'Save Malayali Vibe',
+                      currentStep == 1 || isOnboarding
+                          ? 'Continue'
+                          : 'Save Malayali Vibe',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 17,

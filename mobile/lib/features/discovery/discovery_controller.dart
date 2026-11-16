@@ -91,9 +91,8 @@ class DiscoveryController extends AsyncNotifier<DiscoveryState> {
 
   Future<DiscoveryState> _loadFirstPage() async {
     await _loadInterestLabels();
-    final page = await ref
-        .read(discoverRepositoryProvider)
-        .fetch(gender: _genderFilter);
+    final page =
+        await ref.read(discoverRepositoryProvider).fetch(gender: _genderFilter);
     return DiscoveryState(
       candidates: _toCandidates(page),
       preferences: _preferences,
@@ -108,8 +107,9 @@ class DiscoveryController extends AsyncNotifier<DiscoveryState> {
     try {
       final result = await ref.read(interestsRepositoryProvider).fetch();
       _interestLabels = {
-        for (final options in result.options.values)
-          for (final o in options) o.value: o.label,
+        for (final categories in result.options.values)
+          for (final c in categories)
+            for (final o in c.items) o.value: o.label,
       };
     } on ApiException {
       // Labels are cosmetic; keep going.
