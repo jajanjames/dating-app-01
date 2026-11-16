@@ -2479,6 +2479,12 @@
   background-position: center bottom;
   background-repeat: no-repeat;
   position: relative;
+  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.welcomeHeroPhotoLaunching {
+  transform: scale(1.035) translateY(-6px);
 }
 
 .welcomeBottomCard {
@@ -2491,6 +2497,12 @@
   justify-content: space-between;
   text-align: center;
   box-sizing: border-box;
+  transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.welcomeBottomCardLaunching {
+  transform: translateY(-4px);
 }
 
 .welcomeTextGroup {
@@ -2526,6 +2538,7 @@
 }
 
 .welcomePrimaryBtn {
+  position: relative;
   width: 100%;
   height: 56px;
   border-radius: 999px;
@@ -2539,13 +2552,217 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
+  overflow: visible;
   box-shadow: 0 10px 24px -6px rgba(247, 25, 107, 0.42);
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.welcomePrimaryBtn:hover {
+  box-shadow: 0 12px 28px -5px rgba(247, 25, 107, 0.5);
 }
 
 .welcomePrimaryBtn:active {
-  transform: scale(0.985);
-  opacity: 0.94;
+  transform: scale(0.972);
+}
+
+.welcomePrimaryBtnActive {
+  animation: letsBeginSpringPulse 0.44s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.welcomePrimaryBtnClip {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.welcomePrimaryBtnSheen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -130%;
+  width: 65%;
+  background: linear-gradient(
+    110deg,
+    rgba(255, 255, 255, 0) 10%,
+    rgba(255, 255, 255, 0.42) 50%,
+    rgba(255, 255, 255, 0) 90%
+  );
+  transform: skewX(-18deg);
+  pointer-events: none;
+}
+
+.welcomePrimaryBtnActive .welcomePrimaryBtnSheen {
+  animation: letsBeginSheenSweep 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.welcomePrimaryBtnRippleRing {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 2px solid rgba(247, 25, 107, 0.55);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.welcomePrimaryBtnActive .welcomePrimaryBtnRippleRing {
+  animation: letsBeginRingExpand 0.44s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.welcomePrimaryBtnContent {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0px;
+  transition: gap 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.welcomePrimaryBtnActive .welcomePrimaryBtnContent {
+  gap: 8px;
+}
+
+.welcomePrimaryBtnArrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0;
+  opacity: 0;
+  transform: translateX(-8px) scale(0.75);
+  overflow: hidden;
+  transition: width 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.22s ease,
+    transform 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.welcomePrimaryBtnActive .welcomePrimaryBtnArrow {
+  width: 20px;
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+.welcomePrimaryBtnSparkCluster {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.welcomeSparkDot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background-color: #FA0B65;
+  opacity: 0;
+}
+
+.welcomePrimaryBtnActive .welcomeSparkDot1 {
+  top: -6px;
+  left: 26%;
+  animation: letsBeginSparkUpLeft 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.welcomePrimaryBtnActive .welcomeSparkDot2 {
+  top: -8px;
+  right: 26%;
+  animation: letsBeginSparkUpRight 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.welcomePrimaryBtnActive .welcomeSparkDot3 {
+  bottom: -6px;
+  left: 50%;
+  animation: letsBeginSparkDown 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes letsBeginSpringPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 10px 24px -6px rgba(247, 25, 107, 0.42);
+  }
+  26% {
+    transform: scale(0.952);
+    box-shadow: 0 5px 14px -4px rgba(247, 25, 107, 0.35);
+  }
+  66% {
+    transform: scale(1.024);
+    box-shadow: 0 0 0 7px rgba(247, 25, 107, 0.16),
+      0 16px 32px -6px rgba(247, 25, 107, 0.54);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 10px 24px -6px rgba(247, 25, 107, 0.42);
+  }
+}
+
+@keyframes letsBeginSheenSweep {
+  0% {
+    left: -130%;
+  }
+  100% {
+    left: 140%;
+  }
+}
+
+@keyframes letsBeginRingExpand {
+  0% {
+    opacity: 0.72;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.07, 1.28);
+  }
+}
+
+@keyframes letsBeginSparkUpLeft {
+  0% {
+    opacity: 0.95;
+    transform: translate(0, 6px) scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-14px, -14px) scale(1.15);
+  }
+}
+
+@keyframes letsBeginSparkUpRight {
+  0% {
+    opacity: 0.95;
+    transform: translate(0, 6px) scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(14px, -14px) scale(1.15);
+  }
+}
+
+@keyframes letsBeginSparkDown {
+  0% {
+    opacity: 0.9;
+    transform: translate(-50%, -4px) scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 13px) scale(1.1);
+  }
+}
+
+@keyframes onboardingWizardEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .welcomeLoginRow {
@@ -2592,6 +2809,7 @@
   flex-direction: column;
   background-color: #ffffff;
   overflow: hidden;
+  animation: onboardingWizardEnter 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .onboardingHeader {
@@ -3349,5 +3567,336 @@
   cursor: default;
 }
 
+/* Super Like Yellow Circle Badge & Ring (Likes Grid & New Matches) */
+.matchGridCardSuperLiked {
+  border: 2.5px solid #FACC15 !important;
+  box-shadow: 0 12px 26px -8px rgba(250, 204, 21, 0.38);
+}
+
+.superLikeYellowCircle {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #FDE047 0%, #FACC15 100%);
+  color: #18181b;
+  border: 1.5px solid #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(250, 204, 21, 0.5);
+}
+
+.compactMatchRingSuperLiked {
+  border: 2.5px solid #FACC15 !important;
+  box-shadow: 0 4px 14px rgba(250, 204, 21, 0.42);
+}
+
+.compactMatchSuperCircleBadge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background-color: #FACC15;
+  color: #18181b;
+  border: 2px solid #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(9, 9, 11, 0.18);
+}
+
+/* Likes Section Incoming Note / Star & Accept / Decline Controls */
+.likesIncomingBox {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  color: #18181b;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  text-align: left;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: 0 6px 16px -4px rgba(9, 9, 11, 0.22);
+}
+
+.likesIncomingBadgeRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #F7196B;
+}
+
+.likesIncomingStarLabel {
+  color: #b45309;
+}
+
+.likesIncomingQuote {
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.32;
+  color: #18181b;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.likesAcceptDeclineRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  width: 100%;
+}
+
+.likesAcceptBtn {
+  height: 28px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(90deg, #FA0B65 0%, #E50E62 100%);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: transform 0.14s ease, opacity 0.14s ease;
+}
+
+.likesAcceptBtn:active {
+  transform: scale(0.96);
+}
+
+.likesDeclineBtn {
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid #d4d4d8;
+  background-color: #f4f4f6;
+  color: #3f3f46;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.14s ease, background-color 0.14s ease;
+}
+
+.likesDeclineBtn:active {
+  transform: scale(0.96);
+  background-color: #e4e4e7;
+}
+
+.likesDirectMsgHint {
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background-color: rgba(24, 24, 27, 0.58);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  color: #ffffff;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+/* Main Profile & Edit Profile Compact Clickable Interests Section */
+.profileCompactInterestsCard {
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 14px 16px;
+  border: 1px solid #efeff4;
+  box-shadow: 0 6px 18px -10px rgba(9, 9, 11, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s ease, transform 0.12s ease;
+}
+
+.profileCompactInterestsCard:hover {
+  border-color: rgba(247, 25, 107, 0.35);
+}
+
+.profileCompactInterestsCard:active {
+  transform: scale(0.99);
+}
+
+.profileCompactInterestsTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
+.profileCompactInterestsTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #18181b;
+  letter-spacing: -0.01em;
+}
+
+.profileCompactInterestsAction {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #F7196B;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.editorialVibePillsRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+}
+
+.editorialVibePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background-color: #fff5f8;
+  border: 1.25px solid #F7196B;
+  color: #18181b;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.editorialVibePillTick {
+  color: #F7196B;
+  font-size: 11.5px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* ==========================================================================
+   WHAT'S YOUR MALAYALI VIBE & INTERESTS SCREEN (Clean, Aligned, Tick-Only)
+   ========================================================================== */
+.malayaliProgressTwoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 18px;
+  flex-shrink: 0;
+}
+
+.malayaliVibeSelectionBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background-color: #fafafa;
+  border: 1px solid #efeff4;
+  margin-bottom: 18px;
+}
+
+.malayaliVibeHintText {
+  font-size: 13px;
+  font-weight: 500;
+  color: #52525b;
+}
+
+.malayaliVibeSelectedCount {
+  font-size: 13px;
+  font-weight: 700;
+  color: #F7196B;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.malayaliVibeCategoryStack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 12px;
+}
+
+.malayaliVibeCategoryBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+}
+
+.malayaliVibeCategoryTitle {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #3f3f46;
+  letter-spacing: -0.01em;
+}
+
+.malayaliVibePillsWrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.malayaliVibePill {
+  min-height: 40px;
+  padding: 7px 15px;
+  border-radius: 999px;
+  border: 1.25px solid #e4e4e7;
+  background-color: #ffffff;
+  color: #1c1c1e;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: border-color 0.14s ease, background-color 0.14s ease, transform 0.12s ease;
+}
+
+.malayaliVibePill:hover {
+  border-color: #d4d4d8;
+}
+
+.malayaliVibePill:active {
+  transform: scale(0.97);
+}
+
+.malayaliVibePillSelected {
+  border: 1.5px solid #F7196B;
+  background-color: #fff5f8;
+  color: #18181b;
+  font-weight: 600;
+}
+
+.malayaliVibePillIconCheck {
+  color: #F7196B;
+  font-size: 12.5px;
+  font-weight: 800;
+  line-height: 1;
+}
 
 

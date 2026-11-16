@@ -4,20 +4,32 @@ import '../models/candidate_profile.dart';
 import '../models/filter_preferences.dart';
 import '../models/match_thread.dart';
 
-/// Repository providing curated Naam profiles, discovery filtering, likes/stars/passes state, and chat threads.
+/// Repository providing curated Naam profiles, discovery filtering, likes/stars/passes state, profile notes, and chat threads.
 class DatingRepository {
   DatingRepository()
       : _matches = List<MatchThread>.of(_initialMatches),
         _admirers = List<CandidateProfile>.of(_initialAdmirers),
         _likedProfiles = <CandidateProfile>[_catalog[1]],
-        _starredProfiles = <CandidateProfile>[],
-        _passedProfiles = <CandidateProfile>[];
+        _starredProfiles = <CandidateProfile>[
+          _catalog[0],
+          _catalog[1],
+        ],
+        _passedProfiles = <CandidateProfile>[],
+        _profileNotes = <String, String>{
+          'cand-ananya':
+              'Your taste in warm minimal spaces caught my eye—chai in Fort Kochi this weekend?',
+          'cand-rohan':
+              'I know a hidden courtyard café in Indiranagar you would love.',
+          'cand-aarav':
+              'Scoring a new short film tonight—what soundtrack never gets old for you?',
+        };
 
   final List<MatchThread> _matches;
   final List<CandidateProfile> _admirers;
   final List<CandidateProfile> _likedProfiles;
   final List<CandidateProfile> _starredProfiles;
   final List<CandidateProfile> _passedProfiles;
+  final Map<String, String> _profileNotes;
 
   static const List<CandidateProfile> _catalog = [
     CandidateProfile(
@@ -30,7 +42,8 @@ class DatingRepository {
       heightLabel: '166 cm (5\'5")',
       zodiac: 'Libra',
       lifestyle: 'Filter chai · Non-smoker',
-      drug: 'Never',
+      smoking: 'Non-Smoker',
+      isSuperLiked: true,
       neighborhood: 'Kochi',
       distanceKm: 3,
       bio: 'Chai, good stories & a little spontaneity.',
@@ -41,9 +54,9 @@ class DatingRepository {
       lifestyleStory:
           'Weekends usually mean a morning ferry ride to Fort Kochi, hunting for vintage brassware, and cooking coastal curries for friends with old Malayalam and indie records playing.',
       imageUrls: [
+        'assets/images/image_0899b3c2.png',
         'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=85',
         'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1000&q=85',
-        'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1000&q=85',
       ],
       prompt: ProfilePrompt(
         question: 'A Sunday well spent',
@@ -70,7 +83,8 @@ class DatingRepository {
       heightLabel: '181 cm (5\'11")',
       zodiac: 'Taurus',
       lifestyle: 'Specialty coffee · Early riser',
-      drug: 'Occasionally',
+      smoking: 'Non-Smoker',
+      isSuperLiked: true,
       neighborhood: 'Bengaluru',
       distanceKm: 8,
       bio: 'Restoring heritage bungalows & brewing pour-over coffee.',
@@ -110,7 +124,8 @@ class DatingRepository {
       heightLabel: '168 cm (5\'6")',
       zodiac: 'Pisces',
       lifestyle: 'Matcha ritual · Dog lover',
-      drug: 'Never',
+      smoking: 'Socially',
+      isSuperLiked: false,
       neighborhood: 'Mumbai',
       distanceKm: 12,
       bio: 'Small-batch scents, art bookshops & coastal walks.',
@@ -148,7 +163,8 @@ class DatingRepository {
       heightLabel: '179 cm (5\'10")',
       zodiac: 'Scorpio',
       lifestyle: 'Vinyl collector · Ocean swimmer',
-      drug: 'Socially',
+      smoking: 'Cannabis',
+      isSuperLiked: true,
       neighborhood: 'Kochi',
       distanceKm: 5,
       bio: 'Scoring indie cinema on acoustic guitar & analog synths.',
@@ -191,6 +207,7 @@ class DatingRepository {
       id: 'thread-ananya',
       partner: _catalog[0],
       matchedAtLabel: '2m ago',
+      isSuperMatch: true,
       unreadCount: 1,
       messages: const [
         ChatMessage(
@@ -207,6 +224,7 @@ class DatingRepository {
       id: 'thread-rohan',
       partner: _catalog[1],
       matchedAtLabel: '1h ago',
+      isSuperMatch: true,
       unreadCount: 1,
       messages: const [
         ChatMessage(
@@ -235,12 +253,23 @@ class DatingRepository {
   List<CandidateProfile> getPassedProfiles() =>
       List<CandidateProfile>.unmodifiable(_passedProfiles);
 
+  Map<String, String> getProfileNotes() =>
+      Map<String, String>.unmodifiable(_profileNotes);
+
+  String? getProfileNoteFor(String candidateId) => _profileNotes[candidateId];
+
+  void saveProfileNote(String candidateId, String note) {
+    final trimmed = note.trim();
+    if (trimmed.isEmpty) return;
+    _profileNotes[candidateId] = trimmed;
+  }
+
   bool isStarred(String candidateId) =>
       _starredProfiles.any((c) => c.id == candidateId);
 
   List<CandidateProfile> getPriorityIntroProfiles() {
     return _catalog
-        .where((c) => c.paidIntroMessage != null)
+        .where((c) => c.paidIntroMessage != null || _profileNotes.containsKey(c.id))
         .toList(growable: false);
   }
 
@@ -250,11 +279,13 @@ class DatingRepository {
     required bool isSuperLike,
   }) {
     if (isLike) {
+      final updatedCandidate =
+          isSuperLike ? candidate.copyWith(isSuperLiked: true) : candidate;
       if (!_likedProfiles.any((c) => c.id == candidate.id)) {
-        _likedProfiles.insert(0, candidate);
+        _likedProfiles.insert(0, updatedCandidate);
       }
       if (isSuperLike && !_starredProfiles.any((c) => c.id == candidate.id)) {
-        _starredProfiles.insert(0, candidate);
+        _starredProfiles.insert(0, updatedCandidate);
       }
       _passedProfiles.removeWhere((c) => c.id == candidate.id);
     } else {
@@ -303,7 +334,8 @@ class DatingRepository {
           candidate.age > preferences.maxAge) {
         return false;
       }
-      if (preferences.drug != 'Any' && candidate.drug != preferences.drug) {
+      if (preferences.smoking != 'Any' &&
+          candidate.smoking != preferences.smoking) {
         return false;
       }
       if (preferences.intention != 'Any' &&
@@ -332,18 +364,19 @@ class DatingRepository {
       return _matches[existingIndex];
     }
 
+    final superFlag = isSuperMatch || isStarred(candidate.id) || candidate.isSuperLiked;
     final thread = MatchThread(
       id: 'thread-${candidate.id}',
       partner: candidate,
       matchedAtLabel: 'Just now',
-      isSuperMatch: isSuperMatch,
+      isSuperMatch: superFlag,
       unreadCount: 1,
       messages: [
         ChatMessage(
           id: 'msg-${DateTime.now().millisecondsSinceEpoch}',
           senderId: candidate.id,
-          text: isSuperMatch
-              ? 'Your Star highlight made my day! Would love to hear more about your weekend plans.'
+          text: superFlag
+              ? 'Your Super Like made my day! Would love to hear more about your weekend plans.'
               : 'So glad we matched on Naam! How is your week unfolding?',
           sentAtLabel: 'Just now',
           isFromViewer: false,
@@ -358,6 +391,7 @@ class DatingRepository {
     required CandidateProfile candidate,
     required String text,
   }) {
+    saveProfileNote(candidate.id, text);
     _admirers.removeWhere((c) => c.id == candidate.id);
     if (!_likedProfiles.any((c) => c.id == candidate.id)) {
       _likedProfiles.insert(0, candidate);
@@ -390,6 +424,7 @@ class DatingRepository {
       id: 'thread-${candidate.id}',
       partner: candidate,
       matchedAtLabel: 'Just now',
+      isSuperMatch: isStarred(candidate.id) || candidate.isSuperLiked,
       unreadCount: 0,
       messages: [newMessage],
     );
@@ -435,5 +470,5 @@ final datingRepositoryProvider = Provider<DatingRepository>((ref) {
   return DatingRepository();
 });
 
-/// Reactive counter bumping whenever matches, likes, or passes mutate.
+/// Reactive counter bumping whenever matches, likes, notes, or passes mutate.
 final datingActivityRevisionProvider = StateProvider<int>((ref) => 0);

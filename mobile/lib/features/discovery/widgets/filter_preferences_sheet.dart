@@ -9,7 +9,7 @@ import '../../../data/models/filter_preferences.dart';
 /// - Always-visible inline Age (18-29) dual-thumb range slider
 /// - Always-visible inline Height (4'0"-8'0") dual-thumb range slider
 /// - "Sort By Activity" row with iOS switch
-/// - Expandable accordion rows: Status, Faith, Community, Mother Tongue, Country, State, Smoking, Drug, Interested In
+/// - Expandable accordion rows: Status, Faith, Country, State, Smoking (incl. Cannabis), Interested In (incl. Non-binary)
 /// - Sticky bottom full-width "Save Search" CTA button in #F93666
 class FilterPreferencesSheet extends StatefulWidget {
   const FilterPreferencesSheet({
@@ -31,12 +31,9 @@ class _FilterPreferencesSheetState extends State<FilterPreferencesSheet> {
   late bool _sortByActivity;
   late String _status;
   late String _faith;
-  late String _community;
-  late String _motherTongue;
   late String _country;
   late String _stateRegion;
   late String _smoking;
-  late String _drug;
   late String _interestedInGender;
   String? _expandedKey;
 
@@ -53,24 +50,6 @@ class _FilterPreferencesSheetState extends State<FilterPreferencesSheet> {
     'Hindu',
     'Muslim',
     'Spiritual',
-  ];
-  static const List<String> _communityOptions = [
-    'Any',
-    'Syro-Malabar',
-    'Malankara Orthodox',
-    'Marthoma',
-    'Roman Catholic',
-    'Jacobite',
-    'Latin Catholic',
-  ];
-  static const List<String> _motherTongueOptions = [
-    'Any',
-    'Malayalam',
-    'English',
-    'Tamil',
-    'Hindi',
-    'Kannada',
-    'Telugu',
   ];
   static const List<String> _countryOptions = [
     'Any',
@@ -94,17 +73,15 @@ class _FilterPreferencesSheetState extends State<FilterPreferencesSheet> {
     'Non-Smoker',
     'Socially',
     'Regular',
+    'Cannabis',
     'Trying to Quit',
   ];
-  static const List<String> _drugOptions = [
-    'Any',
-    'Never',
-    'Occasionally',
-    'Socially',
-    'Cannabis',
-    '420 Friendly',
+  static const List<String> _genderOptions = [
+    'Everyone',
+    'Women',
+    'Men',
+    'Non-binary',
   ];
-  static const List<String> _genderOptions = ['Everyone', 'Women', 'Men'];
 
   @override
   void initState() {
@@ -125,12 +102,9 @@ class _FilterPreferencesSheetState extends State<FilterPreferencesSheet> {
     _sortByActivity = prefs.sortByActivity;
     _status = prefs.status;
     _faith = prefs.faith;
-    _community = prefs.community;
-    _motherTongue = prefs.speaks;
     _country = prefs.country;
     _stateRegion = prefs.stateRegion;
     _smoking = prefs.smoking;
-    _drug = prefs.drug;
     _interestedInGender = prefs.interestedInGender;
   }
 
@@ -154,12 +128,9 @@ class _FilterPreferencesSheetState extends State<FilterPreferencesSheet> {
         sortByActivity: _sortByActivity,
         status: _status,
         faith: _faith,
-        community: _community,
-        speaks: _motherTongue,
         country: _country,
         stateRegion: _stateRegion,
         smoking: _smoking,
-        drug: _drug,
       ),
     );
     Navigator.of(context).pop();
@@ -261,7 +232,7 @@ class _FilterPreferencesSheetState extends State<FilterPreferencesSheet> {
                   ),
                   const SizedBox(height: 4),
 
-                  // 4. Expandable Accordion Rows
+                  // 4. Expandable Accordion Rows (Community, Mother Tongue, and Drug removed)
                   _FilterAccordionRow(
                     label: 'Status',
                     selectedValue: _status,
@@ -277,22 +248,6 @@ class _FilterPreferencesSheetState extends State<FilterPreferencesSheet> {
                     options: _faithOptions,
                     onToggle: () => _toggleExpanded('faith'),
                     onSelect: (val) => setState(() => _faith = val),
-                  ),
-                  _FilterAccordionRow(
-                    label: 'Community',
-                    selectedValue: _community,
-                    isExpanded: _expandedKey == 'community',
-                    options: _communityOptions,
-                    onToggle: () => _toggleExpanded('community'),
-                    onSelect: (val) => setState(() => _community = val),
-                  ),
-                  _FilterAccordionRow(
-                    label: 'Mother Tongue',
-                    selectedValue: _motherTongue,
-                    isExpanded: _expandedKey == 'motherTongue',
-                    options: _motherTongueOptions,
-                    onToggle: () => _toggleExpanded('motherTongue'),
-                    onSelect: (val) => setState(() => _motherTongue = val),
                   ),
                   _FilterAccordionRow(
                     label: 'Country',
@@ -317,14 +272,6 @@ class _FilterPreferencesSheetState extends State<FilterPreferencesSheet> {
                     options: _smokingOptions,
                     onToggle: () => _toggleExpanded('smoking'),
                     onSelect: (val) => setState(() => _smoking = val),
-                  ),
-                  _FilterAccordionRow(
-                    label: 'Drug',
-                    selectedValue: _drug,
-                    isExpanded: _expandedKey == 'drug',
-                    options: _drugOptions,
-                    onToggle: () => _toggleExpanded('drug'),
-                    onSelect: (val) => setState(() => _drug = val),
                   ),
                   _FilterAccordionRow(
                     label: 'Interested In',

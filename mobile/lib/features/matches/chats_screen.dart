@@ -32,7 +32,7 @@ final unreadChatsCountProvider = Provider<int>((ref) {
 });
 
 /// Naam Chats Tab Screen:
-/// - Horizontal New Connections & Priority Intros strip
+/// - Horizontal New Matches strip with yellow Super Like circle badge and ring
 /// - Full conversation list with unread count and instant reply
 /// - 4-state UI coverage (`loading`, `error`, `empty`, `data`)
 class ChatsScreen extends ConsumerWidget {
@@ -67,6 +67,7 @@ class ChatsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncInbox = ref.watch(chatsInboxProvider);
+    final repo = ref.watch(datingRepositoryProvider);
 
     return ColoredBox(
       color: Colors.white,
@@ -122,7 +123,7 @@ class ChatsScreen extends ConsumerWidget {
                       children: [
                         if (inbox.priorityIntros.isNotEmpty) ...[
                           const Text(
-                            'New Connections',
+                            'New Matches',
                             style: TextStyle(
                               color: JDateTokens.pitchBlack,
                               fontSize: 15,
@@ -140,8 +141,12 @@ class ChatsScreen extends ConsumerWidget {
                                   const SizedBox(width: 14),
                               itemBuilder: (context, index) {
                                 final person = inbox.priorityIntros[index];
+                                final isSuperLiked =
+                                    person.isSuperLiked ||
+                                        repo.isStarred(person.id);
                                 return _NewConnectionAvatarItem(
                                   candidate: person,
+                                  isSuperLiked: isSuperLiked,
                                   onTap: () =>
                                       _openIntroCandidate(context, ref, person),
                                 );
@@ -182,10 +187,12 @@ class ChatsScreen extends ConsumerWidget {
 class _NewConnectionAvatarItem extends StatelessWidget {
   const _NewConnectionAvatarItem({
     required this.candidate,
+    required this.isSuperLiked,
     required this.onTap,
   });
 
   final CandidateProfile candidate;
+  final bool isSuperLiked;
   final VoidCallback onTap;
 
   @override
@@ -197,25 +204,56 @@ class _NewConnectionAvatarItem extends StatelessWidget {
         width: 72,
         child: Column(
           children: [
-            Container(
-              width: 66,
-              height: 66,
-              padding: const EdgeInsets.all(2.5),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: JDateTokens.brandRose,
-                  width: 2,
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  width: 66,
+                  height: 66,
+                  padding: const EdgeInsets.all(2.5),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isSuperLiked
+                          ? JDateTokens.solarYellow
+                          : JDateTokens.brandRose,
+                      width: 2.5,
+                    ),
+                  ),
+                  child: ClipOval(
+                    child: NaamProfileImage(
+                      imageUrl: candidate.primaryImageUrl,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              ),
-              child: ClipOval(
-                child: Image.network(
-                  candidate.primaryImageUrl,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const ColoredBox(color: Color(0xFFE4E4E7)),
-                ),
-              ),
+                if (isSuperLiked)
+                  Positioned(
+                    right: -2,
+                    bottom: -2,
+                    child: Container(
+                      width: 22,
+                      height: 22,
+                      decoration: BoxDecoration(
+                        color: JDateTokens.solarYellow,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x55FACC15),
+                            blurRadius: 6,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.star_rounded,
+                        size: 13,
+                        color: JDateTokens.pitchBlack,
+                      ),
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(height: 6),
             Text(
@@ -266,11 +304,9 @@ class _ChatThreadListRow extends StatelessWidget {
               child: SizedBox(
                 width: 56,
                 height: 56,
-                child: Image.network(
-                  partner.primaryImageUrl,
+                child: NaamProfileImage(
+                  imageUrl: partner.primaryImageUrl,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const ColoredBox(color: Color(0xFFE4E4E7)),
                 ),
               ),
             ),

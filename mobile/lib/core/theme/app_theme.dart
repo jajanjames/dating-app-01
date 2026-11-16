@@ -47,10 +47,61 @@ abstract final class JDateTokens {
 
   // Minimum Touch Target
   static const double minHitTarget = 48.0;
+
+  // Brand Assets
+  static const String naamLogoAsset = 'assets/images/naam_logo.png';
+  static const String featuredProfilePhotoAsset =
+      'assets/images/image_0899b3c2.png';
 }
 
 /// Light Mode Only theme provider.
 final themeModeProvider = Provider<ThemeMode>((ref) => ThemeMode.light);
+
+/// Unified profile photo widget that supports both bundled local assets (`assets/...`)
+/// and remote network URLs (`https://...`) with a clean fallback placeholder.
+class NaamProfileImage extends StatelessWidget {
+  const NaamProfileImage({
+    super.key,
+    required this.imageUrl,
+    this.fit = BoxFit.cover,
+    this.width,
+    this.height,
+    this.fallback,
+  });
+
+  final String imageUrl;
+  final BoxFit fit;
+  final double? width;
+  final double? height;
+  final Widget? fallback;
+
+  @override
+  Widget build(BuildContext context) {
+    final defaultFallback =
+        fallback ?? const ColoredBox(color: Color(0xFFE4E4E7));
+    if (imageUrl.isEmpty) {
+      return defaultFallback;
+    }
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return Image.network(
+        imageUrl,
+        fit: fit,
+        width: width,
+        height: height,
+        errorBuilder: (context, error, stackTrace) => defaultFallback,
+      );
+    }
+    final normalizedAsset =
+        imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
+    return Image.asset(
+      normalizedAsset,
+      fit: fit,
+      width: width,
+      height: height,
+      errorBuilder: (context, error, stackTrace) => defaultFallback,
+    );
+  }
+}
 
 /// Official naam Brand Wordmark widget rendering the bundled `assets/images/naam_logo.png`
 /// (horizontal lowercase `naam` + inline magenta ribbon heart) with a matching vector fallback.
@@ -65,7 +116,7 @@ class NaamBrandLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      'assets/images/naam_logo.png',
+      JDateTokens.naamLogoAsset,
       height: height,
       fit: BoxFit.contain,
       errorBuilder: (context, error, stackTrace) {

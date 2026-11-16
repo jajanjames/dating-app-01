@@ -7,7 +7,7 @@ interface CandidateProfile {
   id: string;
   name: string;
   age: number;
-  gender: "Women" | "Men";
+  gender: "Women" | "Men" | "Non-binary";
   distanceKm: number;
   heightInches: number;
   heightLabel: string;
@@ -36,6 +36,7 @@ interface CandidateProfile {
   lastSeenLabel: string;
   isRecent: boolean;
   isVerified: boolean;
+  isSuperLiked?: boolean;
   paidIntroMessage?: string;
 }
 
@@ -82,11 +83,18 @@ const CANDIDATE_CATALOG: CandidateProfile[] = [
     promptQuestion: "A Sunday well spent",
     promptAnswer:
       "Morning café hopping in Fort Kochi, browsing indie bookshops, and catching sunset by the water.",
-    interests: ["Spatial Design", "Filter Coffee & Chai", "Indie Books", "Travel"],
+    interests: [
+      "Mohanlal fan",
+      "Malayalam indie",
+      "Chaya",
+      "Coffee & chaya dates",
+      "Anime & manga",
+      "Fort Kochi ferry walks",
+    ],
     photos: [
+      "/assets/aistudio/image_0899b3c2.png",
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=85",
       "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1000&q=85",
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1000&q=85",
     ],
     fallbackGradient: "#e4e4e7",
     likesViewer: true,
@@ -94,6 +102,7 @@ const CANDIDATE_CATALOG: CandidateProfile[] = [
     lastSeenLabel: "Online",
     isRecent: true,
     isVerified: true,
+    isSuperLiked: true,
     paidIntroMessage:
       "Loved your taste in minimal architecture—chai this week?",
   },
@@ -123,7 +132,13 @@ const CANDIDATE_CATALOG: CandidateProfile[] = [
     promptQuestion: "The quickest way to my heart",
     promptAnswer:
       "Warm cardamom buns and debating Brutalist vs. Nordic minimalism over pour-over coffee.",
-    interests: ["Architecture", "Leica M6", "Sourdough", "Jazz Vinyl"],
+    interests: [
+      "Mammootty fan",
+      "Sushin Shyam beats",
+      "Slow-burn romance",
+      "Studio Ghibli",
+      "Porotta & beef roast",
+    ],
     photos: [
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1000&q=85",
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1000&q=85",
@@ -135,6 +150,7 @@ const CANDIDATE_CATALOG: CandidateProfile[] = [
     lastSeenLabel: "Online",
     isRecent: true,
     isVerified: true,
+    isSuperLiked: true,
     paidIntroMessage:
       "I know a hidden courtyard bakery in Indiranagar you need to see.",
   },
@@ -164,7 +180,13 @@ const CANDIDATE_CATALOG: CandidateProfile[] = [
     promptQuestion: "First date wish list",
     promptAnswer:
       "Browsing rare art books at an indie shop followed by matcha lattes in a hidden courtyard.",
-    interests: ["Olfaction", "Art Books", "Ceramics", "Matcha"],
+    interests: [
+      "Kumbalangi Nights",
+      "Matcha & iced latte",
+      "One Piece & JJK",
+      "Bookstore & café hopping",
+      "Varkala cliff cafés",
+    ],
     photos: [
       "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1000&q=85",
       "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=1000&q=85",
@@ -203,7 +225,13 @@ const CANDIDATE_CATALOG: CandidateProfile[] = [
     promptQuestion: "We will get along if",
     promptAnswer:
       "You stay through the end credits just to hear the closing orchestral score.",
-    interests: ["Film Scoring", "Modular Synths", "Surfing", "35mm Film"],
+    interests: [
+      "Fahadh Faasil",
+      "Rex Vijayan & Avial",
+      "Deep 2 AM talks",
+      "35mm film photography",
+      "Sulaimani at 2 AM",
+    ],
     photos: [
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1000&q=85",
       "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1000&q=85",
@@ -243,7 +271,13 @@ const CANDIDATE_CATALOG: CandidateProfile[] = [
     bio: "Throwing stoneware bowls in my sunlit studio and hosting candlelit dinner parties for friends.",
     promptQuestion: "My simple pleasure",
     promptAnswer: "Warm sourdough with cultured butter right out of the oven.",
-    interests: ["Ceramics", "Dinner Parties", "Cycling", "Modernist Design"],
+    interests: [
+      "Bangalore Days",
+      "Evergreen hits",
+      "Cooking together",
+      "K-Dramas & ramen",
+      "Sadya",
+    ],
     photos: [
       "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1000&q=85",
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=85",
@@ -276,12 +310,18 @@ const CANDIDATE_CATALOG: CandidateProfile[] = [
     motherTongue: "English",
     country: "India",
     state: "Maharashtra",
-    smoking: "Socially",
+    smoking: "Cannabis",
     drug: "Cannabis",
     bio: "Obsessed with tactile aluminum, Dieter Rams radios, and weekend hikes in the hills.",
     promptQuestion: "Best travel story",
     promptAnswer: "Taking the night train to Lapland to sketch under the aurora.",
-    interests: ["Industrial Design", "Trail Running", "Pour-Over", "Sauna"],
+    interests: [
+      "Aavesham (Eda Mone)",
+      "Manjummel Boys",
+      "Long drives & playlists",
+      "Gaming & PS5 nights",
+      "Puttu & kadala",
+    ],
     photos: [
       "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1000&q=85",
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1000&q=85",
@@ -678,32 +718,6 @@ const FILTER_ACCORDION_SECTIONS: {
     options: ["Any", "Christian", "Hindu", "Muslim", "Spiritual"],
   },
   {
-    key: "community",
-    label: "Community",
-    options: [
-      "Any",
-      "Syro-Malabar",
-      "Malankara Orthodox",
-      "Marthoma",
-      "Roman Catholic",
-      "Jacobite",
-      "Latin Catholic",
-    ],
-  },
-  {
-    key: "motherTongue",
-    label: "Mother Tongue",
-    options: [
-      "Any",
-      "Malayalam",
-      "English",
-      "Tamil",
-      "Hindi",
-      "Kannada",
-      "Telugu",
-    ],
-  },
-  {
     key: "country",
     label: "Country",
     options: [
@@ -731,24 +745,19 @@ const FILTER_ACCORDION_SECTIONS: {
   {
     key: "smoking",
     label: "Smoking",
-    options: ["Any", "Non-Smoker", "Socially", "Regular", "Trying to Quit"],
-  },
-  {
-    key: "drug",
-    label: "Drug",
     options: [
       "Any",
-      "Never",
-      "Occasionally",
+      "Non-Smoker",
       "Socially",
+      "Regular",
       "Cannabis",
-      "420 Friendly",
+      "Trying to Quit",
     ],
   },
   {
     key: "gender",
     label: "Interested In",
-    options: ["Everyone", "Women", "Men"],
+    options: ["Everyone", "Women", "Men", "Non-binary"],
   },
 ];
 
@@ -980,9 +989,140 @@ const ONBOARDING_CITIES = [
   "Mumbai, Maharashtra",
 ];
 
+const MALAYALI_VIBE_STEP_1_CATEGORIES: {
+  category: string;
+  items: string[];
+}[] = [
+  {
+    category: "Malayalam cinema",
+    items: [
+      "Mohanlal fan",
+      "Mammootty fan",
+      "Fahadh Faasil",
+      "Aavesham (Eda Mone)",
+      "Manjummel Boys",
+      "Kumbalangi Nights",
+      "Premalu",
+      "Premam era",
+      "Bramayugam",
+      "90s Priyadarshan classics",
+      "Bangalore Days",
+    ],
+  },
+  {
+    category: "On repeat",
+    items: [
+      "Malayalam indie",
+      "Evergreen hits",
+      "Sushin Shyam beats",
+      "Dabzee & Baby Jean (MHR)",
+      "Rex Vijayan & Avial",
+      "Vidyasagar melodies",
+      "Yesudas & Chithra classics",
+      "Job Kurian",
+      "Agam",
+      "Monsoon lo-fi",
+    ],
+  },
+  {
+    category: "Comfort food",
+    items: [
+      "Chaya",
+      "Puttu & kadala",
+      "Sadya",
+      "Pazhampori & beef",
+      "Porotta & beef roast",
+      "Malabar dum biriyani",
+      "Kuzhimandhi run",
+      "Karimeen pollichathu",
+      "Sulaimani at 2 AM",
+      "Unniyappam & filter kaapi",
+    ],
+  },
+  {
+    category: "Dating & connection",
+    items: [
+      "Coffee & chaya dates",
+      "Deep 2 AM talks",
+      "Slow-burn romance",
+      "Long drives & playlists",
+      "Cooking together",
+      "Beach sunset walks",
+      "Bookstore & café hopping",
+      "Spontaneous roadtrips",
+      "Humor & banter",
+      "Intentional dating",
+    ],
+  },
+];
+
+const MALAYALI_VIBE_STEP_2_CATEGORIES: {
+  category: string;
+  items: string[];
+}[] = [
+  {
+    category: "Gen Z, anime & pop culture",
+    items: [
+      "Anime & manga",
+      "One Piece & JJK",
+      "Studio Ghibli",
+      "Attack on Titan",
+      "K-Dramas & ramen",
+      "Gaming & PS5 nights",
+      "Thrifting & streetwear",
+      "35mm film photography",
+      "Matcha & iced latte",
+      "Memes & reels",
+      "Indie gigs",
+    ],
+  },
+  {
+    category: "Hangouts & Kerala spots",
+    items: [
+      "Fort Kochi ferry walks",
+      "Varkala cliff cafés",
+      "Marine Drive sunset",
+      "Munnar monsoon drive",
+      "Thattukada at 2 AM",
+      "Kochi-Muziris Biennale",
+      "Kozhikode beach ice-orathi",
+      "Wayanad mist trails",
+    ],
+  },
+  {
+    category: "Roots & celebrations",
+    items: [
+      "Onam kasavu & pookkalam",
+      "Thrissur Pooram energy",
+      "Vallamkali boat race",
+      "Christmas plum cake & wine",
+      "Vishu kani & sadya",
+      "Temple festival thayambaka",
+    ],
+  },
+  {
+    category: "Millennial & Malayali life",
+    items: [
+      "Global / NRI Malayali",
+      "Monsoon veranda reads",
+      "Sunday beef curry & parotta",
+      "Evening chaya & kadi",
+      "Filter kaapi purist",
+      "Late-night drive & FM",
+    ],
+  },
+];
+
 const Home: NextPage = () => {
   // Welcome (0) + 8-Step Onboarding Flow (1..8), or "done" when inside the main app
   const [onboardingStep, setOnboardingStep] = useState<number | "done">(0);
+  // Dedicated 2-Step "What's your Malayali vibe?" Onboarding & Interest Flow (1 = 01/02, 2 = 02/02, null = inactive)
+  const [malayaliVibeStep, setMalayaliVibeStep] = useState<1 | 2 | null>(null);
+  const [vibeReturnTarget, setVibeReturnTarget] = useState<
+    "onboarding" | "profile" | "edit_profile"
+  >("onboarding");
+  const [isLetsBeginAnimating, setIsLetsBeginAnimating] =
+    useState<boolean>(false);
   const [obCountryCode, setObCountryCode] = useState<string>("+91");
   const [obPhoneNumber, setObPhoneNumber] = useState<string>("98765 43210");
   const [obOtpDigits, setObOtpDigits] = useState<string[]>([
@@ -1030,27 +1170,38 @@ const Home: NextPage = () => {
   >({
     status: "Any",
     faith: "Any",
-    community: "Any",
-    motherTongue: "Any",
     country: "Any",
     state: "Any",
     smoking: "Any",
-    drug: "Any",
     gender: "Everyone",
   });
   const [expandedPrefKey, setExpandedPrefKey] = useState<string | null>(null);
 
-  // Discovery Deck, Liked & Passed Profiles State
+  // Discovery Deck, Liked, Super-Liked, Declined & Passed Profiles State
   const [swipedIds, setSwipedIds] = useState<string[]>([]);
   const [likedIds, setLikedIds] = useState<string[]>([
     "cand-aria",
     "cand-julian",
   ]);
+  const [superLikedIds, setSuperLikedIds] = useState<string[]>([
+    "cand-aria",
+    "cand-julian",
+  ]);
+  const [declinedLikeIds, setDeclinedLikeIds] = useState<string[]>([]);
   const [passedIds, setPassedIds] = useState<string[]>(["cand-soren"]);
   const [photoIdx, setPhotoIdx] = useState<number>(0);
   const [swipeAnim, setSwipeAnim] = useState<
     "pass" | "like" | "super" | "rewind" | null
   >(null);
+
+  // Incoming Notes on Profiles in Likes Section
+  const [profileNotes, setProfileNotes] = useState<Record<string, string>>({
+    "cand-aria": "Loved your taste in minimal architecture—chai this week?",
+    "cand-julian":
+      "I know a hidden courtyard bakery in Indiranagar you need to see.",
+    "cand-mateo":
+      "Scoring a new short film tonight—what soundtrack never gets old for you?",
+  });
 
   // Full-Screen Normal Page States (Profile Detail Page & Dedicated Message Page)
   const [fullScreenProfile, setFullScreenProfile] =
@@ -1058,7 +1209,7 @@ const Home: NextPage = () => {
   const [fullScreenChatThread, setFullScreenChatThread] =
     useState<MatchThread | null>(null);
 
-  // Floating Quick-Message Sheet over Discovery
+  // Floating Direct-Message Sheet
   const [quickMsgCandidate, setQuickMsgCandidate] =
     useState<CandidateProfile | null>(null);
   const [quickMsgText, setQuickMsgText] = useState<string>("");
@@ -1110,7 +1261,7 @@ const Home: NextPage = () => {
   ]);
   const [draftMessage, setDraftMessage] = useState<string>("");
 
-  // Current User Profile State (Matches Images 2 & 3: "aria", 29% completion arc, Concierge & Comments, Settings, Love Stories)
+  // Current User Profile State
   const [myPhotos, setMyPhotos] = useState<string[]>([
     "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=85",
     "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80",
@@ -1130,6 +1281,13 @@ const Home: NextPage = () => {
   const [userPromptAnswer, setUserPromptAnswer] = useState<string>(
     "Morning gallery walk, fresh flowers, and cooking pasta with acoustic records."
   );
+  const [userInterests, setUserInterests] = useState<string[]>([
+    "Mohanlal fan",
+    "Malayalam indie",
+    "Chaya",
+    "Sadya",
+  ]);
+  const [newInterestText, setNewInterestText] = useState<string>("");
 
   // Subscription & Comments Interactive State
   const [conciergeSlideIdx, setConciergeSlideIdx] = useState<number>(1);
@@ -1143,20 +1301,6 @@ const Home: NextPage = () => {
   const [profileSubPage, setProfileSubPage] = useState<ProfileSubPage>(null);
   const [supportTicketText, setSupportTicketText] = useState<string>("");
   const [statusBanner, setStatusBanner] = useState<string | null>(null);
-
-  // Calculate dynamic completion percentage (starts at 29% with 2 photos, increases as photos/fields are added)
-  const baseCompletion =
-    myPhotos.length === 2
-      ? 29
-      : Math.min(
-          100,
-          Math.round(
-            15 +
-              myPhotos.length * 10 +
-              (isViewerVerified ? 14 : 0) +
-              (userBio.trim().length > 10 ? 10 : 0)
-          )
-        );
 
   const visibleDeck = CANDIDATE_CATALOG.filter((c) => {
     if (swipedIds.includes(c.id)) return false;
@@ -1183,18 +1327,6 @@ const Home: NextPage = () => {
       return false;
     }
     if (
-      filterSelections.community !== "Any" &&
-      c.community !== filterSelections.community
-    ) {
-      return false;
-    }
-    if (
-      filterSelections.motherTongue !== "Any" &&
-      c.motherTongue !== filterSelections.motherTongue
-    ) {
-      return false;
-    }
-    if (
       filterSelections.country !== "Any" &&
       c.country !== filterSelections.country
     ) {
@@ -1212,12 +1344,6 @@ const Home: NextPage = () => {
     ) {
       return false;
     }
-    if (
-      filterSelections.drug !== "Any" &&
-      c.drug !== filterSelections.drug
-    ) {
-      return false;
-    }
     return true;
   }).sort((a, b) => {
     if (!sortByActivity) return 0;
@@ -1227,16 +1353,13 @@ const Home: NextPage = () => {
   const currentCandidate = visibleDeck[0] ?? null;
 
   const filteredMatchesGrid = CANDIDATE_CATALOG.filter((c) => {
+    if (declinedLikeIds.includes(c.id)) return false;
     if (matchFilter === "recent") return c.isRecent;
     if (matchFilter === "online") return c.isOnline;
     if (matchFilter === "nearby") return c.distanceKm <= 8;
     if (matchFilter === "verified") return c.isVerified;
     return true;
   });
-
-  const paidPriorityIntros = CANDIDATE_CATALOG.filter((c) =>
-    Boolean(c.paidIntroMessage)
-  );
 
   const likedProfilesList = CANDIDATE_CATALOG.filter((c) =>
     likedIds.includes(c.id)
@@ -1267,6 +1390,11 @@ const Home: NextPage = () => {
         setLikedIds((prev) =>
           prev.includes(target.id) ? prev : [target.id, ...prev]
         );
+        if (action === "super") {
+          setSuperLikedIds((prev) =>
+            prev.includes(target.id) ? prev : [target.id, ...prev]
+          );
+        }
       }
       setSwipeAnim(null);
     }, 340);
@@ -1293,22 +1421,21 @@ const Home: NextPage = () => {
     setFilterSelections({
       status: "Any",
       faith: "Any",
-      community: "Any",
-      motherTongue: "Any",
       country: "Any",
       state: "Any",
       smoking: "Any",
-      drug: "Any",
       gender: "Everyone",
     });
     setExpandedPrefKey(null);
   };
 
-  const handleSendQuickMessage = (e: FormEvent) => {
-    e.preventDefault();
-    if (!quickMsgCandidate || !quickMsgText.trim()) return;
-    const text = quickMsgText.trim();
-    const target = quickMsgCandidate;
+  const deliverDirectMessage = (target: CandidateProfile, rawText: string) => {
+    const text = rawText.trim();
+    if (!text) return;
+
+    setLikedIds((prev) =>
+      prev.includes(target.id) ? prev : [target.id, ...prev]
+    );
 
     const newMsg: ChatMessage = {
       id: `msg-${Date.now()}`,
@@ -1317,35 +1444,115 @@ const Home: NextPage = () => {
       time: "Just now",
     };
 
+    let targetThread: MatchThread | null = null;
     setThreads((prev) => {
       const existing = prev.find((t) => t.profile.id === target.id);
       if (existing) {
-        return [
-          {
-            ...existing,
-            unread: false,
-            messages: [...existing.messages, newMsg],
-          },
-          ...prev.filter((t) => t.profile.id !== target.id),
-        ];
-      }
-      return [
-        {
-          id: `thread-${target.id}`,
-          profile: target,
+        const updated = {
+          ...existing,
           unread: false,
-          messages: [newMsg],
-        },
-        ...prev,
-      ];
+          messages: [...existing.messages, newMsg],
+        };
+        targetThread = updated;
+        return [updated, ...prev.filter((t) => t.profile.id !== target.id)];
+      }
+      const created: MatchThread = {
+        id: `thread-${target.id}`,
+        profile: target,
+        unread: false,
+        messages: [newMsg],
+      };
+      targetThread = created;
+      return [created, ...prev];
     });
+
+    if (targetThread) {
+      setFullScreenChatThread(targetThread);
+    }
+  };
+
+  const handleSendQuickMessage = (e: FormEvent) => {
+    e.preventDefault();
+    if (!quickMsgCandidate || !quickMsgText.trim()) return;
+    const text = quickMsgText.trim();
+    const target = quickMsgCandidate;
+
+    deliverDirectMessage(target, text);
 
     if (commentCredits > 0) {
       setCommentCredits((c) => c - 1);
     }
     setQuickMsgText("");
     setQuickMsgCandidate(null);
-    showToast(`Comment delivered to ${target.name}`);
+    showToast(`Direct message sent to ${target.name} ✓`);
+  };
+
+  const handleAcceptIncomingLike = (person: CandidateProfile) => {
+    setLikedIds((prev) =>
+      prev.includes(person.id) ? prev : [person.id, ...prev]
+    );
+    const existing = threads.find((t) => t.profile.id === person.id);
+    if (existing) {
+      setFullScreenChatThread(existing);
+    } else {
+      const incomingText =
+        profileNotes[person.id] ??
+        person.paidIntroMessage ??
+        "Sent you a Super Like on naam ★";
+      const created: MatchThread = {
+        id: `thread-${person.id}`,
+        profile: person,
+        unread: false,
+        messages: [
+          {
+            id: `msg-in-${Date.now()}`,
+            sender: "them",
+            text: incomingText,
+            time: "Just now",
+          },
+        ],
+      };
+      setThreads((prev) => [created, ...prev]);
+      setFullScreenChatThread(created);
+    }
+    showToast(`Accepted ${person.name}!`);
+  };
+
+  const handleDeclineIncomingLike = (person: CandidateProfile) => {
+    setDeclinedLikeIds((prev) =>
+      prev.includes(person.id) ? prev : [...prev, person.id]
+    );
+    setSuperLikedIds((prev) => prev.filter((id) => id !== person.id));
+    setProfileNotes((prev) => {
+      const next = { ...prev };
+      delete next[person.id];
+      return next;
+    });
+    showToast(`Declined ${person.name}`);
+  };
+
+  const handleToggleMalayaliVibeTag = (tag: string) => {
+    setUserInterests((prev) =>
+      prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag]
+    );
+  };
+
+  const handleRemoveUserInterest = (interestToRemove: string) => {
+    setUserInterests((prev) =>
+      prev.filter((item) => item !== interestToRemove)
+    );
+    showToast(`Removed "${interestToRemove}"`);
+  };
+
+  const handleAddUserInterest = (e?: FormEvent) => {
+    if (e) e.preventDefault();
+    const clean = newInterestText.trim();
+    if (!clean) return;
+    if (!userInterests.includes(clean)) {
+      setUserInterests((prev) => [...prev, clean]);
+      showToast(`Added "${clean}" to your Malayali vibe`);
+    }
+    setNewInterestText("");
   };
 
   const handleSendChatReply = (e: FormEvent) => {
@@ -1420,7 +1627,7 @@ const Home: NextPage = () => {
     digitsOnlyPhone.length >= 4 ? digitsOnlyPhone.slice(-4) : "3210";
   const maskedPhoneDisplay = `${obCountryCode} ••••• •${lastFourPhone}`;
 
-  const handleCompleteOnboarding = () => {
+  const handleProceedToMalayaliVibeOnboarding = () => {
     const cleanName = obFirstName.trim() || "Anjali";
     setUserName(cleanName);
     setUserAge(calculatedOnboardingAge);
@@ -1430,9 +1637,28 @@ const Home: NextPage = () => {
       setMyPhotos(obPhotos);
     }
     setIsViewerVerified(true);
-    setOnboardingStep("done");
-    setActiveTab("discover");
-    showToast(`Welcome to naam, ${cleanName}!`);
+    setVibeReturnTarget("onboarding");
+    setMalayaliVibeStep(1);
+  };
+
+  const handleFinishMalayaliVibeFlow = () => {
+    setMalayaliVibeStep(null);
+    if (vibeReturnTarget === "edit_profile") {
+      setOnboardingStep("done");
+      setActiveTab("profile");
+      setProfileSubPage("edit_profile");
+      showToast("Interests & Malayali vibe updated ✓");
+    } else if (vibeReturnTarget === "profile") {
+      setOnboardingStep("done");
+      setActiveTab("profile");
+      setProfileSubPage(null);
+      showToast("Interests & Malayali vibe updated ✓");
+    } else {
+      const cleanName = obFirstName.trim() || userName || "Anjali";
+      setOnboardingStep("done");
+      setActiveTab("discover");
+      showToast(`Welcome to naam, ${cleanName}!`);
+    }
   };
 
   const handleOnboardingPhotoTap = (slotIndex: number) => {
@@ -1455,6 +1681,15 @@ const Home: NextPage = () => {
     }
   };
 
+  const handleLetsBeginClick = () => {
+    if (isLetsBeginAnimating) return;
+    setIsLetsBeginAnimating(true);
+    setTimeout(() => {
+      setIsLetsBeginAnimating(false);
+      setOnboardingStep(1);
+    }, 430);
+  };
+
   return (
     <>
       <Head>
@@ -1467,18 +1702,190 @@ const Home: NextPage = () => {
 
       <div className={`${styles.viewportRoot} ${styles.pearlTheme}`}>
         <div className={styles.mobileCanvas}>
-          {/* WELCOME & 8-STEP ONBOARDING FLOW (Screens 0 to 8) */}
-          {onboardingStep !== "done" ? (
+          {/* MALAYALI VIBE & INTERESTS SCREEN (Clean, Aligned, Tick-Mark Only, No Banner Image Clutter) */}
+          {malayaliVibeStep !== null ? (
+            <section className={styles.onboardingWizardScreen}>
+              <header className={styles.onboardingHeader}>
+                <button
+                  type="button"
+                  className={styles.onboardingBackBtn}
+                  onClick={() => {
+                    if (
+                      vibeReturnTarget === "onboarding" &&
+                      malayaliVibeStep === 2
+                    ) {
+                      setMalayaliVibeStep(1);
+                    } else if (vibeReturnTarget === "edit_profile") {
+                      setMalayaliVibeStep(null);
+                      setOnboardingStep("done");
+                      setActiveTab("profile");
+                      setProfileSubPage("edit_profile");
+                    } else if (vibeReturnTarget === "profile") {
+                      setMalayaliVibeStep(null);
+                      setOnboardingStep("done");
+                      setActiveTab("profile");
+                      setProfileSubPage(null);
+                    } else {
+                      setMalayaliVibeStep(null);
+                      setOnboardingStep(8);
+                    }
+                  }}
+                  aria-label="Go back"
+                >
+                  <OnboardingBackArrowIcon size={22} />
+                </button>
+
+                <div className={styles.onboardingLogoCenter}>
+                  <img
+                    src="/assets/aistudio/image_cd9da323.png"
+                    alt="naam"
+                    className={styles.onboardingHeaderLogo}
+                  />
+                </div>
+
+                <div className={styles.onboardingStepCounter}>
+                  {vibeReturnTarget === "onboarding"
+                    ? `0${malayaliVibeStep} / 02`
+                    : `${userInterests.length} ✓`}
+                </div>
+              </header>
+
+              {/* 2-Segment Horizontal Progress Bar */}
+              <div className={styles.malayaliProgressTwoGrid}>
+                <div
+                  className={`${styles.onboardingProgressSeg} ${
+                    malayaliVibeStep === 1
+                      ? styles.onboardingProgressSegActive
+                      : styles.onboardingProgressSegDone
+                  }`}
+                />
+                <div
+                  className={`${styles.onboardingProgressSeg} ${
+                    vibeReturnTarget !== "onboarding" || malayaliVibeStep === 2
+                      ? styles.onboardingProgressSegActive
+                      : ""
+                  }`}
+                />
+              </div>
+
+              <div className={styles.onboardingBodyScroll}>
+                <h1 className={styles.onboardingTitle}>
+                  What&apos;s your
+                  <br />
+                  Malayali vibe?
+                </h1>
+                <p
+                  className={styles.onboardingSubtitle}
+                  style={{ marginBottom: "14px" }}
+                >
+                  Malayalam cinema, on repeat, dating vibes, Gen Z, anime &amp;
+                  more.
+                </p>
+
+                <div className={styles.malayaliVibeSelectionBar}>
+                  <span className={styles.malayaliVibeHintText}>
+                    Choose at least 3 that feel like you
+                  </span>
+                  <span className={styles.malayaliVibeSelectedCount}>
+                    {`${userInterests.length} selected`}
+                  </span>
+                </div>
+
+                <div className={styles.malayaliVibeCategoryStack}>
+                  {(vibeReturnTarget === "onboarding"
+                    ? malayaliVibeStep === 1
+                      ? MALAYALI_VIBE_STEP_1_CATEGORIES
+                      : MALAYALI_VIBE_STEP_2_CATEGORIES
+                    : [
+                        ...MALAYALI_VIBE_STEP_1_CATEGORIES,
+                        ...MALAYALI_VIBE_STEP_2_CATEGORIES,
+                      ]
+                  ).map((group) => (
+                    <div
+                      key={group.category}
+                      className={styles.malayaliVibeCategoryBlock}
+                    >
+                      <div className={styles.malayaliVibeCategoryTitle}>
+                        {group.category}
+                      </div>
+                      <div className={styles.malayaliVibePillsWrap}>
+                        {group.items.map((tag) => {
+                          const isSelected = userInterests.includes(tag);
+                          return (
+                            <button
+                              key={tag}
+                              type="button"
+                              className={`${styles.malayaliVibePill} ${
+                                isSelected
+                                  ? styles.malayaliVibePillSelected
+                                  : ""
+                              }`}
+                              onClick={() => handleToggleMalayaliVibeTag(tag)}
+                            >
+                              <span>{tag}</span>
+                              {isSelected && (
+                                <span
+                                  className={styles.malayaliVibePillIconCheck}
+                                >
+                                  ✓
+                                </span>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className={styles.onboardingBottomFooter}>
+                <p className={styles.onboardingFooterCaption}>
+                  A familiar taste is a lovely place to start.
+                </p>
+                <button
+                  type="button"
+                  className={styles.onboardingCtaPillBtn}
+                  disabled={userInterests.length < 3}
+                  onClick={() => {
+                    if (
+                      vibeReturnTarget === "onboarding" &&
+                      malayaliVibeStep === 1
+                    ) {
+                      setMalayaliVibeStep(2);
+                    } else {
+                      handleFinishMalayaliVibeFlow();
+                    }
+                  }}
+                >
+                  <span>
+                    {vibeReturnTarget === "onboarding"
+                      ? "Continue"
+                      : "Save Interests"}
+                  </span>
+                  <OnboardingRightArrowIcon size={20} />
+                </button>
+              </div>
+            </section>
+          ) : onboardingStep !== "done" ? (
             onboardingStep === 0 ? (
               /* SCREEN 0: Welcome Screen (Matches image_2972c48f.png) */
               <section className={styles.onboardingFullBleed}>
                 <div
-                  className={styles.welcomeHeroPhoto}
+                  className={`${styles.welcomeHeroPhoto} ${
+                    isLetsBeginAnimating ? styles.welcomeHeroPhotoLaunching : ""
+                  }`}
                   role="img"
                   aria-label="naam Malayali couple enjoying chai and vada under a blue sky"
                 />
 
-                <div className={styles.welcomeBottomCard}>
+                <div
+                  className={`${styles.welcomeBottomCard} ${
+                    isLetsBeginAnimating
+                      ? styles.welcomeBottomCardLaunching
+                      : ""
+                  }`}
+                >
                   <div className={styles.welcomeTextGroup}>
                     <h1 className={styles.welcomeHeadline}>
                       Someone new.
@@ -1493,10 +1900,46 @@ const Home: NextPage = () => {
                   <div className={styles.welcomeActionsGroup}>
                     <button
                       type="button"
-                      className={styles.welcomePrimaryBtn}
-                      onClick={() => setOnboardingStep(1)}
+                      className={`${styles.welcomePrimaryBtn} ${
+                        isLetsBeginAnimating
+                          ? styles.welcomePrimaryBtnActive
+                          : ""
+                      }`}
+                      onClick={handleLetsBeginClick}
                     >
-                      Let&apos;s begin
+                      <span
+                        className={styles.welcomePrimaryBtnRippleRing}
+                        aria-hidden="true"
+                      />
+                      <span
+                        className={styles.welcomePrimaryBtnClip}
+                        aria-hidden="true"
+                      >
+                        <span className={styles.welcomePrimaryBtnSheen} />
+                      </span>
+                      <span
+                        className={styles.welcomePrimaryBtnSparkCluster}
+                        aria-hidden="true"
+                      >
+                        <span
+                          className={`${styles.welcomeSparkDot} ${styles.welcomeSparkDot1}`}
+                        />
+                        <span
+                          className={`${styles.welcomeSparkDot} ${styles.welcomeSparkDot2}`}
+                        />
+                        <span
+                          className={`${styles.welcomeSparkDot} ${styles.welcomeSparkDot3}`}
+                        />
+                      </span>
+                      <span className={styles.welcomePrimaryBtnContent}>
+                        <span>Let&apos;s begin</span>
+                        <span
+                          className={styles.welcomePrimaryBtnArrow}
+                          aria-hidden="true"
+                        >
+                          <OnboardingRightArrowIcon size={19} />
+                        </span>
+                      </span>
                     </button>
 
                     <div className={styles.welcomeLoginRow}>
@@ -1507,6 +1950,17 @@ const Home: NextPage = () => {
                         onClick={() => setOnboardingStep(1)}
                       >
                         Log in
+                      </button>
+                      <span>·</span>
+                      <button
+                        type="button"
+                        className={styles.welcomeLoginBtn}
+                        onClick={() => {
+                          setVibeReturnTarget("onboarding");
+                          setMalayaliVibeStep(1);
+                        }}
+                      >
+                        Malayali vibe
                       </button>
                     </div>
                   </div>
@@ -2387,7 +2841,7 @@ const Home: NextPage = () => {
                         type="button"
                         className={styles.onboardingCtaPillBtn}
                         disabled={!obSelfieConsent}
-                        onClick={handleCompleteOnboarding}
+                        onClick={handleProceedToMalayaliVibeOnboarding}
                       >
                         <span>Capture selfie</span>
                         <OnboardingRightArrowIcon size={20} />
@@ -2404,24 +2858,19 @@ const Home: NextPage = () => {
                   <h1 className={styles.viewHeader}>
                     {fullScreenProfile.name}, {fullScreenProfile.age}
                   </h1>
-                  <span
-                    className={styles.filterChip}
-                    style={{
-                      minHeight: "28px",
-                      padding: "0 10px",
-                      fontSize: "11px",
-                      color: fullScreenProfile.isVerified
-                        ? "#F7196B"
-                        : "var(--lg-muted)",
-                    }}
-                  >
-                    {fullScreenProfile.isVerified && (
+                  {fullScreenProfile.isVerified && (
+                    <span
+                      className={styles.editorialVerifiedBadge}
+                      style={{
+                        minHeight: "26px",
+                        padding: "0 10px",
+                        fontSize: "11px",
+                      }}
+                    >
                       <SoftVerifiedBadgeIcon size={14} />
-                    )}
-                    <span>
-                      {fullScreenProfile.isVerified ? "Verified" : "Unverified"}
+                      <span>Verified</span>
                     </span>
-                  </span>
+                  )}
                 </div>
 
                 <button
@@ -2501,7 +2950,7 @@ const Home: NextPage = () => {
                   </div>
                 </div>
 
-                {/* SEQUENCE 3: Photo 3 + Description, Background & Interests */}
+                {/* SEQUENCE 3: Photo 3 + Description, Background & Malayali Vibe / Interests */}
                 <div className={styles.detailSequenceStep}>
                   <div
                     className={styles.detailGalleryPhoto}
@@ -2513,23 +2962,31 @@ const Home: NextPage = () => {
                   />
                   <div className={styles.sequenceInfoCard}>
                     <div className={styles.paidBadgeText}>
-                      More About {fullScreenProfile.name}
+                      Malayali Vibe &amp; Interests
                     </div>
                     <p className={styles.sequenceBodyText}>
-                      {fullScreenProfile.faith} ({fullScreenProfile.community}) ·
-                      Speaks {fullScreenProfile.motherTongue} ·{" "}
-                      {fullScreenProfile.heightLabel} · {fullScreenProfile.status} ·{" "}
-                      {fullScreenProfile.smoking}
+                      {fullScreenProfile.faith} · {fullScreenProfile.heightLabel}{" "}
+                      · {fullScreenProfile.status} · {fullScreenProfile.smoking}
                     </p>
-                    <div className={styles.sequenceTagRow}>
-                      {fullScreenProfile.interests.map((interest) => (
-                        <span
-                          key={interest}
-                          className={styles.sequencePillTag}
-                        >
-                          {interest}
-                        </span>
-                      ))}
+                    <div className={styles.malayaliVibePillsWrap}>
+                      {fullScreenProfile.interests.map((interest) => {
+                        const isShared = userInterests.includes(interest);
+                        return (
+                          <button
+                            key={interest}
+                            type="button"
+                            className={`${styles.malayaliVibePill} ${
+                              isShared ? styles.malayaliVibePillSelected : ""
+                            }`}
+                            onClick={() => handleToggleMalayaliVibeTag(interest)}
+                          >
+                            <span>{interest}</span>
+                            <span className={styles.malayaliVibePillIconCheck}>
+                              ✓
+                            </span>
+                          </button>
+                        );
+                      })}
                     </div>
 
                     <div
@@ -2550,7 +3007,7 @@ const Home: NextPage = () => {
                         }}
                       >
                         <SoftChatIcon size={18} />
-                        <span>Send Comment to {fullScreenProfile.name}</span>
+                        <span>Direct Message {fullScreenProfile.name}</span>
                       </button>
                       <button
                         type="button"
@@ -3041,7 +3498,7 @@ const Home: NextPage = () => {
                           No Profiles Match Your Search
                         </h1>
                         <p className={styles.viewSubtext}>
-                          Adjust your age, height, or community filters or reset your search preferences.
+                          Adjust your age, height, or faith filters or reset your search preferences.
                         </p>
                         <button
                           type="button"
@@ -3055,13 +3512,13 @@ const Home: NextPage = () => {
                   </div>
                 )}
 
-                {/* TAB 2: MATCHES */}
+                {/* TAB 2: MATCHES & LIKES */}
                 {activeTab === "matches" && (
                   <section className={styles.sectionContainer}>
                     <div>
                       <h1 className={styles.viewHeader}>Matches & Likes</h1>
                       <p className={styles.viewSubtext}>
-                        Filter by Recent, Online, Verified, or tap any person to view their full profile.
+                        Tap any card to send a direct message, or Accept / Decline incoming notes and Super Likes.
                       </p>
                     </div>
 
@@ -3095,11 +3552,23 @@ const Home: NextPage = () => {
                       {filteredMatchesGrid.map((person) => {
                         const isBlurred =
                           matchFilter === "likes_locked" && !isConciergeActive;
+                        const isSuper = Boolean(
+                          person.isSuperLiked ||
+                            superLikedIds.includes(person.id)
+                        );
+                        const incomingNote =
+                          profileNotes[person.id] ?? person.paidIntroMessage;
+                        const hasIncomingNoteOrStar = Boolean(
+                          isSuper || incomingNote
+                        );
                         return (
-                          <button
+                          <div
                             key={person.id}
-                            type="button"
-                            className={styles.matchGridCard}
+                            role="button"
+                            tabIndex={0}
+                            className={`${styles.matchGridCard} ${
+                              isSuper ? styles.matchGridCardSuperLiked : ""
+                            }`}
                             style={
                               isBlurred
                                 ? undefined
@@ -3111,7 +3580,16 @@ const Home: NextPage = () => {
                               if (isBlurred) {
                                 setActivePlanModal("concierge");
                               } else {
-                                setFullScreenProfile(person);
+                                setQuickMsgCandidate(person);
+                              }
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                if (isBlurred) {
+                                  setActivePlanModal("concierge");
+                                } else {
+                                  setQuickMsgCandidate(person);
+                                }
                               }
                             }}
                           >
@@ -3136,23 +3614,36 @@ const Home: NextPage = () => {
                                 />
                                 <span>{person.lastSeenLabel}</span>
                               </span>
-                              <span className={styles.verifiedBadge}>
-                                {person.isVerified && (
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "6px",
+                                }}
+                              >
+                                {isSuper && (
                                   <span
-                                    style={{
-                                      color: "#F7196B",
-                                      display: "flex",
-                                    }}
+                                    className={styles.superLikeYellowCircle}
+                                    title="Super Like"
+                                    aria-label="Super Like"
                                   >
-                                    <SoftVerifiedBadgeIcon size={12} />
+                                    <SoftStarIcon size={14} />
                                   </span>
                                 )}
-                                <span>
-                                  {person.isVerified
-                                    ? "Verified"
-                                    : "Unverified"}
-                                </span>
-                              </span>
+                                {person.isVerified && (
+                                  <span className={styles.verifiedBadge}>
+                                    <span
+                                      style={{
+                                        color: "#F7196B",
+                                        display: "flex",
+                                      }}
+                                    >
+                                      <SoftVerifiedBadgeIcon size={12} />
+                                    </span>
+                                    <span>Verified</span>
+                                  </span>
+                                )}
+                              </div>
                             </div>
 
                             <div className={styles.gridCardBottom}>
@@ -3166,8 +3657,58 @@ const Home: NextPage = () => {
                               <div className={styles.gridCardMeta}>
                                 {person.occupation} · {person.neighborhood}
                               </div>
+
+                              {!isBlurred && hasIncomingNoteOrStar ? (
+                                <div
+                                  className={styles.likesIncomingBox}
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <div className={styles.likesIncomingBadgeRow}>
+                                    {isSuper ? (
+                                      <>
+                                        <SoftStarIcon size={12} />
+                                        <span>Sent you a Super Like</span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <SoftChatIcon size={12} />
+                                        <span>Sent you a note</span>
+                                      </>
+                                    )}
+                                  </div>
+                                  {incomingNote && (
+                                    <div className={styles.likesIncomingQuote}>
+                                      &ldquo;{incomingNote}&rdquo;
+                                    </div>
+                                  )}
+                                  <div
+                                    className={styles.likesAcceptDeclineRow}
+                                  >
+                                    <button
+                                      type="button"
+                                      className={styles.likesAcceptBtn}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAcceptIncomingLike(person);
+                                      }}
+                                    >
+                                      Accept
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className={styles.likesDeclineBtn}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDeclineIncomingLike(person);
+                                      }}
+                                    >
+                                      Decline
+                                    </button>
+                                  </div>
+                                </div>
+                              ) : null}
                             </div>
-                          </button>
+                          </div>
                         );
                       })}
                     </div>
@@ -3184,7 +3725,11 @@ const Home: NextPage = () => {
                       </div>
                       <div className={styles.compactMatchesStrip}>
                         {CANDIDATE_CATALOG.slice(0, 5).map((person) => {
-                          const hasIntro = Boolean(person.paidIntroMessage);
+                          const hasIntro = Boolean(profileNotes[person.id]);
+                          const isSuper = Boolean(
+                            person.isSuperLiked ||
+                              superLikedIds.includes(person.id)
+                          );
                           return (
                             <button
                               key={person.id}
@@ -3205,6 +3750,7 @@ const Home: NextPage = () => {
                                         id: `paid-${person.id}`,
                                         sender: "them",
                                         text:
+                                          profileNotes[person.id] ??
                                           person.paidIntroMessage ??
                                           "Matched with you on naam",
                                         time: "Just now",
@@ -3216,15 +3762,32 @@ const Home: NextPage = () => {
                                 }
                               }}
                             >
-                              <div className={styles.compactMatchRing}>
+                              <div
+                                className={`${styles.compactMatchRing} ${
+                                  isSuper
+                                    ? styles.compactMatchRingSuperLiked
+                                    : ""
+                                }`}
+                              >
                                 <div
                                   className={styles.compactMatchImg}
                                   style={{
                                     backgroundImage: `url(${person.photos[0]})`,
                                   }}
                                 />
-                                {hasIntro && (
-                                  <span className={styles.compactMatchDot} />
+                                {isSuper ? (
+                                  <span
+                                    className={
+                                      styles.compactMatchSuperCircleBadge
+                                    }
+                                    title="Super Like"
+                                  >
+                                    <SoftStarIcon size={11} />
+                                  </span>
+                                ) : (
+                                  hasIntro && (
+                                    <span className={styles.compactMatchDot} />
+                                  )
                                 )}
                               </div>
                               <span className={styles.compactMatchName}>
@@ -3510,37 +4073,82 @@ const Home: NextPage = () => {
                               >
                                 {isViewerVerified
                                   ? "Verified badge shown next to your name"
-                                  : "Tap to verify your profile"}
+                                  : "Tap to enable your Verified tick mark"}
                               </div>
                             </div>
                             <button
                               type="button"
-                              className={`${styles.iosSwitchBtn} ${
+                              className={`${styles.malayaliVibePill} ${
                                 isViewerVerified
-                                  ? styles.iosSwitchBtnActive
+                                  ? styles.malayaliVibePillSelected
                                   : ""
                               }`}
+                              style={{ minHeight: "34px", padding: "0 12px" }}
                               onClick={() =>
                                 setIsViewerVerified((prev) => !prev)
                               }
                               aria-label="Toggle verification"
                             >
-                              <div
-                                className={`${styles.iosSwitchThumb} ${
-                                  isViewerVerified
-                                    ? styles.iosSwitchThumbActive
-                                    : ""
-                                }`}
-                              />
+                              <span>
+                                {isViewerVerified ? "Verified" : "Verify"}
+                              </span>
+                              {isViewerVerified && (
+                                <span
+                                  className={styles.malayaliVibePillIconCheck}
+                                >
+                                  ✓
+                                </span>
+                              )}
                             </button>
                           </div>
+
+                          {/* Small Clickable Interests Section inside Edit Profile (Navigates directly to full Malayali Vibe & Interests page) */}
+                          <button
+                            type="button"
+                            className={styles.profileCompactInterestsCard}
+                            onClick={() => {
+                              setVibeReturnTarget("edit_profile");
+                              setMalayaliVibeStep(1);
+                            }}
+                          >
+                            <div className={styles.profileCompactInterestsTop}>
+                              <span
+                                className={styles.profileCompactInterestsTitle}
+                              >
+                                Interests &amp; Malayali Vibe (
+                                {userInterests.length})
+                              </span>
+                              <span
+                                className={styles.profileCompactInterestsAction}
+                              >
+                                <span>Edit interests</span>
+                                <ChevronRightIcon size={15} />
+                              </span>
+                            </div>
+
+                            <div className={styles.editorialVibePillsRow}>
+                              {userInterests.map((interest) => (
+                                <span
+                                  key={interest}
+                                  className={styles.editorialVibePill}
+                                >
+                                  <span>{interest}</span>
+                                  <span
+                                    className={styles.editorialVibePillTick}
+                                  >
+                                    ✓
+                                  </span>
+                                </span>
+                              ))}
+                            </div>
+                          </button>
 
                           <button
                             type="button"
                             className={styles.primaryCapsuleBtn}
                             onClick={() => {
                               setProfileSubPage(null);
-                              showToast("Profile updated ✓");
+                              showToast("Profile & Malayali vibe updated ✓");
                             }}
                           >
                             Save Profile Changes
@@ -3604,7 +4212,7 @@ const Home: NextPage = () => {
                                       )}
                                     </div>
                                     <div className={styles.viewSubtext}>
-                                      {person.occupation} · {person.community} ·{" "}
+                                      {person.occupation} ·{" "}
                                       {person.neighborhood}
                                     </div>
                                   </div>
@@ -3802,7 +4410,7 @@ const Home: NextPage = () => {
                               className={styles.viewSubtext}
                               style={{ marginTop: "4px" }}
                             >
-                              Your age, height, faith, community, and mother tongue preferences are saved immediately to curate your Discovery deck.
+                              Your age, height, faith, and smoking preferences are saved immediately to curate your Discovery deck.
                             </p>
                           </div>
                           <div className={styles.vitalCard}>
@@ -3895,6 +4503,44 @@ const Home: NextPage = () => {
                             </button>
                           </div>
                         </div>
+
+                        {/* Small Clickable Interests Section in Profile (Clicks directly to Malayali Vibe & Interests page) */}
+                        <button
+                          type="button"
+                          className={styles.profileCompactInterestsCard}
+                          onClick={() => {
+                            setVibeReturnTarget("profile");
+                            setMalayaliVibeStep(1);
+                          }}
+                        >
+                          <div className={styles.profileCompactInterestsTop}>
+                            <span
+                              className={styles.profileCompactInterestsTitle}
+                            >
+                              Interests &amp; Malayali Vibe
+                            </span>
+                            <span
+                              className={styles.profileCompactInterestsAction}
+                            >
+                              <span>{userInterests.length} selected</span>
+                              <ChevronRightIcon size={15} />
+                            </span>
+                          </div>
+
+                          <div className={styles.editorialVibePillsRow}>
+                            {userInterests.map((tag) => (
+                              <span
+                                key={tag}
+                                className={styles.editorialVibePill}
+                              >
+                                <span>{tag}</span>
+                                <span className={styles.editorialVibePillTick}>
+                                  ✓
+                                </span>
+                              </span>
+                            ))}
+                          </div>
+                        </button>
 
                         {/* 2. Clean White Card with Rose Accent, 3 Short Perks & Upgrade CTA */}
                         <div className={styles.subShowcaseCard}>
@@ -4064,6 +4710,30 @@ const Home: NextPage = () => {
                             type="button"
                             className={styles.minimalSettingRow}
                             onClick={() => {
+                              setVibeReturnTarget("edit_profile");
+                              setMalayaliVibeStep(1);
+                            }}
+                          >
+                            <div className={styles.minimalSettingLeft}>
+                              <span
+                                className={styles.minimalSettingIcon}
+                                style={{ color: "#F7196B" }}
+                              >
+                                <SoftHeartIcon size={19} />
+                              </span>
+                              <span className={styles.minimalSettingTitle}>
+                                Malayali Vibe & Interests
+                              </span>
+                            </div>
+                            <span className={styles.minimalSettingArrow}>
+                              <ChevronRightIcon size={18} />
+                            </span>
+                          </button>
+
+                          <button
+                            type="button"
+                            className={styles.minimalSettingRow}
+                            onClick={() => {
                               setProfileSubPage(null);
                               setOnboardingStep(0);
                             }}
@@ -4097,6 +4767,7 @@ const Home: NextPage = () => {
 
           {/* Clean Full-Width Docked Bottom Navigation Bar — Hidden Inside Onboarding, Full-Screen Chat, or Profile Detail View */}
           {onboardingStep === "done" &&
+            malayaliVibeStep === null &&
             !fullScreenChatThread &&
             !fullScreenProfile && (
             <div className={styles.bottomTabBarWrapper}>
@@ -4185,7 +4856,7 @@ const Home: NextPage = () => {
           )}
         </div>
 
-        {/* Floating Quick-Message / Comment Sheet */}
+        {/* Floating Direct Message Sheet */}
         {quickMsgCandidate && (
           <div
             className={styles.sheetOverlay}
@@ -4200,10 +4871,10 @@ const Home: NextPage = () => {
               <div className={styles.sheetHeaderRow}>
                 <div>
                   <h2 className={styles.viewHeader}>
-                    Send Comment to {quickMsgCandidate.name}
+                    Direct Message {quickMsgCandidate.name}
                   </h2>
                   <p className={styles.viewSubtext}>
-                    You have {commentCredits} Comment credits remaining.
+                    Send a direct message to start chatting immediately.
                   </p>
                 </div>
                 <button
@@ -4218,7 +4889,7 @@ const Home: NextPage = () => {
               <input
                 type="text"
                 className={styles.glassInput}
-                placeholder={`Write an intentional comment to ${quickMsgCandidate.name}...`}
+                placeholder={`Write a direct message to ${quickMsgCandidate.name}...`}
                 value={quickMsgText}
                 onChange={(e) => setQuickMsgText(e.target.value)}
                 autoFocus
@@ -4227,7 +4898,7 @@ const Home: NextPage = () => {
 
               <button type="submit" className={styles.primaryCapsuleBtn}>
                 <SoftChatIcon size={18} />
-                <span>Send Comment</span>
+                <span>Send Direct Message</span>
               </button>
             </form>
           </div>
