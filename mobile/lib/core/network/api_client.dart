@@ -41,21 +41,56 @@ class ApiClient {
 
   Uri _uri(String path) => Uri.parse('$baseUrl$path');
 
-  Future<dynamic> postJson(String path, Map<String, dynamic> body) {
+  Future<dynamic> postJson(
+    String path,
+    Map<String, dynamic> body, {
+    String? token,
+  }) {
     return _guard(() async {
       final response = await _http
           .post(
             _uri(path),
-            headers: const {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-            },
+            headers: _jsonHeaders(token),
             body: jsonEncode(body),
           )
           .timeout(_jsonTimeout);
       return _decode(response);
     });
   }
+
+  /// Authenticated GET. [token] is sent as `Authorization: Bearer <token>`.
+  Future<dynamic> getJson(String path, {String? token}) {
+    return _guard(() async {
+      final response = await _http
+          .get(_uri(path), headers: _jsonHeaders(token))
+          .timeout(_jsonTimeout);
+      return _decode(response);
+    });
+  }
+
+  /// Authenticated PUT with a JSON [body].
+  Future<dynamic> putJson(
+    String path,
+    Map<String, dynamic> body, {
+    String? token,
+  }) {
+    return _guard(() async {
+      final response = await _http
+          .put(
+            _uri(path),
+            headers: _jsonHeaders(token),
+            body: jsonEncode(body),
+          )
+          .timeout(_jsonTimeout);
+      return _decode(response);
+    });
+  }
+
+  Map<String, String> _jsonHeaders(String? token) => {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
+      };
 
   Future<dynamic> postMultipart(
     String path, {

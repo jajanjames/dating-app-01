@@ -112,9 +112,83 @@ class DiscoveryScreen extends ConsumerWidget {
     );
   }
 
+  void _showMatchDialog(
+    BuildContext context,
+    WidgetRef ref,
+    CandidateProfile match,
+  ) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: const Text(
+          "It's a match!",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.w800),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircleAvatar(
+              radius: 44,
+              backgroundColor: const Color(0xFFFFF5F8),
+              backgroundImage: match.primaryImageUrl.startsWith('http')
+                  ? NetworkImage(match.primaryImageUrl)
+                  : null,
+              child: match.primaryImageUrl.startsWith('http')
+                  ? null
+                  : const Icon(
+                      Icons.favorite_rounded,
+                      color: JDateTokens.brandRose,
+                      size: 34,
+                    ),
+            ),
+            const SizedBox(height: 14),
+            Text(
+              'You and ${match.firstName} liked each other.',
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: [
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: JDateTokens.brandRose,
+            ),
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Keep swiping'),
+          ),
+        ],
+      ),
+    ).whenComplete(
+      () => ref.read(discoveryControllerProvider.notifier).dismissMatchCelebration(),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncDiscovery = ref.watch(discoveryControllerProvider);
+
+    ref.listen<AsyncValue<DiscoveryState>>(discoveryControllerProvider,
+        (previous, next) {
+      final prev = previous?.valueOrNull;
+      final cur = next.valueOrNull;
+      if (cur == null) return;
+      if (cur.swipeError != null && cur.swipeError != prev?.swipeError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(cur.swipeError!),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+      final match = cur.latestMutualMatch;
+      if (match != null && match.id != prev?.latestMutualMatch?.id) {
+        _showMatchDialog(context, ref, match);
+      }
+    });
 
     return ColoredBox(
       color: Colors.white,
@@ -150,9 +224,9 @@ class DiscoveryScreen extends ConsumerWidget {
                     if (current == null) {
                       return _DiscoveryStateCard(
                         icon: Icons.favorite_outline_rounded,
-                        title: 'You Are All Caught Up',
+                        title: 'No more profiles nearby',
                         subtitle:
-                            'Adjust your filter preferences or reload your Naam discovery deck.',
+                            'Check back soon, or adjust your filter preferences.',
                         actionLabel: 'Reload Profiles',
                         onAction: () {
                           ref

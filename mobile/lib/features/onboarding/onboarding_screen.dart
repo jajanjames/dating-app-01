@@ -13,6 +13,7 @@ import '../../core/theme/app_theme.dart';
 import '../../data/models/onboarding_models.dart';
 import '../../data/repositories/onboarding_repository.dart';
 import 'city_search_sheet.dart';
+import 'malayali_vibe_onboarding_screen.dart';
 import 'selfie_capture_screen.dart';
 
 const Object _unset = Object();
@@ -741,9 +742,19 @@ class OnboardingScreen extends ConsumerWidget {
       finished = await notifier.submitCurrentStep();
     }
 
-    if (finished && context.mounted) {
-      context.go(AppRoutes.discover);
-    }
+    if (!finished || !context.mounted) return;
+
+    // Selfie verified: let the user pick their interests ("Malayali vibe")
+    // before entering the app. Leaving the screen any way continues to Discover.
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (routeContext) => MalayaliVibeOnboardingScreen(
+          isOnboarding: true,
+          onCompleted: () => Navigator.of(routeContext).pop(),
+        ),
+      ),
+    );
+    if (context.mounted) context.go(AppRoutes.discover);
   }
 
   @override

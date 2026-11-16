@@ -16,11 +16,12 @@ dependencies:
   get: ^4.7.3
   http: ^1.6.0
   camera: ^0.12.2
-  google_mlkit_face_detection: ^1.0.0
+  google_mlkit_face_detection: ^0.13.1
   image_picker: ^1.2.4
   geolocator: ^14.1.2
   flutter_secure_storage: ^11.2.0
   http_parser: ^4.1.2
+  mapbox_search: ^4.4.0
 
 dev_dependencies:
   flutter_test:

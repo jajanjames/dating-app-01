@@ -77,6 +77,28 @@ class _CitySearchSheetState extends ConsumerState<CitySearchSheet> {
     }
   }
 
+  Future<void> _select(CityOption city) async {
+    if (city.isResolved) {
+      Navigator.of(context).pop(city);
+      return;
+    }
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+    try {
+      final resolved = await ref.read(mapboxGeocodingProvider).resolve(city);
+      if (!mounted) return;
+      Navigator.of(context).pop(resolved);
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _error = e.message;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
@@ -93,7 +115,7 @@ class _CitySearchSheetState extends ConsumerState<CitySearchSheet> {
               const Padding(
                 padding: EdgeInsets.fromLTRB(24, 20, 24, 12),
                 child: Text(
-                  'Search your city',
+                  'Search a place',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
               ),
@@ -105,7 +127,7 @@ class _CitySearchSheetState extends ConsumerState<CitySearchSheet> {
                   textInputAction: TextInputAction.search,
                   onChanged: _onChanged,
                   decoration: InputDecoration(
-                    hintText: 'e.g. Kochi',
+                    hintText: 'City, area or neighbourhood',
                     prefixIcon: const Icon(Icons.search_rounded),
                     suffixIcon: _isLoading
                         ? const Padding(
@@ -160,7 +182,7 @@ class _CitySearchSheetState extends ConsumerState<CitySearchSheet> {
                               color: Color(0xFF8E8E93),
                             ),
                             title: Text(city.label),
-                            onTap: () => Navigator.of(context).pop(city),
+                            onTap: () => _select(city),
                           );
                         },
                       ),

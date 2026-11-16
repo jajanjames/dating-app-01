@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:mapbox_search/mapbox_search.dart' as mb;
 
 import 'api_client.dart';
 
@@ -15,11 +16,22 @@ const String kMapboxAccessToken = String.fromEnvironment('MAPBOX_ACCESS_TOKEN');
 /// A place with coordinates (sent as LOCATION latitude/longitude).
 @immutable
 class CityOption {
-  const CityOption(this.label, this.latitude, this.longitude);
+  const CityOption(this.label, this.latitude, this.longitude)
+      : mapboxId = null;
+
+  /// A Mapbox search suggestion whose coordinates are not known yet; call
+  /// [MapboxGeocodingService.resolve] to fetch them.
+  const CityOption.suggestion(this.label, String this.mapboxId)
+      : latitude = 0,
+        longitude = 0;
 
   final String label;
   final double latitude;
   final double longitude;
+  final String? mapboxId;
+
+  /// `true` once [latitude]/[longitude] are real coordinates.
+  bool get isResolved => mapboxId == null;
 }
 
 /// Mapbox Geocoding v6: place search (text → lat/lng) and reverse lookup.
@@ -36,18 +48,72 @@ class MapboxGeocodingService {
 
   bool get isConfigured => _token.isNotEmpty;
 
-  /// Searches for cities/localities matching [query].
+  /// Searches places matching [query] with the Mapbox Search Box SDK.
+  ///
+  /// Results are suggestions without coordinates; pass the chosen one to
+  /// [resolve]. Results are biased towards the user's IP location (nearby).
   Future<List<CityOption>> search(String query, {String country = ''}) async {
     final q = query.trim();
     if (q.isEmpty) return const [];
-    final json = await _get('/search/geocode/v6/forward', {
-      'q': q,
-      'types': 'place,locality,district',
-      'autocomplete': 'true',
-      'limit': '6',
-      if (country.isNotEmpty) 'country': country,
-    });
-    return _parse(json);
+    _ensureConfigured();
+    final api = mb.SearchBoxAPI(
+      apiKey: _token,
+      limit: 8,
+      country: country.isEmpty ? null : country,
+      types: const [
+        mb.PlaceType.place,
+        mb.PlaceType.locality,
+        mb.PlaceType.neighborhood,
+        mb.PlaceType.district,
+      ],
+    );
+    final response = await api.getSuggestions(
+      q,
+      proximity: mb.Proximity.LocationIp(),
+    );
+    final data = response.success;
+    if (data == null) throw _failure(response.failure);
+    return [
+      for (final s in data.suggestions)
+        CityOption.suggestion(_label(s.name, s.placeFormatted), s.mapboxId),
+    ];
+  }
+
+  /// Fetches the coordinates for a [CityOption] returned by [search].
+  Future<CityOption> resolve(CityOption option) async {
+    final id = option.mapboxId;
+    if (id == null) return option;
+    _ensureConfigured();
+    final response = await mb.SearchBoxAPI(apiKey: _token).getPlace(id);
+    final data = response.success;
+    if (data == null) throw _failure(response.failure);
+    for (final feature in data.features) {
+      final coords = feature.properties.coordinates?.location;
+      if (coords == null) continue;
+      return CityOption(option.label, coords.lat, coords.long);
+    }
+    throw const ApiException('Could not get coordinates for that place.');
+  }
+
+  String _label(String name, String? formatted) =>
+      (formatted == null || formatted.isEmpty) ? name : '$name, $formatted';
+
+  void _ensureConfigured() {
+    if (!isConfigured) {
+      throw const ApiException(
+        'Location search is not configured (missing Mapbox token).',
+      );
+    }
+  }
+
+  ApiException _failure(mb.FailureResponse? failure) {
+    final code = int.tryParse(failure?.code ?? '');
+    return ApiException(
+      code == 401
+          ? 'Mapbox rejected the access token.'
+          : 'Location search failed. Please try again.',
+      statusCode: code,
+    );
   }
 
   /// Returns a readable city name for coordinates, or `null` if none found.
