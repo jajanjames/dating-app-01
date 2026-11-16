@@ -22,7 +22,7 @@ class DiscoveryScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       builder: (sheetContext) => FilterPreferencesSheet(
-        initialPreferences: currentPrefs,
+        initialPreferences: currentPrefs!,
         onApply: (updated) {
           ref
               .read(discoveryControllerProvider.notifier)
@@ -262,8 +262,7 @@ class CandidateProfileDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final photo1 =
-        candidate.imageUrls.isNotEmpty ? candidate.imageUrls[0] : '';
+    final photo1 = candidate.imageUrls.isNotEmpty ? candidate.imageUrls[0] : '';
     final photo2 =
         candidate.imageUrls.length > 1 ? candidate.imageUrls[1] : photo1;
     final photo3 =
