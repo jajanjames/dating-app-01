@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/discovery/discovery_screen.dart';
+import '../../features/matches/chat_screen.dart';
+import '../../features/matches/chats_controller.dart';
 import '../../features/matches/chats_screen.dart';
 import '../../features/matches/likes_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/profile/profile_screen.dart';
+import '../session/session_bootstrap.dart';
 import '../theme/app_theme.dart';
 
 /// Named route paths for Naam (Onboarding + 4-Tab Navigation: Discover, Likes, Chats, You).
@@ -16,6 +19,9 @@ abstract final class AppRoutes {
   static const String likes = '/likes';
   static const String chats = '/chats';
   static const String profile = '/you';
+
+  /// `/chat/<conversationId>`: full-screen chat (used by push notifications).
+  static const String chat = '/chat';
 }
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNav');
@@ -35,6 +41,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.onboarding,
         builder: (context, state) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: '${AppRoutes.chat}/:conversationId',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => ChatScreen(
+          conversationId: state.pathParameters['conversationId'],
+        ),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
@@ -101,6 +114,8 @@ class _DockedBottomTabMainScaffold extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Signed in: open the realtime socket and register for push.
+    ref.watch(sessionBootstrapProvider);
     final unreadChats = ref.watch(unreadChatsCountProvider);
 
     return Scaffold(

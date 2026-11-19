@@ -1,10 +1,14 @@
 // FILE: lib/features/profile/profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/network/api_client.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/models/candidate_profile.dart';
+import '../../data/models/social_models.dart';
 import '../../data/repositories/dating_repository.dart';
+import '../matches/likes_controller.dart';
 import '../onboarding/malayali_vibe_onboarding_screen.dart';
+import '../subscription/subscription_controller.dart';
 
 class UserProfileData {
   const UserProfileData({
@@ -96,8 +100,6 @@ final userProfileProvider = StateProvider<UserProfileData>((ref) {
   );
 });
 
-final activeSubscriptionPlanProvider = StateProvider<String?>((ref) => null);
-
 class SubscriptionTierInfo {
   const SubscriptionTierInfo({
     required this.id,
@@ -124,12 +126,12 @@ const List<SubscriptionTierInfo> _kSubscriptionTiers = [
     title: 'Premium',
     badgeLabel: 'Essential',
     priceLabel: '₹499/mo',
-    tagline: 'Everything you need for effortless daily discovery.',
+    tagline: 'Like and chat with everyone you match.',
     icon: Icons.favorite_rounded,
     features: [
-      'Unlimited daily Likes & Rewinds',
-      'Full Faith, Status & City filters',
-      'Ad-free discovery experience',
+      'Unlimited daily Likes',
+      'Chat with all your matches',
+      '1 Note and 1 Star every day',
     ],
   ),
   SubscriptionTierInfo(
@@ -137,12 +139,12 @@ const List<SubscriptionTierInfo> _kSubscriptionTiers = [
     title: 'Premium+',
     badgeLabel: 'Most Popular',
     priceLabel: '₹899/mo',
-    tagline: 'Unlock everyone who liked you + 3x profile boost.',
+    tagline: 'Stand out with more Stars and Notes.',
     icon: Icons.auto_awesome_rounded,
     features: [
-      'See everyone who already Liked you',
-      '5 free Direct Comments every week',
-      '3× Profile Boost in your city weekly',
+      'Unlimited daily Likes & chats',
+      '5 Notes every day',
+      '3 Stars every day',
     ],
   ),
   SubscriptionTierInfo(
@@ -150,12 +152,12 @@ const List<SubscriptionTierInfo> _kSubscriptionTiers = [
     title: 'Ultra',
     badgeLabel: 'VIP Access',
     priceLabel: '₹1,499/mo',
-    tagline: 'Priority placement and curated weekly introductions.',
+    tagline: 'No limits on anything.',
     icon: Icons.workspace_premium_rounded,
     features: [
-      'Priority #1 placement in Discover & Likes',
-      'Unlimited Direct Comments & Super-Stars',
-      'Curated weekly VIP introductions',
+      'Unlimited Likes & chats',
+      'Unlimited Notes',
+      'Unlimited Stars',
     ],
   ),
 ];
@@ -191,23 +193,66 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   void _openUpgradeSheet(BuildContext context, SubscriptionTierInfo tier) {
+    final status = ref.read(subscriptionStatusProvider).valueOrNull;
+    if (status?.freeAccess == true) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Likes, notes and chats are already free for you.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (sheetContext) => _SubscriptionUpgradeSheet(
         tier: tier,
-        onConfirmUpgrade: () {
-          ref.read(activeSubscriptionPlanProvider.notifier).state = tier.id;
+        onConfirmUpgrade: () async {
           Navigator.of(sheetContext).pop();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Naam ${tier.title} activated!'),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
+          final messenger = ScaffoldMessenger.of(context);
+          try {
+            await ref
+                .read(subscriptionStatusProvider.notifier)
+                .activate(tier.id);
+            messenger.showSnackBar(
+              SnackBar(
+                content: Text('Naam ${tier.title} activated!'),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          } on ApiException catch (e) {
+            messenger.showSnackBar(
+              SnackBar(
+                content: Text(e.message),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
         },
       ),
     );
+  }
+
+  /// Plan copy from `GET /subscriptions/plans`, falling back to the built-in tiers.
+  List<SubscriptionTierInfo> _tiersFrom(List<SubscriptionPlan>? plans) {
+    if (plans == null || plans.isEmpty) return _kSubscriptionTiers;
+    return [
+      for (final tier in _kSubscriptionTiers)
+        () {
+          final plan = plans.where((p) => p.id == tier.id).firstOrNull;
+          if (plan == null) return tier;
+          return SubscriptionTierInfo(
+            id: tier.id,
+            title: plan.title,
+            badgeLabel: plan.badgeLabel,
+            priceLabel: plan.priceLabel,
+            tagline: plan.tagline,
+            features: plan.features,
+            icon: tier.icon,
+          );
+        }(),
+    ];
   }
 
   void _openYourLikesSheet(BuildContext context) {
@@ -247,7 +292,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget build(BuildContext context) {
     final profile = ref.watch(userProfileProvider);
     final activePlanId = ref.watch(activeSubscriptionPlanProvider);
-    final selectedTier = _kSubscriptionTiers[_selectedTierIndex];
+    final tiers = _tiersFrom(ref.watch(subscriptionPlansProvider).valueOrNull);
+    final selectedTier = tiers[_selectedTierIndex];
 
     return ColoredBox(
       color: Colors.white,
@@ -265,7 +311,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
             // 2. Clean White Card with Rose Accent, 3 Short Perks & Upgrade CTA
             _MediumSubscriptionShowcaseCard(
-              tiers: _kSubscriptionTiers,
+              tiers: tiers,
               selectedIndex: _selectedTierIndex,
               activePlanId: activePlanId,
               onSelectTab: (index) {
@@ -903,8 +949,14 @@ class _SavedProfilesSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(datingActivityRevisionProvider);
     final repo = ref.watch(datingRepositoryProvider);
-    final List<CandidateProfile> list =
-        isPassesMode ? repo.getPassedProfiles() : repo.getLikedProfiles();
+    final List<CandidateProfile> list = isPassesMode
+        ? repo.getPassedProfiles()
+        : [
+            for (final like
+                in ref.watch(likesControllerProvider).valueOrNull?.sent ??
+                    const [])
+              like.profile,
+          ];
     final theme = Theme.of(context);
 
     return Padding(

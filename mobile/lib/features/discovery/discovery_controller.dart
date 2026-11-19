@@ -8,6 +8,9 @@ import '../../data/models/filter_preferences.dart';
 import '../../data/repositories/dating_repository.dart';
 import '../../data/repositories/discover_repository.dart';
 import '../../data/repositories/interests_repository.dart';
+import '../matches/chats_controller.dart';
+import '../matches/likes_controller.dart';
+import '../subscription/subscription_controller.dart';
 
 /// Immutable state for the Naam Discovery screen.
 @immutable
@@ -19,7 +22,9 @@ class DiscoveryState {
     this.hasMore = false,
     this.isSwiping = false,
     this.swipeError,
+    this.swipeErrorNeedsUpgrade = false,
     this.latestMutualMatch,
+    this.latestMatchConversationId,
   });
 
   /// Profiles waiting to be shown; the first one is on screen.
@@ -33,7 +38,13 @@ class DiscoveryState {
   /// `true` while a swipe request is in flight (ignore further taps).
   final bool isSwiping;
   final String? swipeError;
+
+  /// The swipe was refused because the user needs a plan (or more quota).
+  final bool swipeErrorNeedsUpgrade;
   final CandidateProfile? latestMutualMatch;
+
+  /// Chat to open from the "It's a match" dialog.
+  final String? latestMatchConversationId;
 
   CandidateProfile? get currentCandidate =>
       candidates.isNotEmpty ? candidates.first : null;
@@ -49,8 +60,10 @@ class DiscoveryState {
     bool clearCursor = false,
     bool? isSwiping,
     String? swipeError,
+    bool? swipeErrorNeedsUpgrade,
     bool clearSwipeError = false,
     CandidateProfile? latestMutualMatch,
+    String? latestMatchConversationId,
     bool clearLatestMatch = false,
   }) {
     return DiscoveryState(
@@ -60,9 +73,15 @@ class DiscoveryState {
       hasMore: hasMore ?? this.hasMore,
       isSwiping: isSwiping ?? this.isSwiping,
       swipeError: clearSwipeError ? null : (swipeError ?? this.swipeError),
+      swipeErrorNeedsUpgrade: clearSwipeError
+          ? false
+          : (swipeErrorNeedsUpgrade ?? this.swipeErrorNeedsUpgrade),
       latestMutualMatch: clearLatestMatch
           ? null
           : (latestMutualMatch ?? this.latestMutualMatch),
+      latestMatchConversationId: clearLatestMatch
+          ? null
+          : (latestMatchConversationId ?? this.latestMatchConversationId),
     );
   }
 }
@@ -131,15 +150,16 @@ class DiscoveryController extends AsyncNotifier<DiscoveryState> {
   }
 
   /// Dislike, like, or premium like on the current card.
-  /// [message] (max 200 chars) is sent with a like / premium like.
-  Future<void> swipeCurrent({
+  /// [message] (max 200 chars) is sent with a like / premium like (a note).
+  /// Returns `true` when the swipe was saved.
+  Future<bool> swipeCurrent({
     required bool isLike,
     bool isSuperLike = false,
     String? message,
   }) async {
     final current = state.valueOrNull;
     final candidate = current?.currentCandidate;
-    if (current == null || candidate == null || current.isSwiping) return;
+    if (current == null || candidate == null || current.isSwiping) return false;
 
     final action = !isLike
         ? SwipeAction.dislike
@@ -148,6 +168,7 @@ class DiscoveryController extends AsyncNotifier<DiscoveryState> {
     state = AsyncData(current.copyWith(isSwiping: true, clearSwipeError: true));
 
     var matched = false;
+    String? conversationId;
     try {
       final result = await ref.read(discoverRepositoryProvider).swipe(
             targetUserId: candidate.id,
@@ -155,27 +176,35 @@ class DiscoveryController extends AsyncNotifier<DiscoveryState> {
             message: message,
           );
       matched = result.isMatch;
+      conversationId = result.conversationId;
     } on ApiException catch (e) {
-      // 409: already swiped, so just drop the card. Anything else keeps it.
+      // 409: already swiped, so just drop the card. Anything else keeps it
+      // (403: no plan / quota used up -> the screen offers an upgrade).
       if (e.statusCode != 409) {
         state = AsyncData(
-          (state.valueOrNull ?? current)
-              .copyWith(isSwiping: false, swipeError: e.message),
+          (state.valueOrNull ?? current).copyWith(
+            isSwiping: false,
+            swipeError: e.message,
+            swipeErrorNeedsUpgrade: e.requiresUpgrade,
+          ),
         );
-        return;
+        return false;
       }
     }
 
-    final repository = ref.read(datingRepositoryProvider);
-    repository.recordSwipeAction(
-      candidate: candidate,
-      isLike: isLike,
-      isSuperLike: isSuperLike,
-    );
-    if (matched) {
-      repository.registerMutualMatch(candidate, isSuperMatch: isSuperLike);
-    }
+    // Local history for the profile tab's "Recent Passes" sheet.
+    ref.read(datingRepositoryProvider).recordSwipeAction(
+          candidate: candidate,
+          isLike: isLike,
+          isSuperLike: isSuperLike,
+        );
     _bumpActivityRevision();
+    if (isLike) {
+      // Quotas changed and "Your Likes" grew; matches arrive in Chats.
+      ref.invalidate(subscriptionStatusProvider);
+      ref.invalidate(likesControllerProvider);
+      if (matched) ref.read(chatInboxProvider.notifier).refresh();
+    }
 
     final latest = state.valueOrNull ?? current;
     final remaining =
@@ -185,11 +214,13 @@ class DiscoveryController extends AsyncNotifier<DiscoveryState> {
         candidates: remaining,
         isSwiping: false,
         latestMutualMatch: matched ? candidate : null,
+        latestMatchConversationId: matched ? conversationId : null,
         clearLatestMatch: !matched,
       ),
     );
 
     await _loadMoreIfNeeded();
+    return true;
   }
 
   /// Prefetches the next 2 profiles once the queue is nearly empty.
@@ -227,14 +258,15 @@ class DiscoveryController extends AsyncNotifier<DiscoveryState> {
     }
   }
 
-  /// Priority intro: a premium like carrying one short [messageText].
-  Future<void> sendIntroMessageFromDiscovery({
+  /// A note: a like carrying one short [messageText] (max 200 chars), sent
+  /// without matching. Returns `true` when it was sent.
+  Future<bool> sendIntroMessageFromDiscovery({
     required CandidateProfile candidate,
     required String messageText,
   }) async {
     final text = messageText.trim();
-    if (text.isEmpty) return;
-    await swipeCurrent(isLike: true, isSuperLike: true, message: text);
+    if (text.isEmpty) return false;
+    return swipeCurrent(isLike: true, message: text);
   }
 
   /// The API has no undo; kept so existing callers compile.

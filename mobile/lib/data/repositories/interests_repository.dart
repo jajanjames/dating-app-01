@@ -66,3 +66,18 @@ final interestsRepositoryProvider = Provider<InterestsRepository>(
     ref.watch(authStorageProvider),
   ),
 );
+
+/// Interest enum value -> display label (from `GET /interests`). Cosmetic and
+/// best-effort: an empty map on failure, so callers fall back to prettified values.
+final interestLabelsProvider = FutureProvider<Map<String, String>>((ref) async {
+  try {
+    final result = await ref.read(interestsRepositoryProvider).fetch();
+    return {
+      for (final categories in result.options.values)
+        for (final c in categories)
+          for (final o in c.items) o.value: o.label,
+    };
+  } on ApiException {
+    return const {};
+  }
+});

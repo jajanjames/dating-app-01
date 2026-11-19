@@ -1,35 +1,20 @@
 // FILE: lib/features/matches/likes_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/network/api_client.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/models/candidate_profile.dart';
-import '../../data/repositories/dating_repository.dart';
+import '../../data/models/social_models.dart';
 import '../discovery/widgets/discovery_card.dart';
 import 'chat_screen.dart';
-
-/// Async provider supplying the Likes tab data (`Liked You`, `Your Likes`, and `profileNotes`) with 4-state coverage.
-final likesFeedProvider = FutureProvider.autoDispose<
-    ({
-      List<CandidateProfile> admirers,
-      List<CandidateProfile> yourLikes,
-      Map<String, String> profileNotes,
-    })>(
-  (ref) async {
-    ref.watch(datingActivityRevisionProvider);
-    final repo = ref.watch(datingRepositoryProvider);
-    return (
-      admirers: repo.getAdmirers(),
-      yourLikes: repo.getLikedProfiles(),
-      profileNotes: repo.getProfileNotes(),
-    );
-  },
-);
+import 'likes_controller.dart';
 
 /// Naam Likes Tab Screen:
-/// - No inline "Type a message... [Send]" box on cards and no top showcase strip.
-/// - Tapping any profile card opens the Direct Message composer modal immediately.
-/// - When an incoming Note or Star (Super Like) is present on a card, displays "Accept" and "Decline" action buttons.
-/// - Full 4-state UI coverage (`loading`, `error`, `empty`, `data`).
+/// - `Liked You`: every incoming like, Super Like (star) and note, each with "Accept" and "Decline".
+///   Accept likes them back and opens the chat; Decline passes (the other person is not told).
+/// - `Your Likes`: likes you sent from Discover that are waiting for an answer.
+/// - Likes are only sent from Discover; there is no messaging before a match.
+/// - Live updates from the `like` / `match` socket events; full 4-state UI coverage.
 class LikesScreen extends ConsumerStatefulWidget {
   const LikesScreen({super.key});
 
@@ -39,84 +24,78 @@ class LikesScreen extends ConsumerStatefulWidget {
 
 class _LikesScreenState extends ConsumerState<LikesScreen> {
   int _selectedSegment = 0; // 0 = Liked You, 1 = Your Likes
-  final Set<String> _declinedCandidateIds = <String>{};
+  final Set<String> _busyUserIds = <String>{};
 
-  void _handleAcceptIncoming(CandidateProfile candidate) {
-    final repo = ref.read(datingRepositoryProvider);
-    final thread = repo.registerMutualMatch(candidate);
-    ref.read(datingActivityRevisionProvider.notifier).state++;
+  Future<void> _handleAcceptIncoming(LikeItem like) async {
+    if (!_busyUserIds.add(like.userId)) return;
+    setState(() {});
+    try {
+      final thread =
+          await ref.read(likesControllerProvider.notifier).accept(like);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("It's a match with ${like.profile.firstName}!"),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      Navigator.of(context).push<void>(
+        MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (_) => ChatScreen(initialThread: thread),
+        ),
+      );
+    } on ApiException catch (e) {
+      _showError(e);
+    } finally {
+      if (mounted) setState(() => _busyUserIds.remove(like.userId));
+    }
+  }
 
+  Future<void> _handleDeclineIncoming(LikeItem like) async {
+    if (!_busyUserIds.add(like.userId)) return;
+    setState(() {});
+    try {
+      await ref.read(likesControllerProvider.notifier).reject(like);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Declined ${like.profile.firstName}'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } on ApiException catch (e) {
+      _showError(e);
+    } finally {
+      if (mounted) setState(() => _busyUserIds.remove(like.userId));
+    }
+  }
+
+  void _showError(ApiException e) {
+    if (!mounted) return;
+    // 404 / 409: the like is no longer pending; resync the list.
+    if (e.statusCode == 404 || e.statusCode == 409) {
+      ref.read(likesControllerProvider.notifier).refresh();
+    }
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Accepted ${candidate.firstName} — chat opened!'),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-
-    Navigator.of(context).push<void>(
-      MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (_) => ChatScreen(initialThread: thread),
-      ),
+      SnackBar(content: Text(e.message), behavior: SnackBarBehavior.floating),
     );
   }
 
-  void _handleDeclineIncoming(CandidateProfile candidate) {
-    setState(() {
-      _declinedCandidateIds.add(candidate.id);
-    });
-    ref.read(datingRepositoryProvider).removeLikedProfile(candidate.id);
-    ref.read(datingActivityRevisionProvider.notifier).state++;
-
+  void _showPendingHint(LikeItem like) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Declined ${candidate.firstName}'),
+        content: Text(
+          "You'll be notified when ${like.profile.firstName} likes you back.",
+        ),
         behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
-
-  void _handleSendDirectMessage(CandidateProfile candidate, String text) {
-    final trimmed = text.trim();
-    if (trimmed.isEmpty) return;
-
-    final repo = ref.read(datingRepositoryProvider);
-    final thread = repo.sendDirectMessage(candidate: candidate, text: trimmed);
-    ref.read(datingActivityRevisionProvider.notifier).state++;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Direct message sent to ${candidate.firstName}!'),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-
-    Navigator.of(context).push<void>(
-      MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (_) => ChatScreen(initialThread: thread),
-      ),
-    );
-  }
-
-  void _openDirectMessageSheet(CandidateProfile candidate) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      builder: (sheetContext) => _DirectMessageComposerSheet(
-        candidate: candidate,
-        onSend: (messageText) {
-          Navigator.of(sheetContext).pop();
-          _handleSendDirectMessage(candidate, messageText);
-        },
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final asyncLikes = ref.watch(likesFeedProvider);
-    final repo = ref.watch(datingRepositoryProvider);
+    final asyncLikes = ref.watch(likesControllerProvider);
 
     return ColoredBox(
       color: Colors.white,
@@ -137,7 +116,7 @@ class _LikesScreenState extends ConsumerState<LikesScreen> {
               ),
               const SizedBox(height: 4),
               const Text(
-                'Tap any profile to send a direct message, or Accept / Decline incoming notes and Super Likes.',
+                'Accept a like, Super Like or note to start chatting, or Decline it. Likes are sent from Discover.',
                 style: TextStyle(
                   color: Color(0xFF71717A),
                   fontSize: 13.5,
@@ -157,76 +136,78 @@ class _LikesScreenState extends ConsumerState<LikesScreen> {
                     title: 'Unable to Load Likes',
                     subtitle: err.toString(),
                     actionLabel: 'Retry',
-                    onAction: () => ref.invalidate(likesFeedProvider),
+                    onAction: () => ref.invalidate(likesControllerProvider),
                   ),
                   data: (feed) {
-                    final rawList = _selectedSegment == 0
-                        ? feed.admirers
-                        : feed.yourLikes;
-                    final activeList = rawList
-                        .where((c) => !_declinedCandidateIds.contains(c.id))
-                        .toList(growable: false);
+                    final isReceived = _selectedSegment == 0;
+                    final activeList = isReceived ? feed.received : feed.sent;
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _LikesSegmentedBar(
                           selectedIndex: _selectedSegment,
-                          admirerCount: feed.admirers
-                              .where(
-                                  (c) => !_declinedCandidateIds.contains(c.id))
-                              .length,
-                          yourLikesCount: feed.yourLikes
-                              .where(
-                                  (c) => !_declinedCandidateIds.contains(c.id))
-                              .length,
+                          admirerCount: feed.received.length,
+                          yourLikesCount: feed.sent.length,
                           onSelect: (index) {
                             setState(() => _selectedSegment = index);
                           },
                         ),
                         const SizedBox(height: 14),
                         Expanded(
-                          child: activeList.isEmpty
-                              ? _LikesStateView(
-                                  icon: Icons.favorite_border_rounded,
-                                  title: _selectedSegment == 0
-                                      ? 'No New Admirers Yet'
-                                      : 'No Saved Likes Yet',
-                                  subtitle: _selectedSegment == 0
-                                      ? 'Keep exploring on Discover to appear in more local decks.'
-                                      : 'Tap the Heart or Star button on Discover to save profiles here.',
-                                )
-                              : GridView.builder(
-                                  itemCount: activeList.length,
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    mainAxisSpacing: 14,
-                                    crossAxisSpacing: 14,
-                                    childAspectRatio: 0.66,
+                          child: RefreshIndicator(
+                            color: JDateTokens.brandRose,
+                            onRefresh: () => ref
+                                .read(likesControllerProvider.notifier)
+                                .refresh(),
+                            child: activeList.isEmpty
+                                ? ListView(
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(),
+                                    children: [
+                                      const SizedBox(height: 60),
+                                      _LikesStateView(
+                                        icon: Icons.favorite_border_rounded,
+                                        title: isReceived
+                                            ? 'No New Admirers Yet'
+                                            : 'No Pending Likes',
+                                        subtitle: isReceived
+                                            ? 'Keep exploring on Discover to appear in more local decks.'
+                                            : 'Tap the Heart or Star button on Discover to like profiles. Matches move to Chats.',
+                                      ),
+                                    ],
+                                  )
+                                : GridView.builder(
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(),
+                                    itemCount: activeList.length,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      mainAxisSpacing: 14,
+                                      crossAxisSpacing: 14,
+                                      childAspectRatio: 0.66,
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      final like = activeList[index];
+                                      return _LikeProfileGridCard(
+                                        candidate: like.profile,
+                                        isSuperLiked: like.isPremium,
+                                        incomingNote: like.note,
+                                        isIncoming: isReceived,
+                                        isBusy:
+                                            _busyUserIds.contains(like.userId),
+                                        onTapCard: isReceived
+                                            ? null
+                                            : () => _showPendingHint(like),
+                                        onAccept: () =>
+                                            _handleAcceptIncoming(like),
+                                        onDecline: () =>
+                                            _handleDeclineIncoming(like),
+                                      );
+                                    },
                                   ),
-                                  itemBuilder: (context, index) {
-                                    final person = activeList[index];
-                                    final isSuperLiked =
-                                        person.isSuperLiked ||
-                                            repo.isStarred(person.id);
-                                    final incomingNote =
-                                        feed.profileNotes[person.id] ??
-                                            person.paidIntroMessage;
-
-                                    return _LikeProfileGridCard(
-                                      candidate: person,
-                                      isSuperLiked: isSuperLiked,
-                                      incomingNote: incomingNote,
-                                      onTapCard: () =>
-                                          _openDirectMessageSheet(person),
-                                      onAccept: () =>
-                                          _handleAcceptIncoming(person),
-                                      onDecline: () =>
-                                          _handleDeclineIncoming(person),
-                                    );
-                                  },
-                                ),
+                          ),
                         ),
                       ],
                     );
@@ -337,6 +318,8 @@ class _LikeProfileGridCard extends StatelessWidget {
     required this.candidate,
     required this.isSuperLiked,
     required this.incomingNote,
+    required this.isIncoming,
+    required this.isBusy,
     required this.onTapCard,
     required this.onAccept,
     required this.onDecline,
@@ -345,15 +328,16 @@ class _LikeProfileGridCard extends StatelessWidget {
   final CandidateProfile candidate;
   final bool isSuperLiked;
   final String? incomingNote;
-  final VoidCallback onTapCard;
+
+  /// `Liked You` card (Accept / Decline) vs `Your Likes` card (pending).
+  final bool isIncoming;
+  final bool isBusy;
+  final VoidCallback? onTapCard;
   final VoidCallback onAccept;
   final VoidCallback onDecline;
 
   @override
   Widget build(BuildContext context) {
-    final hasIncomingNoteOrStar =
-        isSuperLiked || (incomingNote != null && incomingNote!.isNotEmpty);
-
     return GestureDetector(
       onTap: onTapCard,
       child: Container(
@@ -458,15 +442,16 @@ class _LikeProfileGridCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    if (hasIncomingNoteOrStar)
+                    if (isIncoming)
                       _IncomingNoteOrStarBox(
                         isSuperLiked: isSuperLiked,
                         incomingNote: incomingNote,
+                        isBusy: isBusy,
                         onAccept: onAccept,
                         onDecline: onDecline,
                       )
                     else
-                      const _DirectMessageHintPill(),
+                      const _PendingLikeHintPill(),
                   ],
                 ),
               ),
@@ -482,17 +467,27 @@ class _IncomingNoteOrStarBox extends StatelessWidget {
   const _IncomingNoteOrStarBox({
     required this.isSuperLiked,
     required this.incomingNote,
+    required this.isBusy,
     required this.onAccept,
     required this.onDecline,
   });
 
   final bool isSuperLiked;
   final String? incomingNote;
+  final bool isBusy;
   final VoidCallback onAccept;
   final VoidCallback onDecline;
 
+  bool get _hasNote => incomingNote != null && incomingNote!.isNotEmpty;
+
   @override
   Widget build(BuildContext context) {
+    final headline = isSuperLiked
+        ? 'Sent you a Super Like'
+        : (_hasNote ? 'Sent you a note' : 'Likes you');
+    final icon = isSuperLiked
+        ? Icons.star_rounded
+        : (_hasNote ? Icons.chat_bubble_rounded : Icons.favorite_rounded);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(9),
@@ -507,14 +502,14 @@ class _IncomingNoteOrStarBox extends StatelessWidget {
           Row(
             children: [
               Icon(
-                isSuperLiked ? Icons.star_rounded : Icons.chat_bubble_rounded,
+                icon,
                 size: 12,
                 color: JDateTokens.brandRose,
               ),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
-                  isSuperLiked ? 'Sent you a Super Like' : 'Sent you a note',
+                  headline,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -526,7 +521,7 @@ class _IncomingNoteOrStarBox extends StatelessWidget {
               ),
             ],
           ),
-          if (incomingNote != null && incomingNote!.isNotEmpty) ...[
+          if (_hasNote) ...[
             const SizedBox(height: 3),
             Text(
               '“$incomingNote”',
@@ -545,7 +540,7 @@ class _IncomingNoteOrStarBox extends StatelessWidget {
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: onAccept,
+                  onTap: isBusy ? null : onAccept,
                   child: Container(
                     height: 30,
                     alignment: Alignment.center,
@@ -553,9 +548,9 @@ class _IncomingNoteOrStarBox extends StatelessWidget {
                       color: JDateTokens.brandRose,
                       borderRadius: BorderRadius.circular(999),
                     ),
-                    child: const Text(
-                      'Accept',
-                      style: TextStyle(
+                    child: Text(
+                      isBusy ? '...' : 'Accept',
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 11.5,
                         fontWeight: FontWeight.w800,
@@ -567,7 +562,7 @@ class _IncomingNoteOrStarBox extends StatelessWidget {
               const SizedBox(width: 6),
               Expanded(
                 child: GestureDetector(
-                  onTap: onDecline,
+                  onTap: isBusy ? null : onDecline,
                   child: Container(
                     height: 30,
                     alignment: Alignment.center,
@@ -595,8 +590,8 @@ class _IncomingNoteOrStarBox extends StatelessWidget {
   }
 }
 
-class _DirectMessageHintPill extends StatelessWidget {
-  const _DirectMessageHintPill();
+class _PendingLikeHintPill extends StatelessWidget {
+  const _PendingLikeHintPill();
 
   @override
   Widget build(BuildContext context) {
@@ -611,14 +606,14 @@ class _DirectMessageHintPill extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: const [
           Icon(
-            Icons.chat_bubble_outline_rounded,
+            Icons.hourglass_top_rounded,
             size: 11,
             color: Colors.white,
           ),
           SizedBox(width: 5),
           Flexible(
             child: Text(
-              'Tap to send direct message',
+              'Waiting for a like back',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -658,88 +653,6 @@ class _YellowSuperLikeCircleBadge extends StatelessWidget {
         Icons.star_rounded,
         size: 15,
         color: JDateTokens.pitchBlack,
-      ),
-    );
-  }
-}
-
-class _DirectMessageComposerSheet extends StatefulWidget {
-  const _DirectMessageComposerSheet({
-    required this.candidate,
-    required this.onSend,
-  });
-
-  final CandidateProfile candidate;
-  final ValueChanged<String> onSend;
-
-  @override
-  State<_DirectMessageComposerSheet> createState() =>
-      _DirectMessageComposerSheetState();
-}
-
-class _DirectMessageComposerSheetState
-    extends State<_DirectMessageComposerSheet> {
-  late final TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
-
-    return Padding(
-      padding: EdgeInsets.fromLTRB(14, 14, 14, bottomInset + 16),
-      child: LiquidGlassSurface(
-        borderRadius: 24,
-        padding: const EdgeInsets.all(22),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Direct Message ${widget.candidate.firstName}',
-              style: theme.textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 6),
-            Text(
-              'Send a direct message to start chatting immediately with ${widget.candidate.firstName}.',
-              style: theme.textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 14),
-            TextField(
-              controller: _controller,
-              autofocus: true,
-              maxLines: 3,
-              decoration: InputDecoration(
-                hintText:
-                    'Write a direct message to ${widget.candidate.firstName}...',
-                filled: true,
-                fillColor: const Color(0xFFF8F8FA),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(color: Color(0xFFE4E4E7)),
-                ),
-              ),
-            ),
-            const SizedBox(height: 14),
-            FilledButton.icon(
-              onPressed: () => widget.onSend(_controller.text),
-              icon: const Icon(Icons.send_rounded, size: 18),
-              label: const Text('Send Direct Message'),
-            ),
-          ],
-        ),
       ),
     );
   }

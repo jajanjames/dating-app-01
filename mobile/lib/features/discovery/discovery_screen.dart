@@ -1,6 +1,8 @@
 // FILE: lib/features/discovery/discovery_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../core/router/app_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/models/candidate_profile.dart';
 import 'discovery_controller.dart';
@@ -43,7 +45,7 @@ class DiscoveryScreen extends ConsumerWidget {
       builder: (sheetContext) => _QuickMessageComposerSheet(
         candidate: candidate,
         onSend: (text) async {
-          await ref
+          final sent = await ref
               .read(discoveryControllerProvider.notifier)
               .sendIntroMessageFromDiscovery(
                 candidate: candidate,
@@ -51,10 +53,11 @@ class DiscoveryScreen extends ConsumerWidget {
               );
           if (!sheetContext.mounted) return;
           Navigator.of(sheetContext).pop();
-          if (!context.mounted) return;
+          // On failure the screen's listener shows the error (with Upgrade).
+          if (!sent || !context.mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Intro sent to ${candidate.firstName}'),
+              content: Text('Note sent to ${candidate.firstName}'),
               behavior: SnackBarBehavior.floating,
             ),
           );
@@ -116,6 +119,7 @@ class DiscoveryScreen extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     CandidateProfile match,
+    String? conversationId,
   ) {
     showDialog<void>(
       context: context,
@@ -153,6 +157,14 @@ class DiscoveryScreen extends ConsumerWidget {
         ),
         actionsAlignment: MainAxisAlignment.center,
         actions: [
+          if (conversationId != null)
+            OutlinedButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                context.push('${AppRoutes.chat}/$conversationId');
+              },
+              child: const Text('Say hi'),
+            ),
           FilledButton(
             style: FilledButton.styleFrom(
               backgroundColor: JDateTokens.brandRose,
@@ -163,7 +175,9 @@ class DiscoveryScreen extends ConsumerWidget {
         ],
       ),
     ).whenComplete(
-      () => ref.read(discoveryControllerProvider.notifier).dismissMatchCelebration(),
+      () => ref
+          .read(discoveryControllerProvider.notifier)
+          .dismissMatchCelebration(),
     );
   }
 
@@ -181,12 +195,18 @@ class DiscoveryScreen extends ConsumerWidget {
           SnackBar(
             content: Text(cur.swipeError!),
             behavior: SnackBarBehavior.floating,
+            action: cur.swipeErrorNeedsUpgrade
+                ? SnackBarAction(
+                    label: 'Upgrade',
+                    onPressed: () => context.go(AppRoutes.profile),
+                  )
+                : null,
           ),
         );
       }
       final match = cur.latestMutualMatch;
       if (match != null && match.id != prev?.latestMutualMatch?.id) {
-        _showMatchDialog(context, ref, match);
+        _showMatchDialog(context, ref, match, cur.latestMatchConversationId);
       }
     });
 

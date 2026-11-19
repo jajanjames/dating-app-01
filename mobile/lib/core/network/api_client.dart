@@ -11,10 +11,18 @@ const String kNaamApiBaseUrl = 'https://naam.gredin.app';
 
 /// Error thrown for any failed API call, carrying a user-presentable message.
 class ApiException implements Exception {
-  const ApiException(this.message, {this.statusCode});
+  const ApiException(this.message, {this.statusCode, this.code});
 
   final String message;
   final int? statusCode;
+
+  /// Machine-readable reason from the backend, e.g. `SUBSCRIPTION_REQUIRED`,
+  /// `LIMIT_REACHED` or `PAYMENTS_DISABLED`.
+  final String? code;
+
+  /// The user must buy or upgrade a plan to do this.
+  bool get requiresUpgrade =>
+      code == 'SUBSCRIPTION_REQUIRED' || code == 'LIMIT_REACHED';
 
   @override
   String toString() => message;
@@ -86,6 +94,16 @@ class ApiClient {
     });
   }
 
+  /// Authenticated DELETE.
+  Future<dynamic> deleteJson(String path, {String? token}) {
+    return _guard(() async {
+      final response = await _http
+          .delete(_uri(path), headers: _jsonHeaders(token))
+          .timeout(_jsonTimeout);
+      return _decode(response);
+    });
+  }
+
   Map<String, String> _jsonHeaders(String? token) => {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -150,6 +168,8 @@ class ApiClient {
     throw ApiException(
       _extractMessage(body) ?? 'Something went wrong (${response.statusCode}).',
       statusCode: response.statusCode,
+      code:
+          body is Map && body['code'] is String ? body['code'] as String : null,
     );
   }
 

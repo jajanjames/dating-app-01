@@ -4,36 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/models/candidate_profile.dart';
 import '../../data/models/match_thread.dart';
-import '../../data/repositories/dating_repository.dart';
+import '../../data/models/social_models.dart';
 import 'chat_screen.dart';
-
-/// Provider supplying active chat threads and new mutual matches with 4-state coverage.
-final chatsInboxProvider = FutureProvider.autoDispose<
-    ({List<MatchThread> threads, List<CandidateProfile> priorityIntros})>(
-  (ref) async {
-    ref.watch(datingActivityRevisionProvider);
-    final repo = ref.watch(datingRepositoryProvider);
-    return (
-      threads: repo.getMatches(),
-      priorityIntros: repo.getPriorityIntroProfiles(),
-    );
-  },
-);
-
-/// Provider exposing the total unread chat count for the bottom tab badge.
-final unreadChatsCountProvider = Provider<int>((ref) {
-  ref.watch(datingActivityRevisionProvider);
-  final threads = ref.watch(datingRepositoryProvider).getMatches();
-  var count = 0;
-  for (final thread in threads) {
-    count += thread.unreadCount;
-  }
-  return count;
-});
+import 'chats_controller.dart';
 
 /// Naam Chats Tab Screen:
-/// - Horizontal New Matches strip with yellow Super Like circle badge and ring
-/// - Full conversation list with unread count and instant reply
+/// - Horizontal New Matches strip (matches without messages) with yellow Super Like circle badge and ring
+/// - Full conversation list with unread count, kept live by the `message` / `match` socket events
 /// - 4-state UI coverage (`loading`, `error`, `empty`, `data`)
 class ChatsScreen extends ConsumerWidget {
   const ChatsScreen({super.key});
@@ -43,8 +20,7 @@ class ChatsScreen extends ConsumerWidget {
     WidgetRef ref,
     MatchThread thread,
   ) {
-    ref.read(datingRepositoryProvider).markThreadRead(thread.id);
-    ref.read(datingActivityRevisionProvider.notifier).state++;
+    ref.read(chatInboxProvider.notifier).markRead(thread.id);
 
     Navigator.of(context).push<void>(
       MaterialPageRoute(
@@ -53,21 +29,9 @@ class ChatsScreen extends ConsumerWidget {
     );
   }
 
-  void _openIntroCandidate(
-    BuildContext context,
-    WidgetRef ref,
-    CandidateProfile candidate,
-  ) {
-    final repo = ref.read(datingRepositoryProvider);
-    final thread = repo.registerMutualMatch(candidate);
-    ref.read(datingActivityRevisionProvider.notifier).state++;
-    _openThread(context, ref, thread);
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncInbox = ref.watch(chatsInboxProvider);
-    final repo = ref.watch(datingRepositoryProvider);
+    final asyncInbox = ref.watch(chatInboxProvider);
 
     return ColoredBox(
       color: Colors.white,
@@ -107,23 +71,71 @@ class ChatsScreen extends ConsumerWidget {
                     title: 'Could Not Load Chats',
                     subtitle: err.toString(),
                     actionLabel: 'Retry',
-                    onAction: () => ref.invalidate(chatsInboxProvider),
+                    onAction: () => ref.invalidate(chatInboxProvider),
                   ),
                   data: (inbox) {
-                    if (inbox.threads.isEmpty && inbox.priorityIntros.isEmpty) {
-                      return const _ChatsStateView(
-                        icon: Icons.chat_bubble_outline_rounded,
-                        title: 'No Conversations Yet',
-                        subtitle:
-                            'Like or message someone on Discover to start your first conversation.',
+                    Future<void> onRefresh() =>
+                        ref.read(chatInboxProvider.notifier).refresh();
+
+                    if (inbox.conversations.isEmpty &&
+                        inbox.newMatches.isEmpty) {
+                      return RefreshIndicator(
+                        color: JDateTokens.brandRose,
+                        onRefresh: onRefresh,
+                        child: ListView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          children: const [
+                            SizedBox(height: 60),
+                            _ChatsStateView(
+                              icon: Icons.chat_bubble_outline_rounded,
+                              title: 'No Conversations Yet',
+                              subtitle:
+                                  'Like someone on Discover, or accept a like, to start your first conversation.',
+                            ),
+                          ],
+                        ),
                       );
                     }
 
-                    return ListView(
-                      children: [
-                        if (inbox.priorityIntros.isNotEmpty) ...[
+                    return RefreshIndicator(
+                      color: JDateTokens.brandRose,
+                      onRefresh: onRefresh,
+                      child: ListView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        children: [
+                          if (inbox.newMatches.isNotEmpty) ...[
+                            const Text(
+                              'New Matches',
+                              style: TextStyle(
+                                color: JDateTokens.pitchBlack,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.2,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              height: 98,
+                              child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: inbox.newMatches.length,
+                                separatorBuilder: (_, __) =>
+                                    const SizedBox(width: 14),
+                                itemBuilder: (context, index) {
+                                  final thread = inbox.newMatches[index];
+                                  return _NewConnectionAvatarItem(
+                                    candidate: thread.partner,
+                                    isSuperLiked: thread.isSuperMatch,
+                                    onTap: () =>
+                                        _openThread(context, ref, thread),
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 18),
+                          ],
                           const Text(
-                            'New Matches',
+                            'Messages',
                             style: TextStyle(
                               color: JDateTokens.pitchBlack,
                               fontSize: 15,
@@ -131,47 +143,26 @@ class ChatsScreen extends ConsumerWidget {
                               letterSpacing: -0.2,
                             ),
                           ),
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            height: 98,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: inbox.priorityIntros.length,
-                              separatorBuilder: (_, __) =>
-                                  const SizedBox(width: 14),
-                              itemBuilder: (context, index) {
-                                final person = inbox.priorityIntros[index];
-                                final isSuperLiked =
-                                    person.isSuperLiked ||
-                                        repo.isStarred(person.id);
-                                return _NewConnectionAvatarItem(
-                                  candidate: person,
-                                  isSuperLiked: isSuperLiked,
-                                  onTap: () =>
-                                      _openIntroCandidate(context, ref, person),
-                                );
-                              },
+                          const SizedBox(height: 8),
+                          if (inbox.conversations.isEmpty)
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              child: Text(
+                                'Tap a new match above to say hello.',
+                                style: TextStyle(
+                                  color: Color(0xFF71717A),
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ...inbox.conversations.map(
+                            (thread) => _ChatThreadListRow(
+                              thread: thread,
+                              onTap: () => _openThread(context, ref, thread),
                             ),
                           ),
-                          const SizedBox(height: 18),
                         ],
-                        const Text(
-                          'Messages',
-                          style: TextStyle(
-                            color: JDateTokens.pitchBlack,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: -0.2,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        ...inbox.threads.map(
-                          (thread) => _ChatThreadListRow(
-                            thread: thread,
-                            onTap: () => _openThread(context, ref, thread),
-                          ),
-                        ),
-                      ],
+                      ),
                     );
                   },
                 ),
@@ -342,7 +333,9 @@ class _ChatThreadListRow extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    lastMsg?.text ?? 'Say hello to ${partner.firstName}',
+                    lastMsg == null
+                        ? 'Say hello to ${partner.firstName}'
+                        : '${lastMsg.isFromViewer ? 'You: ' : ''}${lastMsg.text}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -350,8 +343,7 @@ class _ChatThreadListRow extends StatelessWidget {
                           ? JDateTokens.pitchBlack
                           : const Color(0xFF71717A),
                       fontSize: 14,
-                      fontWeight:
-                          hasUnread ? FontWeight.w600 : FontWeight.w400,
+                      fontWeight: hasUnread ? FontWeight.w600 : FontWeight.w400,
                     ),
                   ),
                 ],
@@ -362,7 +354,9 @@ class _ChatThreadListRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  lastMsg?.sentAtLabel ?? thread.matchedAtLabel,
+                  lastMsg?.createdAt != null
+                      ? relativeLabel(lastMsg!.createdAt!)
+                      : (lastMsg?.sentAtLabel ?? thread.matchedAtLabel),
                   style: TextStyle(
                     color: hasUnread
                         ? JDateTokens.brandRose

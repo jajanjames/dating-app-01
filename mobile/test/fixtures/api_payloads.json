@@ -1,0 +1,328 @@
+{
+  "chats": {
+    "newMatches": [
+      {
+        "id": "fb1f3231-5dad-4db3-ba58-e9b9589e03f6",
+        "matchedAt": "2026-11-19T15:57:58.102Z",
+        "partner": {
+          "id": "5ce43ca4-bfa1-48ca-9f1a-faa400bfa7ca",
+          "name": "Devi",
+          "age": 28,
+          "gender": "FEMALE",
+          "relationshipGoal": null,
+          "photos": [
+            "https://x/p.jpg"
+          ],
+          "distanceKm": 4,
+          "interestsStepOne": [],
+          "interestsStepTwo": [],
+          "isOnline": false
+        },
+        "lastMessage": null,
+        "unreadCount": 0,
+        "isSuperMatch": true
+      }
+    ],
+    "conversations": [
+      {
+        "id": "3e5c9099-6314-4b65-977b-44a952b5c73a",
+        "matchedAt": "2026-11-19T15:57:57.321Z",
+        "partner": {
+          "id": "f4586c08-36cc-4897-9960-ae02b629428b",
+          "name": "Anjali",
+          "age": 28,
+          "gender": "FEMALE",
+          "relationshipGoal": null,
+          "photos": [
+            "https://x/p.jpg"
+          ],
+          "distanceKm": 4,
+          "interestsStepOne": [],
+          "interestsStepTwo": [],
+          "isOnline": false
+        },
+        "lastMessage": {
+          "id": "3796d2ab-86b5-41fb-8837-1e6c8e2720be",
+          "conversationId": "3e5c9099-6314-4b65-977b-44a952b5c73a",
+          "senderId": "9da91db4-dbbd-4316-adbf-c5494d340e5d",
+          "text": "Hey Anjali 👋",
+          "isNote": false,
+          "isMine": true,
+          "createdAt": "2026-11-19T15:57:57.840Z",
+          "readAt": "2026-11-19T15:57:57.848Z"
+        },
+        "unreadCount": 1,
+        "isSuperMatch": false
+      }
+    ],
+    "totalUnread": 1,
+    "canMessage": true
+  },
+  "likesSent": {
+    "likes": [
+      {
+        "id": "f7fd5282-4daf-475f-9e7f-93871106bb8f",
+        "action": "LIKE",
+        "note": "hello Priya",
+        "isNote": true,
+        "createdAt": "2026-11-19T15:57:58.076Z",
+        "profile": {
+          "id": "5460f9c3-9422-409b-b359-9b9d3a182cc1",
+          "name": "Priya",
+          "age": 28,
+          "gender": "FEMALE",
+          "relationshipGoal": null,
+          "photos": [
+            "https://x/p.jpg"
+          ],
+          "distanceKm": 4,
+          "interestsStepOne": [],
+          "interestsStepTwo": [],
+          "isOnline": false
+        }
+      }
+    ]
+  },
+  "subscription": {
+    "freeAccess": false,
+    "plan": {
+      "id": "premium",
+      "title": "Premium",
+      "badgeLabel": "Essential",
+      "priceInr": 499,
+      "priceLabel": "₹499/mo",
+      "tagline": "Like and chat with everyone you match.",
+      "durationDays": 30,
+      "features": [
+        "Unlimited daily Likes",
+        "Chat with all your matches",
+        "1 Note and 1 Star every day"
+      ],
+      "quotas": {
+        "likes": {
+          "limit": null,
+          "period": "DAY"
+        },
+        "premiumLikes": {
+          "limit": 1,
+          "period": "DAY"
+        },
+        "notes": {
+          "limit": 1,
+          "period": "DAY"
+        }
+      }
+    },
+    "expiresAt": "2026-12-19T15:57:57.823Z",
+    "canMessage": true,
+    "quotas": {
+      "likes": {
+        "limit": null,
+        "period": "DAY",
+        "used": 2,
+        "remaining": null
+      },
+      "premiumLikes": {
+        "limit": 1,
+        "period": "DAY",
+        "used": 0,
+        "remaining": 1
+      },
+      "notes": {
+        "limit": 1,
+        "period": "DAY",
+        "used": 1,
+        "remaining": 0
+      }
+    }
+  },
+  "plans": {
+    "plans": [
+      {
+        "id": "premium",
+        "title": "Premium",
+        "badgeLabel": "Essential",
+        "priceInr": 499,
+        "priceLabel": "₹499/mo",
+        "tagline": "Like and chat with everyone you match.",
+        "durationDays": 30,
+        "features": [
+          "Unlimited daily Likes",
+          "Chat with all your matches",
+          "1 Note and 1 Star every day"
+        ],
+        "quotas": {
+          "likes": {
+            "limit": null,
+            "period": "DAY"
+          },
+          "premiumLikes": {
+            "limit": 1,
+            "period": "DAY"
+          },
+          "notes": {
+            "limit": 1,
+            "period": "DAY"
+          }
+        }
+      },
+      {
+        "id": "premium_plus",
+        "title": "Premium+",
+        "badgeLabel": "Most Popular",
+        "priceInr": 899,
+        "priceLabel": "₹899/mo",
+        "tagline": "Stand out with more Stars and Notes.",
+        "durationDays": 30,
+        "features": [
+          "Unlimited daily Likes & chats",
+          "5 Notes every day",
+          "3 Stars every day"
+        ],
+        "quotas": {
+          "likes": {
+            "limit": null,
+            "period": "DAY"
+          },
+          "premiumLikes": {
+            "limit": 3,
+            "period": "DAY"
+          },
+          "notes": {
+            "limit": 5,
+            "period": "DAY"
+          }
+        }
+      },
+      {
+        "id": "ultra",
+        "title": "Ultra",
+        "badgeLabel": "VIP Access",
+        "priceInr": 1499,
+        "priceLabel": "₹1,499/mo",
+        "tagline": "No limits on anything.",
+        "durationDays": 30,
+        "features": [
+          "Unlimited Likes & chats",
+          "Unlimited Notes",
+          "Unlimited Stars"
+        ],
+        "quotas": {
+          "likes": {
+            "limit": null,
+            "period": "DAY"
+          },
+          "premiumLikes": {
+            "limit": null,
+            "period": "DAY"
+          },
+          "notes": {
+            "limit": null,
+            "period": "DAY"
+          }
+        }
+      }
+    ]
+  },
+  "messages": {
+    "messages": [
+      {
+        "id": "5818f032-0ef2-400c-8160-c868653a2d26",
+        "conversationId": "3e5c9099-6314-4b65-977b-44a952b5c73a",
+        "senderId": "f4586c08-36cc-4897-9960-ae02b629428b",
+        "text": "Loved your cinema picks!",
+        "isNote": true,
+        "isMine": false,
+        "createdAt": "2026-11-19T15:57:57.099Z",
+        "readAt": "2026-11-19T15:57:57.324Z"
+      },
+      {
+        "id": "83f1a4ad-1b5b-48c4-97d1-a0f798f6b8f9",
+        "conversationId": "3e5c9099-6314-4b65-977b-44a952b5c73a",
+        "senderId": "f4586c08-36cc-4897-9960-ae02b629428b",
+        "text": "Hi Rahul!",
+        "isNote": false,
+        "isMine": false,
+        "createdAt": "2026-11-19T15:57:57.597Z",
+        "readAt": null
+      },
+      {
+        "id": "3796d2ab-86b5-41fb-8837-1e6c8e2720be",
+        "conversationId": "3e5c9099-6314-4b65-977b-44a952b5c73a",
+        "senderId": "9da91db4-dbbd-4316-adbf-c5494d340e5d",
+        "text": "Hey Anjali 👋",
+        "isNote": false,
+        "isMine": true,
+        "createdAt": "2026-11-19T15:57:57.840Z",
+        "readAt": "2026-11-19T15:57:57.848Z"
+      }
+    ],
+    "hasMore": false,
+    "nextCursor": null
+  },
+  "likeEvent": {
+    "id": "680cb220-ec14-46e2-8031-e9a5f5a7fb6c",
+    "action": "PREMIUM_LIKE",
+    "note": "Your playlist is 🔥",
+    "isNote": true,
+    "createdAt": "2026-11-19T16:09:15.355Z",
+    "profile": {
+      "id": "8ae87215-f44c-44ac-be4c-ebe89abfb217",
+      "name": "Lakshmi",
+      "age": 27,
+      "gender": "FEMALE",
+      "relationshipGoal": null,
+      "photos": [
+        "https://x/l.jpg"
+      ],
+      "distanceKm": 11,
+      "interestsStepOne": [],
+      "interestsStepTwo": [],
+      "isOnline": false
+    }
+  },
+  "messageEvent": {
+    "conversationId": "3e5c9099-6314-4b65-977b-44a952b5c73a",
+    "message": {
+      "id": "1e89e114-37ad-4561-a3fd-c3466a9e04a4",
+      "conversationId": "3e5c9099-6314-4b65-977b-44a952b5c73a",
+      "senderId": "f4586c08-36cc-4897-9960-ae02b629428b",
+      "text": "Free Sunday?",
+      "isNote": false,
+      "isMine": false,
+      "createdAt": "2026-11-19T16:09:15.360Z",
+      "readAt": null
+    },
+    "sender": {
+      "id": "f4586c08-36cc-4897-9960-ae02b629428b",
+      "name": "Anjali",
+      "photo": "https://x/p.jpg"
+    },
+    "clientId": null
+  },
+  "likesReceived": {
+    "likes": [
+      {
+        "id": "680cb220-ec14-46e2-8031-e9a5f5a7fb6c",
+        "action": "PREMIUM_LIKE",
+        "note": "Your playlist is 🔥",
+        "isNote": true,
+        "createdAt": "2026-11-19T16:09:15.355Z",
+        "profile": {
+          "id": "8ae87215-f44c-44ac-be4c-ebe89abfb217",
+          "name": "Lakshmi",
+          "age": 27,
+          "gender": "FEMALE",
+          "relationshipGoal": null,
+          "photos": [
+            "https://x/l.jpg"
+          ],
+          "distanceKm": 11,
+          "interestsStepOne": [],
+          "interestsStepTwo": [],
+          "isOnline": false
+        }
+      }
+    ]
+  }
+}

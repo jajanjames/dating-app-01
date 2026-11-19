@@ -153,6 +153,7 @@ class SwipeResult {
     required this.action,
     required this.messageSent,
     required this.isMatch,
+    this.conversationId,
   });
 
   factory SwipeResult.fromJson(Map<String, dynamic> json) => SwipeResult(
@@ -160,10 +161,14 @@ class SwipeResult {
         action: json['action'] as String? ?? '',
         messageSent: json['messageSent'] == true,
         isMatch: json['isMatch'] == true,
+        conversationId: json['conversationId'] as String?,
       );
 
   final String swipeId;
   final String action;
   final bool messageSent;
   final bool isMatch;
+
+  /// Set when [isMatch]; the chat to open.
+  final String? conversationId;
 }
